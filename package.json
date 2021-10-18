@@ -1,0 +1,29 @@
+{
+  "name": "murmurhash-es",
+  "version": "0.1.0",
+  "repository": "unjs/murmurhash-es",
+  "license": "MIT",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.mjs"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "browser": "./dist/index.min.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild && yarn build:minify",
+    "build:minify": "yarn esbuild dist/index.mjs --minify --outfile=dist/index.min.mjs",
+    "release": "yarn build && standard-version && git push --follow-tags && npm publish",
+    "test": "jiti ./test/index.ts"
+  },
+  "devDependencies": {
+    "esbuild": "^0.13.8",
+    "jiti": "^1.12.9",
+    "standard-version": "^9.3.2",
+    "unbuild": "^0.5.7"
+  }
+}
