@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "repository": "unjs/murmurhash-es",
   "license": "MIT",
+  "sideEffects": false,
   "exports": {
     "require": "./dist/index.cjs",
     "import": "./dist/index.mjs"
