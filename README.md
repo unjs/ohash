@@ -29,6 +29,9 @@ yarn add murmurhash-es
 
 # npm
 npm i murmurhash-es
+
+# pnpm
+pnpm i murmurhash-es
 ```
 
 ```js

@@ -16,9 +16,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "unbuild && yarn build:minify",
-    "build:minify": "yarn esbuild dist/index.mjs --minify --outfile=dist/index.min.mjs",
-    "release": "yarn build && standard-version && git push --follow-tags && npm publish",
+    "build": "unbuild && pnpm build:minify",
+    "build:minify": "pnpm esbuild dist/index.mjs --minify --outfile=dist/index.min.mjs",
+    "release": "pnpm build && standard-version && git push --follow-tags && pnpm publish",
     "test": "jiti ./test/index.ts"
   },
   "devDependencies": {
@@ -26,5 +26,6 @@
     "jiti": "^1.12.9",
     "standard-version": "^9.3.2",
     "unbuild": "^0.5.7"
-  }
+  },
+  "packageManager": "pnpm@6.32.3"
 }
