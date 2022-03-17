@@ -1,2 +1,3 @@
-export { murmurHashV2 } from './v2'
-export { murmurHashV3 } from './v3'
+export * from './v2'
+export * from './v3'
+export * from './hash'
