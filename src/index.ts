@@ -1,3 +1,3 @@
-export * from './v2'
-export * from './v3'
+export * from './murmur'
+export * from './object-hash'
 export * from './hash'

@@ -1,5 +1,3 @@
-import { createBuffer } from './utils'
-
 /**
  * JS Implementation of MurmurHash3 (r136) (as of May 20, 2011)
  *
@@ -7,7 +5,7 @@ import { createBuffer } from './utils'
  * @param {number} seed Positive integer only
  * @return {number} 32-bit positive integer hash
  */
-export function murmurHashV3 (key: Uint8Array | string, seed = 0) {
+export function murmurHash (key: Uint8Array | string, seed = 0) {
   if (typeof key === 'string') {
     key = createBuffer(key)
   }
@@ -61,4 +59,8 @@ export function murmurHashV3 (key: Uint8Array | string, seed = 0) {
   h1 ^= h1 >>> 16
 
   return h1 >>> 0
+}
+
+function createBuffer (val: any) {
+  return new TextEncoder().encode(val)
 }

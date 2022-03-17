@@ -1,34 +1,40 @@
 {
-  "name": "murmurhash-es",
-  "version": "0.1.1",
-  "repository": "unjs/murmurhash-es",
+  "name": "ohash",
+  "version": "0.1.0",
+  "description": "Super fast hashing library based on murmurhash3 written in Vanilla JS",
+  "repository": "unjs/ohash",
   "license": "MIT",
   "sideEffects": false,
+  "type": "module",
   "exports": {
-    "require": "./dist/index.cjs",
-    "import": "./dist/index.mjs"
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
-  "browser": "./dist/index.min.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild && pnpm build:minify",
-    "build:minify": "pnpm esbuild dist/index.mjs --minify --outfile=dist/index.min.mjs",
-    "lint": "eslint --ext .ts,.mjs,.js .",
-    "release": "pnpm build && standard-version && git push --follow-tags && pnpm publish",
-    "test": "jiti ./test/index.ts"
+    "build": "unbuild",
+    "dev": "vitest dev",
+    "lint": "eslint --ext .ts,.js,.mjs,.cjs .",
+    "prepack": "unbuild",
+    "release": "pnpm test && standard-version && git push --follow-tags && pnpm publish",
+    "test": "pnpm lint && vitest run"
   },
+  "dependencies": {},
   "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^9.0.0",
-    "esbuild": "^0.13.8",
-    "eslint": "^8.11.0",
-    "jiti": "^1.12.9",
-    "standard-version": "^9.3.2",
-    "unbuild": "^0.5.7"
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "c8": "latest",
+    "eslint": "latest",
+    "standard-version": "latest",
+    "typescript": "latest",
+    "unbuild": "latest",
+    "vitest": "latest"
   },
-  "packageManager": "pnpm@6.32.3"
+  "packageManager": "pnpm@6.32.2"
 }
