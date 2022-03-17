@@ -1,1 +1,1 @@
-export const createBuffer = (val) => new TextEncoder().encode(val)
+export const createBuffer = (val: any) => new TextEncoder().encode(val)
