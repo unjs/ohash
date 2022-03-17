@@ -4,6 +4,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions][github-actions-src]][github-actions-href]
 [![Codecov][codecov-src]][codecov-href]
+[![bundle size][bundle-src]][bundle-href]
 
 > Super fast hashing library based on murmurhash3 written in Vanilla JS
 
@@ -115,3 +116,6 @@ Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott P
 
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/ohash/main?style=flat-square
 [codecov-href]: https://codecov.io/gh/unjs/ohash
+
+[bundle-src]: https://flat.badgen.net/bundlephobia/minzip/ohash
+[bundle-href]: https://bundlephobia.com/package/ohash
