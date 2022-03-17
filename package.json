@@ -18,11 +18,14 @@
   "scripts": {
     "build": "unbuild && pnpm build:minify",
     "build:minify": "pnpm esbuild dist/index.mjs --minify --outfile=dist/index.min.mjs",
+    "lint": "eslint --ext .ts,.mjs,.js .",
     "release": "pnpm build && standard-version && git push --follow-tags && pnpm publish",
     "test": "jiti ./test/index.ts"
   },
   "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^9.0.0",
     "esbuild": "^0.13.8",
+    "eslint": "^8.11.0",
     "jiti": "^1.12.9",
     "standard-version": "^9.3.2",
     "unbuild": "^0.5.7"
