@@ -17,7 +17,7 @@ Install package:
 npm install ohash
 
 # yarn
-yarn install ohash
+yarn add ohash
 
 # pnpm
 pnpm install ohash
