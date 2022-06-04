@@ -46,6 +46,21 @@ import { hash } from 'ohash'
 console.log(hash({ foo: 'bar'}))
 ```
 
+### `safeHash(object, options?)`
+
+Converts object value into a string hash using `objectHash` and then applies `murmurHash`.
+
+This hash is then shortened and a map is used to prevent collisions.
+
+Usage:
+
+```js
+import { safeHash } from 'ohash'
+
+// "273"
+console.log(safeHash({ foo: 'bar'}))
+```
+
 ### `objectHash(object, options?)`
 
 Converts a nest object value into a stable and safe string for hashing.
