@@ -46,7 +46,15 @@ const W = []
  * SHA-256 hash algorithm.
  */
 export class SHA256 extends Hasher {
-  _doReset () {
+  _hash: WordArray
+
+  constructor () {
+    super()
+    this.reset()
+  }
+
+  reset () {
+    super.reset()
     this._hash = new WordArray(H.slice(0))
   }
 
@@ -112,7 +120,9 @@ export class SHA256 extends Hasher {
     H[7] = (H[7] + h) | 0
   }
 
-  _doFinalize () {
+  finalize (messageUpdate) {
+    super.finalize(messageUpdate)
+
     // Shortcuts
     const data = this._data
     const dataWords = data.words

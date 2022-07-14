@@ -14,7 +14,7 @@ export class WordArray {
     }
   }
 
-  toString (encoder) {
+  toString (encoder?) {
     return (encoder || Hex).stringify(this)
   }
 
@@ -164,7 +164,9 @@ export class BufferedBlockAlgorithm {
     this._nDataBytes += data.sigBytes
   }
 
-  _process (doFlush) {
+  _doProcessBlock (_dataWords, _offset) {}
+
+  _process (doFlush?: Boolean) {
     let processedWords
 
     // Shortcuts
@@ -215,14 +217,6 @@ export class BufferedBlockAlgorithm {
 }
 
 export class Hasher extends BufferedBlockAlgorithm {
-  reset () {
-    // Reset data buffer
-    super.reset()
-
-    // Perform concrete-hasher logic
-    this._doReset()
-  }
-
   update (messageUpdate) {
     // Append
     this._append(messageUpdate)
@@ -234,15 +228,11 @@ export class Hasher extends BufferedBlockAlgorithm {
     return this
   }
 
+
   finalize (messageUpdate) {
     // Final message update
     if (messageUpdate) {
       this._append(messageUpdate)
     }
-
-    // Perform concrete-hasher logic
-    const hash = this._doFinalize()
-
-    return hash
   }
 }
