@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest'
 import { murmurHash, objectHash, hash, sha256 } from '../src'
+import { sha256base64 } from '../src/crypto/sha256'
 
 it('murmurHash', () => {
   expect(murmurHash('Hello World')).toMatchInlineSnapshot('2708020327')
@@ -10,10 +11,15 @@ it('sha256', () => {
   expect(sha256('')).toMatchInlineSnapshot('"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"')
 })
 
+it('sha256base64', () => {
+  expect(sha256base64('Hello World')).toMatchInlineSnapshot('"pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"')
+  expect(sha256base64('')).toMatchInlineSnapshot('"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"')
+})
+
 it('objectHash', () => {
   expect(objectHash({ foo: 'bar' })).toMatchInlineSnapshot('"object:1:string:3:foo:string:3:bar,"')
 })
 
 it('hash', () => {
-  expect(hash({ foo: 'bar' })).toMatchInlineSnapshot('"7596ed03b7"')
+  expect(hash({ foo: 'bar' })).toMatchInlineSnapshot('"dZbtA7f0lK"')
 })

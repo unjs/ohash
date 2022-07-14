@@ -35,15 +35,15 @@ const { hash, objectHash, murmurHash, sha256 } = require('ohash')
 
 ### `hash(object, options?)`
 
-Converts object value into a string hash using `objectHash` and then applies `sha256` (trimmed by length of 10).
+Converts object value into a string hash using `objectHash` and then applies `sha256` with Base64 encoding (trimmed by length of 10).
 
 Usage:
 
 ```js
 import { hash } from 'ohash'
 
-// "7596ed03b7"
-console.log(hash({ foo: 'bar'}))
+// "dZbtA7f0lK"
+console.log(hash({ foo: 'bar' }))
 ```
 
 ### `objectHash(object, options?)`
@@ -81,6 +81,17 @@ import { sha256 } from 'ohash'
 
 // "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
 console.log(sha256('Hello World'))
+```
+
+### `sha256base64`
+
+Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
+
+```js
+import { sha256base64 } from 'ohash'
+
+// "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
+console.log(sha256base64('Hello World'))
 ```
 
 ## 💻 Development

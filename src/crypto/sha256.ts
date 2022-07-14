@@ -1,6 +1,6 @@
 // Based on https://github.com/brix/crypto-js 4.1.1 (MIT)
 
-import { WordArray, Hasher } from './core'
+import { WordArray, Hasher, Base64 } from './core'
 
 // Initialization and round constants tables
 const H = [1779033703, -1150833019, 1013904242, -1521486534, 1359893119, -1694144372, 528734635, 1541459225]
@@ -109,4 +109,8 @@ export class SHA256 extends Hasher {
 
 export function sha256 (message: string) {
   return new SHA256().finalize(message).toString()
+}
+
+export function sha256base64 (message: string) {
+  return new SHA256().finalize(message).toString(Base64)
 }
