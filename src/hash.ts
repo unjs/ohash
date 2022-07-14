@@ -1,5 +1,5 @@
 import { objectHash, HashOptions } from './object-hash'
-import { sha256 } from './crypto/sha256'
+import { sha256base64 } from './crypto/sha256'
 
 /**
  * Hash any JS value into a string
@@ -10,5 +10,5 @@ import { sha256 } from './crypto/sha256'
  */
 export function hash (object: any, options: HashOptions = {}): string {
   const hashed = typeof object === 'string' ? object : objectHash(object, options)
-  return sha256(hashed).substr(0, 10)
+  return sha256base64(hashed).substr(0, 10)
 }

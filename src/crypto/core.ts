@@ -18,7 +18,7 @@ export class WordArray {
     return (encoder || Hex).stringify(this)
   }
 
-  concat (wordArray) {
+  concat (wordArray: WordArray) {
     // Clamp excess bits
     this.clamp()
 
@@ -53,9 +53,9 @@ export class WordArray {
 }
 
 export const Hex = {
-  stringify (wordArray) {
+  stringify (wordArray: WordArray) {
     // Convert
-    const hexChars = []
+    const hexChars: string[] = []
     for (let i = 0; i < wordArray.sigBytes; i++) {
       const bite = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xFF
       hexChars.push((bite >>> 4).toString(16))
@@ -63,6 +63,24 @@ export const Hex = {
     }
 
     return hexChars.join('')
+  }
+}
+
+export const Base64 = {
+  stringify (wordArray: WordArray) {
+    const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const base64Chars: string[] = []
+    for (let i = 0; i < wordArray.sigBytes; i += 3) {
+      const byte1 = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xFF
+      const byte2 = (wordArray.words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xFF
+      const byte3 = (wordArray.words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xFF
+
+      const triplet = (byte1 << 16) | (byte2 << 8) | byte3
+      for (let j = 0; (j < 4) && (i * 8 + j * 6 < wordArray.sigBytes * 8); j++) {
+        base64Chars.push(keyStr.charAt((triplet >>> (6 * (3 - j))) & 0x3F))
+      }
+    }
+    return base64Chars.join('')
   }
 }
 
