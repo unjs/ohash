@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/unjs/ohash/compare/v0.1.3...v0.1.4) (2022-07-14)
+
+
+### Features
+
+* use base64 to encode sha256 hash ([#13](https://github.com/unjs/ohash/issues/13)) ([778413f](https://github.com/unjs/ohash/commit/778413f5a848fb310dd08b17bbe65f2564ba2222))
+
 ### [0.1.3](https://github.com/unjs/ohash/compare/v0.1.2...v0.1.3) (2022-07-14)
 
 ### [0.1.2](https://github.com/unjs/ohash/compare/v0.1.1...v0.1.2) (2022-07-14)
