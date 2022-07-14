@@ -6,7 +6,7 @@
 [![Codecov][codecov-src]][codecov-href]
 [![bundle size][bundle-src]][bundle-href]
 
-> Super fast hashing library based on murmurhash3 written in Vanilla JS
+> Super fast hashing library written in Vanilla JS
 
 ## Usage
 
@@ -27,22 +27,22 @@ Import:
 
 ```js
 // ESM
-import { hash, objectHash, murmurHash } from 'ohash'
+import { hash, objectHash, murmurHash, sha256 } from 'ohash'
 
 // CommonJS
-const { hash, objectHash, murmurHash } = require('ohash')
+const { hash, objectHash, murmurHash, sha256 } = require('ohash')
 ```
 
 ### `hash(object, options?)`
 
-Converts object value into a string hash using `objectHash` and then applies `murmurHash`.
+Converts object value into a string hash using `objectHash` and then applies `sha256` (trimmed by length of 10).
 
 Usage:
 
 ```js
 import { hash } from 'ohash'
 
-// "2736179692"
+// "7596ed03b7"
 console.log(hash({ foo: 'bar'}))
 ```
 
@@ -61,7 +61,7 @@ console.log(objectHash({ foo: 'bar'}))
 
 ### `murmurHash(str)`
 
-Converts input string (of any length) into a 32-bit positive integer using MurmurHash3.
+Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3]((https://en.wikipedia.org/wiki/MurmurHash)).
 
 Usage:
 
@@ -72,21 +72,16 @@ import { murmurHash } from 'ohash'
 console.log(murmurHash('Hello World'))
 ```
 
-## What is MurmurHash
+### `sha256`
 
-[MurmurHash](https://en.wikipedia.org/wiki/MurmurHash) is a non-cryptographic hash function created by Austin Appleby.
+Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
 
-According to [murmurhash website](https://sites.google.com/site/murmurhash):
+```js
+import { sha256 } from 'ohash'
 
-✅ Extremely simple - compiles down to ~52 instructions on x86.
-
-✅ Excellent distribution - Passes chi-squared tests for practically all keysets & bucket sizes.
-
-✅ Excellent avalanche behavior - Maximum bias is under 0.5%.
-
-✅ Excellent collision resistance - Passes Bob Jenkin's frog.c torture-test. No collisions possible for 4-byte keys, no small (1- to 7-bit) differentials.
-
-✅ Excellent performance
+// "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
+console.log(sha256('Hello World'))
+```
 
 ## 💻 Development
 
@@ -102,7 +97,7 @@ Made with 💛
 Published under [MIT License](./LICENSE).
 
 Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](perezd/node-murmurhash) and
-[garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com).
+[garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com) and [brix/crypto-js](https://github.com/brix/crypto-js).
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/ohash?style=flat-square

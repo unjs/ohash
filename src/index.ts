@@ -1,3 +1,4 @@
-export * from './murmur'
-export * from './object-hash'
-export * from './hash'
+export { objectHash } from './object-hash'
+export { hash } from './hash'
+export { murmurHash } from './crypto/murmur'
+export { sha256 } from './crypto/sha256'

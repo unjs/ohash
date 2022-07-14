@@ -1,5 +1,5 @@
 import { objectHash, HashOptions } from './object-hash'
-import { murmurHash } from './murmur'
+import { sha256 } from './crypto/sha256'
 
 /**
  * Hash any JS value into a string
@@ -10,5 +10,5 @@ import { murmurHash } from './murmur'
  */
 export function hash (object: any, options: HashOptions = {}): string {
   const hashed = typeof object === 'string' ? object : objectHash(object, options)
-  return String(murmurHash(hashed))
+  return sha256(hashed).substr(0, 10)
 }
