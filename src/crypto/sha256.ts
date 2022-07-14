@@ -123,18 +123,14 @@ export class SHA256 extends Hasher {
   finalize (messageUpdate) {
     super.finalize(messageUpdate)
 
-    // Shortcuts
-    const data = this._data
-    const dataWords = data.words
-
     const nBitsTotal = this._nDataBytes * 8
-    const nBitsLeft = data.sigBytes * 8
+    const nBitsLeft = this._data.sigBytes * 8
 
     // Add padding
-    dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32)
-    dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000)
-    dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal
-    data.sigBytes = dataWords.length * 4
+    this._data.words[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32)
+    this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000)
+    this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal
+    this._data.sigBytes = this._data.words.length * 4
 
     // Hash final blocks
     this._process()
