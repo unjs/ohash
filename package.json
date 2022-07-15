@@ -31,10 +31,19 @@
     "@types/node": "^18.0.4",
     "c8": "latest",
     "eslint": "latest",
+    "hash-wasm": "^4.9.0",
     "standard-version": "latest",
     "typescript": "latest",
     "unbuild": "latest",
     "vitest": "latest"
   },
-  "packageManager": "pnpm@7.5.2"
+  "packageManager": "pnpm@7.5.2",
+  "peerDependencies": {
+    "hash-wasm": "^4.9.0"
+  },
+  "peerDependenciesMeta": {
+    "hash-wasm": {
+      "optional": true
+    }
+  }
 }
