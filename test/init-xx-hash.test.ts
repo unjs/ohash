@@ -9,7 +9,7 @@ describe('initXxHash64()', () => {
   it('should create hash', async () => {
     const hash = await initXxHash()
 
-    expect(await hash('test')).toMatchInlineSnapshot('"3e2023cf"')
+    expect(await hash('test')).toMatchInlineSnapshot('"PiAjzw=="')
   })
 
   // See: https://github.com/unjs/ohash/issues/11

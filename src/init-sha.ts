@@ -1,5 +1,5 @@
 import type { HashFn } from './hash-fn.type'
-import { toHex } from './to-hex'
+import { toBase64 } from './to-base64'
 import { sha256base64 } from './crypto/sha256'
 
 export const ALGORITHM = 'SHA-256'
@@ -8,7 +8,8 @@ export const MAX_LENGTH = 10
 function getWebCryptoHash (digest: SubtleCrypto['digest']): HashFn {
   const encoder = new TextEncoder()
 
-  return message => digest(ALGORITHM, encoder.encode(message)).then(arrayBuffer => toHex(arrayBuffer).slice(0, MAX_LENGTH))
+  return message => digest(ALGORITHM, encoder.encode(message))
+    .then(arrayBuffer => toBase64(arrayBuffer).slice(0, MAX_LENGTH))
 }
 
 /**
@@ -31,7 +32,7 @@ export async function initSha (): Promise<HashFn> {
   // Crypto API: Node.js
   try {
     const { createHash } = await import('crypto')
-    return message => createHash(ALGORITHM).update(message).digest('hex').slice(0, MAX_LENGTH)
+    return message => createHash(ALGORITHM).update(message).digest('base64').slice(0, MAX_LENGTH)
   } catch (_e) {
   }
 

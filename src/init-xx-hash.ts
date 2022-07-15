@@ -6,12 +6,13 @@ import type { HashFn } from './hash-fn.type'
  */
 export async function initXxHash (): Promise<HashFn> {
   const { createXXHash32 } = await import('hash-wasm')
+  const { encodeBase64 } = await import('hash-wasm/lib/util')
 
   const hasher = await createXXHash32()
 
   return (message) => {
     hasher.init()
     hasher.update(message)
-    return hasher.digest()
+    return encodeBase64(hasher.digest('binary'))
   }
 }

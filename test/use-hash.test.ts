@@ -5,6 +5,6 @@ describe('useHash()', () => {
   it('should return hash function', async () => {
     const { hash } = await useHash()
 
-    expect(await hash('test')).toMatchInlineSnapshot('"3e2023cf"')
+    expect(await hash('test')).toMatchInlineSnapshot('"PiAjzw=="')
   })
 })

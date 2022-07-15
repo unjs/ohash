@@ -9,7 +9,7 @@ describe('initSha()', () => {
   it('should create hash', async () => {
     const hash = await initSha()
 
-    expect(await hash('test')).toMatchInlineSnapshot('"9f86d08188"')
+    expect(await hash('test')).toMatchInlineSnapshot('"n4bQgYhMfW"')
   })
 
   // See: https://github.com/unjs/ohash/issues/11
