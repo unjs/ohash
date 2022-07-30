@@ -36,5 +36,5 @@
     "unbuild": "latest",
     "vitest": "latest"
   },
-  "packageManager": "pnpm@7.5.2"
+  "packageManager": "pnpm@7.7.1"
 }
