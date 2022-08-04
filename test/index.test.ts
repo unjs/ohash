@@ -1,5 +1,5 @@
-import { expect, it } from 'vitest'
-import { murmurHash, objectHash, hash, sha256 } from '../src'
+import { describe, expect, it } from 'vitest'
+import { murmurHash, objectHash, hash, sha256, isEqual } from '../src'
 import { sha256base64 } from '../src/crypto/sha256'
 
 it('murmurHash', () => {
@@ -22,4 +22,20 @@ it('objectHash', () => {
 
 it('hash', () => {
   expect(hash({ foo: 'bar' })).toMatchInlineSnapshot('"dZbtA7f0lK"')
+})
+
+describe('isEqual', () => {
+  const cases = [
+    [{ foo: 'bar' }, { foo: 'bar' }, true],
+    [{ foo: 'bar' }, { foo: 'baz' }, false],
+    [{ a: 1, b: 2 }, { b: 2, a: 1 }, true],
+    [123, 123, true],
+    [123, 456, false],
+    [[1, 2], [2, 1], false]
+  ]
+  for (const [obj1, obj2, equals] of cases) {
+    it(`${JSON.stringify(obj1)} ${equals ? 'equals' : 'not equals'} to ${JSON.stringify(obj2)}`, () => {
+      expect(isEqual(obj1, obj2)).toBe(equals)
+    })
+  }
 })

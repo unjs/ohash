@@ -59,6 +59,19 @@ import { objectHash } from 'ohash'
 console.log(objectHash({ foo: 'bar'}))
 ```
 
+### `isEqual(obj1, obj2, options?)`
+
+Compare two objects using reference equality and stable object hashing.
+
+Usage:
+
+```js
+import { isEqual } from 'ohash'
+
+// true
+console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }))
+```
+
 ### `murmurHash(str)`
 
 Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3]((https://en.wikipedia.org/wiki/MurmurHash)).
