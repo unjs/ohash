@@ -1,6 +1,6 @@
 {
   "name": "ohash",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "Super fast hashing library based on murmurhash3 written in Vanilla JS",
   "repository": "unjs/ohash",
   "license": "MIT",
