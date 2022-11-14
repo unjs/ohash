@@ -1,5 +1,14 @@
 {
   "extends": [
-    "@nuxtjs/eslint-config-typescript"
-  ]
+    "eslint-config-unjs"
+  ],
+  "rules": {
+    "unicorn/no-null": 0,
+    "unicorn/prevent-abbreviations": 0,
+    "unicorn/prefer-math-trunc": 0,
+    "numeric-separators-style": 0,
+    "unicorn/prefer-code-point": 0,
+    "unicorn/prefer-ternary": 0,
+    "unicorn/prefer-spread": 0
+  }
 }
