@@ -287,6 +287,9 @@ function createHasher (options: HashOptions) {
       throw new Error("Hashing Blob objects is currently not supported\n" +
         "Use \"options.replacer\" or \"options.ignoreUnknown\"\n");
     },
+    _htmlcanvaselement(htmlcanvaselement) {
+      return write("htmlcanvaselement:" + htmlcanvaselement.toString());
+    },
     _domwindow () { return write("domwindow"); },
     _bigint (number) {
       return write("bigint:" + number.toString());
