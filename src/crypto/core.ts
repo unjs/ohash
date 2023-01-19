@@ -10,7 +10,7 @@ export class WordArray {
     this.sigBytes = sigBytes !== undefined ? sigBytes : words.length * 4;
   }
 
-  toString (encoder?) {
+  toString (encoder?): string {
     return (encoder || Hex).stringify(this);
   }
 
