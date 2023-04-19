@@ -4,17 +4,17 @@ export class WordArray {
   words: number[];
   sigBytes: number;
 
-  constructor (words?, sigBytes?) {
+  constructor(words?, sigBytes?) {
     words = this.words = words || [];
 
     this.sigBytes = sigBytes !== undefined ? sigBytes : words.length * 4;
   }
 
-  toString (encoder?): string {
+  toString(encoder?): string {
     return (encoder || Hex).stringify(this);
   }
 
-  concat (wordArray: WordArray) {
+  concat(wordArray: WordArray) {
     // Clamp excess bits
     this.clamp();
 
@@ -22,8 +22,10 @@ export class WordArray {
     if (this.sigBytes % 4) {
       // Copy one byte at a time
       for (let i = 0; i < wordArray.sigBytes; i++) {
-        const thatByte = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xFF;
-        this.words[(this.sigBytes + i) >>> 2] |= thatByte << (24 - ((this.sigBytes + i) % 4) * 8);
+        const thatByte =
+          (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+        this.words[(this.sigBytes + i) >>> 2] |=
+          thatByte << (24 - ((this.sigBytes + i) % 4) * 8);
       }
     } else {
       // Copy one word at a time
@@ -37,89 +39,90 @@ export class WordArray {
     return this;
   }
 
-  clamp () {
+  clamp() {
     // Clamp
-    this.words[this.sigBytes >>> 2] &= 0xFF_FF_FF_FF << (32 - (this.sigBytes % 4) * 8);
+    this.words[this.sigBytes >>> 2] &=
+      0xff_ff_ff_ff << (32 - (this.sigBytes % 4) * 8);
     this.words.length = Math.ceil(this.sigBytes / 4);
   }
 
-  clone () {
+  clone() {
     return new WordArray([...this.words]);
   }
 }
 
 export const Hex = {
-  stringify (wordArray: WordArray) {
+  stringify(wordArray: WordArray) {
     // Convert
     const hexChars: string[] = [];
     for (let i = 0; i < wordArray.sigBytes; i++) {
-      const bite = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xFF;
-      hexChars.push(
-        (bite >>> 4).toString(16),
-        (bite & 0x0F).toString(16)
-      );
+      const bite = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+      hexChars.push((bite >>> 4).toString(16), (bite & 0x0f).toString(16));
     }
 
     return hexChars.join("");
-  }
+  },
 };
 
 export const Base64 = {
-  stringify (wordArray: WordArray) {
-    const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  stringify(wordArray: WordArray) {
+    const keyStr =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const base64Chars: string[] = [];
     for (let i = 0; i < wordArray.sigBytes; i += 3) {
-      const byte1 = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xFF;
-      const byte2 = (wordArray.words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xFF;
-      const byte3 = (wordArray.words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xFF;
+      const byte1 = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+      const byte2 =
+        (wordArray.words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
+      const byte3 =
+        (wordArray.words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
 
       const triplet = (byte1 << 16) | (byte2 << 8) | byte3;
-      for (let j = 0; (j < 4) && (i * 8 + j * 6 < wordArray.sigBytes * 8); j++) {
-        base64Chars.push(keyStr.charAt((triplet >>> (6 * (3 - j))) & 0x3F));
+      for (let j = 0; j < 4 && i * 8 + j * 6 < wordArray.sigBytes * 8; j++) {
+        base64Chars.push(keyStr.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
       }
     }
     return base64Chars.join("");
-  }
+  },
 };
 
 export const Latin1 = {
-  parse (latin1Str) {
+  parse(latin1Str) {
     // Shortcut
     const latin1StrLength = latin1Str.length;
 
     // Convert
     const words = [];
     for (let i = 0; i < latin1StrLength; i++) {
-      words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xFF) << (24 - (i % 4) * 8);
+      words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
     }
 
     return new WordArray(words, latin1StrLength);
-  }
+  },
 };
 
 export const Utf8 = {
-  parse (utf8Str) {
+  parse(utf8Str) {
     return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
-  }
+  },
 };
 
 export class BufferedBlockAlgorithm {
   _data: WordArray;
   _nDataBytes: number;
-  _minBufferSize: number = 0;
+  _minBufferSize = 0;
   blockSize = 512 / 32;
 
-  constructor () {
+  constructor() {
     this.reset();
   }
 
-  reset () {
+  reset() {
     // Initial values
     this._data = new WordArray();
     this._nDataBytes = 0;
   }
 
-  _append (data) {
+  _append(data) {
     // Convert string to WordArray, else assume WordArray already
     if (typeof data === "string") {
       data = Utf8.parse(data);
@@ -130,13 +133,14 @@ export class BufferedBlockAlgorithm {
     this._nDataBytes += data.sigBytes;
   }
 
-  _doProcessBlock (_dataWords, _offset) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _doProcessBlock(_dataWords, _offset) {}
 
-  _process (doFlush?: Boolean) {
+  _process(doFlush?: boolean) {
     let processedWords;
 
     // Count blocks ready
-    let nBlocksReady = this._data.sigBytes / (this.blockSize * 4 /* bytes */);
+    let nBlocksReady = this._data.sigBytes / (this.blockSize * 4); /* bytes */
     if (doFlush) {
       // Round up to include partial blocks
       nBlocksReady = Math.ceil(nBlocksReady);
@@ -170,7 +174,7 @@ export class BufferedBlockAlgorithm {
 }
 
 export class Hasher extends BufferedBlockAlgorithm {
-  update (messageUpdate) {
+  update(messageUpdate) {
     // Append
     this._append(messageUpdate);
 
@@ -181,7 +185,7 @@ export class Hasher extends BufferedBlockAlgorithm {
     return this;
   }
 
-  finalize (messageUpdate) {
+  finalize(messageUpdate) {
     // Final message update
     if (messageUpdate) {
       this._append(messageUpdate);

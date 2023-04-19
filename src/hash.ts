@@ -8,7 +8,8 @@ import { sha256base64 } from "./crypto/sha256";
  * @return {string} hash value
  * @api public
  */
-export function hash (object: any, options: HashOptions = {}): string {
-  const hashed = typeof object === "string" ? object : objectHash(object, options);
+export function hash(object: any, options: HashOptions = {}): string {
+  const hashed =
+    typeof object === "string" ? object : objectHash(object, options);
   return sha256base64(hashed).slice(0, 10);
 }

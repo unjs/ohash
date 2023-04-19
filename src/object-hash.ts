@@ -1,46 +1,46 @@
 // Based on https://github.com/puleos/object-hash v3.0.0 (MIT)
 
 export interface HashOptions {
-    /**
-     *
-     */
-    excludeKeys?: ((key: string) => boolean) | undefined;
-    /**
-    * hash object keys, values ignored
-    */
-    excludeValues?: boolean | undefined;
-    /**
-     * ignore unknown object types
-    */
-    ignoreUnknown?: boolean | undefined;
-    /**
-     * optional function that replaces values before hashing
-     */
-    replacer?: ((value: any) => any) | undefined;
-    /**
-     * consider 'name' property of functions for hashing
-    */
-    respectFunctionNames?: boolean | undefined;
-    /**
-     * consider function properties when hashing
-    */
-    respectFunctionProperties?: boolean | undefined;
-    /**
-     * Respect special properties (prototype, letructor) when hashing to distinguish between types
-    */
-    respectType?: boolean | undefined;
-    /**
-     * Sort all arrays before hashing
-    */
-    unorderedArrays?: boolean | undefined;
-    /**
-     * Sort `Set` and `Map` instances before hashing
-    */
-    unorderedObjects?: boolean | undefined;
-    /**
-     * Sort `Set` and `Map` instances before hashing
-    */
-    unorderedSets?: boolean | undefined;
+  /**
+   *
+   */
+  excludeKeys?: ((key: string) => boolean) | undefined;
+  /**
+   * hash object keys, values ignored
+   */
+  excludeValues?: boolean | undefined;
+  /**
+   * ignore unknown object types
+   */
+  ignoreUnknown?: boolean | undefined;
+  /**
+   * optional function that replaces values before hashing
+   */
+  replacer?: ((value: any) => any) | undefined;
+  /**
+   * consider 'name' property of functions for hashing
+   */
+  respectFunctionNames?: boolean | undefined;
+  /**
+   * consider function properties when hashing
+   */
+  respectFunctionProperties?: boolean | undefined;
+  /**
+   * Respect special properties (prototype, letructor) when hashing to distinguish between types
+   */
+  respectType?: boolean | undefined;
+  /**
+   * Sort all arrays before hashing
+   */
+  unorderedArrays?: boolean | undefined;
+  /**
+   * Sort `Set` and `Map` instances before hashing
+   */
+  unorderedObjects?: boolean | undefined;
+  /**
+   * Sort `Set` and `Map` instances before hashing
+   */
+  unorderedSets?: boolean | undefined;
 }
 
 // Defaults
@@ -51,7 +51,7 @@ const defaults: HashOptions = {
   respectFunctionProperties: false,
   unorderedObjects: true,
   unorderedArrays: false,
-  unorderedSets: false
+  unorderedSets: false,
 };
 
 /**
@@ -61,34 +61,36 @@ const defaults: HashOptions = {
  * @return {string} hash value
  * @api public
  */
-export function objectHash (object: any, options: HashOptions = {}): string {
+export function objectHash(object: any, options: HashOptions = {}): string {
   options = { ...defaults, ...options };
   const hasher = createHasher(options);
   hasher.dispatch(object);
   return hasher.toString();
 }
 
-function createHasher (options: HashOptions) {
+function createHasher(options: HashOptions) {
   const buff: string[] = [];
   let context = [];
-  const write = (str: string) => { buff.push(str); };
+  const write = (str: string) => {
+    buff.push(str);
+  };
 
   return {
-    toString () {
+    toString() {
       return buff.join("");
     },
-    getContext () {
+    getContext() {
       return context;
     },
-    dispatch (value) {
+    dispatch(value) {
       if (options.replacer) {
         value = options.replacer(value);
       }
       const type = value === null ? "null" : typeof value;
       return this["_" + type](value);
     },
-    _object (object) {
-      const pattern = (/\[object (.*)]/i);
+    _object(object) {
+      const pattern = /\[object (.*)]/i;
       const objString = Object.prototype.toString.call(object);
 
       const _objType = pattern.exec(objString);
@@ -104,18 +106,26 @@ function createHasher (options: HashOptions) {
         context.push(object);
       }
 
-      if (typeof Buffer !== "undefined" && Buffer.isBuffer && Buffer.isBuffer(object)) {
+      if (
+        typeof Buffer !== "undefined" &&
+        Buffer.isBuffer &&
+        Buffer.isBuffer(object)
+      ) {
         write("buffer:");
         return write(object.toString("utf8"));
       }
 
-      if (objType !== "object" && objType !== "function" && objType !== "asyncfunction") {
+      if (
+        objType !== "object" &&
+        objType !== "function" &&
+        objType !== "asyncfunction"
+      ) {
         if (this["_" + objType]) {
           this["_" + objType](object);
         } else if (options.ignoreUnknown) {
           return write("[" + objType + "]");
         } else {
-          throw new Error("Unknown object type \"" + objType + "\"");
+          throw new Error('Unknown object type "' + objType + '"');
         }
       } else {
         let keys = Object.keys(object);
@@ -130,7 +140,9 @@ function createHasher (options: HashOptions) {
         }
 
         if (options.excludeKeys) {
-          keys = keys.filter(function (key) { return !options.excludeKeys(key); });
+          keys = keys.filter(function (key) {
+            return !options.excludeKeys(key);
+          });
         }
 
         write("object:" + keys.length + ":");
@@ -144,10 +156,11 @@ function createHasher (options: HashOptions) {
         }
       }
     },
-    _array (arr, unordered) {
-      unordered = typeof unordered !== "undefined"
-        ? unordered
-        : options.unorderedArrays !== false; // default to options.unorderedArrays
+    _array(arr, unordered) {
+      unordered =
+        typeof unordered !== "undefined"
+          ? unordered
+          : options.unorderedArrays !== false; // default to options.unorderedArrays
 
       write("array:" + arr.length + ":");
       if (!unordered || arr.length <= 1) {
@@ -173,23 +186,23 @@ function createHasher (options: HashOptions) {
       entries.sort();
       return this._array(entries, false);
     },
-    _date (date) {
+    _date(date) {
       return write("date:" + date.toJSON());
     },
-    _symbol (sym) {
+    _symbol(sym) {
       return write("symbol:" + sym.toString());
     },
-    _error (err) {
+    _error(err) {
       return write("error:" + err.toString());
     },
-    _boolean (bool) {
+    _boolean(bool) {
       return write("bool:" + bool.toString());
     },
-    _string (string) {
+    _string(string) {
       write("string:" + string.length + ":");
       write(string.toString());
     },
-    _function (fn) {
+    _function(fn) {
       write("fn:");
       if (isNativeFunction(fn)) {
         this.dispatch("[native]");
@@ -208,113 +221,151 @@ function createHasher (options: HashOptions) {
         this._object(fn);
       }
     },
-    _number (number) {
+    _number(number) {
       return write("number:" + number.toString());
     },
-    _xml (xml) {
+    _xml(xml) {
       return write("xml:" + xml.toString());
     },
-    _null () {
+    _null() {
       return write("Null");
     },
-    _undefined () {
+    _undefined() {
       return write("Undefined");
     },
-    _regexp (regex) {
+    _regexp(regex) {
       return write("regex:" + regex.toString());
     },
-    _uint8array (arr) {
+    _uint8array(arr) {
       write("uint8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint8clampedarray (arr) {
+    _uint8clampedarray(arr) {
       write("uint8clampedarray:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int8array (arr) {
+    _int8array(arr) {
       write("int8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint16array (arr) {
+    _uint16array(arr) {
       write("uint16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int16array (arr) {
+    _int16array(arr) {
       write("int16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint32array (arr) {
+    _uint32array(arr) {
       write("uint32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int32array (arr) {
+    _int32array(arr) {
       write("int32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _float32array (arr) {
+    _float32array(arr) {
       write("float32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _float64array (arr) {
+    _float64array(arr) {
       write("float64array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _arraybuffer (arr) {
+    _arraybuffer(arr) {
       write("arraybuffer:");
       return this.dispatch(new Uint8Array(arr));
     },
-    _url (url) {
+    _url(url) {
       return write("url:" + url.toString());
     },
-    _map (map) {
+    _map(map) {
       write("map:");
       const arr = [...map];
       return this._array(arr, options.unorderedSets !== false);
     },
-    _set (set) {
+    _set(set) {
       write("set:");
       const arr = [...set];
       return this._array(arr, options.unorderedSets !== false);
     },
-    _file (file) {
+    _file(file) {
       write("file:");
       return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
     },
-    _blob () {
+    _blob() {
       if (options.ignoreUnknown) {
         return write("[blob]");
       }
-      throw new Error("Hashing Blob objects is currently not supported\n" +
-        "Use \"options.replacer\" or \"options.ignoreUnknown\"\n");
+      throw new Error(
+        "Hashing Blob objects is currently not supported\n" +
+          'Use "options.replacer" or "options.ignoreUnknown"\n'
+      );
     },
-    _domwindow () { return write("domwindow"); },
-    _bigint (number) {
+    _domwindow() {
+      return write("domwindow");
+    },
+    _bigint(number) {
       return write("bigint:" + number.toString());
     },
     /* Node.js standard native objects */
-    _process () { return write("process"); },
-    _timer () { return write("timer"); },
-    _pipe () { return write("pipe"); },
-    _tcp () { return write("tcp"); },
-    _udp () { return write("udp"); },
-    _tty () { return write("tty"); },
-    _statwatcher () { return write("statwatcher"); },
-    _securecontext () { return write("securecontext"); },
-    _connection () { return write("connection"); },
-    _zlib () { return write("zlib"); },
-    _context () { return write("context"); },
-    _nodescript () { return write("nodescript"); },
-    _httpparser () { return write("httpparser"); },
-    _dataview () { return write("dataview"); },
-    _signal () { return write("signal"); },
-    _fsevent () { return write("fsevent"); },
-    _tlswrap () { return write("tlswrap"); }
+    _process() {
+      return write("process");
+    },
+    _timer() {
+      return write("timer");
+    },
+    _pipe() {
+      return write("pipe");
+    },
+    _tcp() {
+      return write("tcp");
+    },
+    _udp() {
+      return write("udp");
+    },
+    _tty() {
+      return write("tty");
+    },
+    _statwatcher() {
+      return write("statwatcher");
+    },
+    _securecontext() {
+      return write("securecontext");
+    },
+    _connection() {
+      return write("connection");
+    },
+    _zlib() {
+      return write("zlib");
+    },
+    _context() {
+      return write("context");
+    },
+    _nodescript() {
+      return write("nodescript");
+    },
+    _httpparser() {
+      return write("httpparser");
+    },
+    _dataview() {
+      return write("dataview");
+    },
+    _signal() {
+      return write("signal");
+    },
+    _fsevent() {
+      return write("fsevent");
+    },
+    _tlswrap() {
+      return write("tlswrap");
+    },
   };
 }
 
 /** Check if the given function is a native function */
-function isNativeFunction (f) {
-  if ((typeof f) !== "function") {
+function isNativeFunction(f) {
+  if (typeof f !== "function") {
     return false;
   }
   const exp = /^function\s+\w*\s*\(\s*\)\s*{\s+\[native code]\s+}$/i;

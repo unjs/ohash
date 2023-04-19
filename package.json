@@ -22,7 +22,8 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest dev",
-    "lint": "eslint --ext .ts,.js,.mjs,.cjs .",
+    "lint": "eslint --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
+    "lint:fix": "eslint --fix --ext .ts,.js,.mjs,.cjs . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && standard-version && git push --follow-tags && pnpm publish",
     "test": "pnpm lint && vitest run"
@@ -33,6 +34,7 @@
     "c8": "^7.13.0",
     "eslint": "^8.38.0",
     "eslint-config-unjs": "^0.1.0",
+    "prettier": "^2.8.7",
     "standard-version": "^9.5.0",
     "typescript": "^5.0.4",
     "unbuild": "^1.2.1",

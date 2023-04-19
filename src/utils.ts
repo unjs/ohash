@@ -7,7 +7,11 @@ import { objectHash, HashOptions } from "./object-hash";
  * @return {boolean} true if equal and false if not
  * @api public
  */
-export function isEqual (object1: any, object2: any, hashOptions: HashOptions = {}): boolean {
+export function isEqual(
+  object1: any,
+  object2: any,
+  hashOptions: HashOptions = {}
+): boolean {
   if (object1 === object2) {
     return true;
   }
