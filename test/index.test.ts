@@ -4,8 +4,10 @@ import { sha256base64 } from "../src/crypto/sha256";
 
 describe("objectHash", () => {
   it("basic object", () => {
-    expect(objectHash({ foo: "bar", bar: new Date(0) })).toMatchInlineSnapshot(
-      '"object:2:string:3:bar:string:24:1970-01-01T00:00:00.000Z,string:3:foo:string:3:bar,"'
+    expect(
+      objectHash({ foo: "bar", bar: new Date(0), bool: false })
+    ).toMatchInlineSnapshot(
+      '"object:3:string:3:bar:string:24:1970-01-01T00:00:00.000Z,string:4:bool:boolean:false,string:3:foo:string:3:bar,"'
     );
   });
 
