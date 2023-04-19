@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.0
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.0.0...v1.1.0)
+
+
+### 🚀 Enhancements
+
+  - Expose `sha256base64` utility ([#19](https://github.com/unjs/ohash/pull/19))
+  - **objectHash:** Serialize objects with `entries` ([1c8e8b9](https://github.com/unjs/ohash/commit/1c8e8b9))
+  - **objectHash:** Support serializing classes with custom `toJSON()` ([331eceb](https://github.com/unjs/ohash/commit/331eceb))
+  - `diff` utility ([#28](https://github.com/unjs/ohash/pull/28))
+
+### 🩹 Fixes
+
+  - Fix type of `SHA256.prototype.toString` method ([#23](https://github.com/unjs/ohash/pull/23))
+  - **objectHash:** Serialize boolean types ([7fd580f](https://github.com/unjs/ohash/commit/7fd580f))
+
+### 🏡 Chore
+
+  - Add @vitest/coverage-c8 ([#24](https://github.com/unjs/ohash/pull/24))
+  - Update all dependencies ([b17fa41](https://github.com/unjs/ohash/commit/b17fa41))
+  - Lint and format with prettier ([373eac4](https://github.com/unjs/ohash/commit/373eac4))
+  - Upgrade node version for ci ([9532f47](https://github.com/unjs/ohash/commit/9532f47))
+  - Update release script ([3124feb](https://github.com/unjs/ohash/commit/3124feb))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Nozomu Ikuta 
+- Damian Głowala
+
 ## [1.0.0](https://github.com/unjs/ohash/compare/v0.1.5...v1.0.0) (2022-11-14)
 
 ### [0.1.5](https://github.com/unjs/ohash/compare/v0.1.4...v0.1.5) (2022-08-04)
