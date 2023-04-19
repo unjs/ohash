@@ -90,6 +90,10 @@ function createHasher(options: HashOptions) {
       return this["_" + type](value);
     },
     _object(object) {
+      if (object && typeof object.toJSON === "function") {
+        return this._object(object.toJSON());
+      }
+
       const pattern = /\[object (.*)]/i;
       const objString = Object.prototype.toString.call(object);
 
@@ -192,9 +196,12 @@ function createHasher(options: HashOptions) {
     },
     _unkown(value: any, type: string) {
       write(type);
+      if (!value) {
+        return;
+      }
+      write(":");
       if (value && typeof value.entries === "function") {
-        write(":");
-        this._array(Array.from(value.entries()), false);
+        return this._array(Array.from(value.entries()), true /* ordered */);
       }
     },
     _error(err) {
