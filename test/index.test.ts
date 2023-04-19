@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { murmurHash, objectHash, hash, sha256, isEqual } from "../src";
+import { murmurHash, objectHash, hash, sha256, isEqual, diff } from "../src";
 import { sha256base64 } from "../src/crypto/sha256";
 
 describe("objectHash", () => {
@@ -76,4 +76,36 @@ describe("isEqual", () => {
       expect(isEqual(obj1, obj2)).toBe(equals);
     });
   }
+});
+
+describe("diff", () => {
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const createObject = () =>
+    ({
+      foo: "bar",
+      nested: {
+        // x: undefined,
+        y: 123,
+        bar: {
+          baz: "123",
+        },
+      },
+    } as any);
+
+  it("simple", () => {
+    const obj1 = createObject();
+    const obj2 = createObject();
+
+    obj2.nested.x = 123;
+    delete obj2.nested.y;
+    obj2.nested.bar.baz = 123;
+
+    expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
+      [
+        "[-] Removed nested.y",
+        "[~] Changed nested.bar.baz from \\"123\\" to 123",
+        "[+] Added   nested.x",
+      ]
+    `);
+  });
 });
