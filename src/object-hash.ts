@@ -122,10 +122,8 @@ function createHasher(options: HashOptions) {
       ) {
         if (this["_" + objType]) {
           this["_" + objType](object);
-        } else if (options.ignoreUnknown) {
-          return write("[" + objType + "]");
-        } else {
-          throw new Error('Unknown object type "' + objType + '"');
+        } else if (!options.ignoreUnknown) {
+          this._unkown(object, objType);
         }
       } else {
         let keys = Object.keys(object);
@@ -192,12 +190,17 @@ function createHasher(options: HashOptions) {
     _symbol(sym) {
       return write("symbol:" + sym.toString());
     },
+    _unkown(value: any, type: string) {
+      write(type);
+      if (value && typeof value.entries === "function") {
+        write(":");
+        this._array(Array.from(value.entries()), false);
+      }
+    },
     _error(err) {
       return write("error:" + err.toString());
     },
-    _boolean(bool) {
-      return write("bool:" + bool.toString());
-    },
+    _boolean(bool) {},
     _string(string) {
       write("string:" + string.length + ":");
       write(string.toString());

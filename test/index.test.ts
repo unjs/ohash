@@ -2,6 +2,22 @@ import { describe, expect, it } from "vitest";
 import { murmurHash, objectHash, hash, sha256, isEqual } from "../src";
 import { sha256base64 } from "../src/crypto/sha256";
 
+describe("objectHash", () => {
+  it("basic object", () => {
+    expect(objectHash({ foo: "bar", bar: new Date(0) })).toMatchInlineSnapshot(
+      '"object:2:string:3:bar:date:1970-01-01T00:00:00.000Z,string:3:foo:string:3:bar,"'
+    );
+  });
+
+  it("Serialize object with entries", () => {
+    const form = new FormData();
+    form.set("foo", "bar");
+    form.set("bar", "baz");
+
+    expect(objectHash(form)).toMatchInlineSnapshot('"formdata:array:2:array:2:string:3:foostring:3:bararray:2:string:3:barstring:3:baz"');
+  });
+});
+
 it("murmurHash", () => {
   expect(murmurHash("Hello World")).toMatchInlineSnapshot("2708020327");
 });
@@ -21,12 +37,6 @@ it("sha256base64", () => {
   );
   expect(sha256base64("")).toMatchInlineSnapshot(
     '"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"'
-  );
-});
-
-it("objectHash", () => {
-  expect(objectHash({ foo: "bar" })).toMatchInlineSnapshot(
-    '"object:1:string:3:foo:string:3:bar,"'
   );
 });
 
