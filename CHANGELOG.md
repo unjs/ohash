@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.1
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.0...v1.1.1)
+
+
+### 💅 Refactors
+
+  - Expose `diff` function types ([bc08321](https://github.com/unjs/ohash/commit/bc08321))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.1.0
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.0.0...v1.1.0)
