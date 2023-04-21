@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.2
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.1...v1.1.2)
+
+
+### 🩹 Fixes
+
+  - **objectHash:** Serialize `boolean` as `bool` ([186e719](https://github.com/unjs/ohash/commit/186e719))
+
+### ✅ Tests
+
+  - Update snapshots ([52830c8](https://github.com/unjs/ohash/commit/52830c8))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.1.1
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.0...v1.1.1)
