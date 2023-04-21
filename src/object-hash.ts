@@ -208,7 +208,7 @@ function createHasher(options: HashOptions) {
       return write("error:" + err.toString());
     },
     _boolean(bool) {
-      return write("boolean:" + bool.toString());
+      return write("bool:" + bool.toString());
     },
     _string(string) {
       write("string:" + string.length + ":");
