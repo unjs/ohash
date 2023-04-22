@@ -13,3 +13,18 @@ export function hash(object: any, options: HashOptions = {}): string {
     typeof object === "string" ? object : objectHash(object, options);
   return sha256base64(hashed).slice(0, 10);
 }
+
+export async function asyncHash(
+  object: any,
+  options: HashOptions = {}
+): Promise<string> {
+  if (!globalThis.crypto?.subtle?.digest) {
+    return hash(object, options);
+  }
+  const hashed =
+    typeof object === "string" ? object : objectHash(object, options);
+  const encoded = new TextEncoder().encode(hashed);
+  const digest = await globalThis.crypto?.subtle?.digest("SHA-256", encoded);
+  const b64Digest = btoa(String.fromCharCode(...new Uint8Array(digest)));
+  return b64Digest.toString().slice(0, 10);
+}

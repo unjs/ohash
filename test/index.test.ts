@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { murmurHash, objectHash, hash, sha256, isEqual, diff } from "../src";
+import {
+  murmurHash,
+  objectHash,
+  hash,
+  sha256,
+  isEqual,
+  diff,
+  asyncHash,
+} from "../src";
 import { sha256base64 } from "../src/crypto/sha256";
 
 describe("objectHash", () => {
@@ -58,6 +66,10 @@ it("sha256base64", () => {
 
 it("hash", () => {
   expect(hash({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
+});
+
+it("asyncHash", async () => {
+  expect(await asyncHash({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
 });
 
 describe("isEqual", () => {

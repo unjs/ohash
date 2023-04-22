@@ -1,51 +1,36 @@
 import Benchmark from "benchmark";
 import { objectHash } from "ohash";
-import largeJson from './fixture/large.mjs'
+import largeJson from "./fixture/large.mjs";
+import { generateItems } from "./_utils.mjs";
 
-function generateItems(num) {
-  return new Array(num).fill(0).map(() => {
-    return {
-      propNum: Math.random(),
-      propBool: Math.random() > 0.5,
-      propString: Math.random().toString(16),
-      propDate: new Date(),
-      propObj: {
-        propNum: Math.random(),
-        propBool: Math.random() > 0.5,
-        propString: Math.random().toString(16),
-        propDate: new Date(),
-      },
-    };
-  });
-}
-
-const suite = new Benchmark.Suite();
 const singleObject = generateItems(1)[0];
 const tinyArray = generateItems(10);
 const mediumArray = generateItems(100);
 const largeArray = generateItems(1000);
 
-suite.add("hash({})", function () {
+const suite = new Benchmark.Suite();
+
+suite.add("objectHash({})", function () {
   const v = objectHash({});
 });
 
-suite.add("hash(singleObject)", function () {
+suite.add("objectHash(singleObject)", function () {
   const v = objectHash(singleObject);
 });
 
-suite.add("hash(tinyArray)", function () {
+suite.add("objectHash(tinyArray)", function () {
   const v = objectHash(tinyArray);
 });
 
-suite.add("hash(mediumArray)", function () {
+suite.add("objectHash(mediumArray)", function () {
   const v = objectHash(mediumArray);
 });
 
-suite.add("hash(largeArray)", function () {
+suite.add("objectHash(largeArray)", function () {
   const v = objectHash(largeArray);
 });
 
-suite.add("hash(largeJson)", function () {
+suite.add("objectHash(largeJson)", function () {
   const v = objectHash(largeJson);
 });
 
