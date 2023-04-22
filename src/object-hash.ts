@@ -87,11 +87,11 @@ function createHasher(options: HashOptions) {
         value = options.replacer(value);
       }
       const type = value === null ? "null" : typeof value;
-      return this["_" + type](value);
+      return this[type](value);
     },
-    _object(object) {
+    object(object) {
       if (object && typeof object.toJSON === "function") {
-        return this._object(object.toJSON());
+        return this.object(object.toJSON());
       }
 
       const objString = Object.prototype.toString.call(object);
@@ -131,10 +131,10 @@ function createHasher(options: HashOptions) {
         objType !== "function" &&
         objType !== "asyncfunction"
       ) {
-        if (this["_" + objType]) {
-          this["_" + objType](object);
+        if (this[objType]) {
+          this[objType](object);
         } else if (!options.ignoreUnknown) {
-          this._unkown(object, objType);
+          this.unkown(object, objType);
         }
       } else {
         let keys = Object.keys(object);
@@ -165,7 +165,7 @@ function createHasher(options: HashOptions) {
         }
       }
     },
-    _array(arr, unordered) {
+    array(arr, unordered) {
       unordered =
         typeof unordered !== "undefined"
           ? unordered
@@ -193,35 +193,35 @@ function createHasher(options: HashOptions) {
       });
       context = [...context, ...contextAdditions];
       entries.sort();
-      return this._array(entries, false);
+      return this.array(entries, false);
     },
-    _date(date) {
+    date(date) {
       return write("date:" + date.toJSON());
     },
-    _symbol(sym) {
+    symbol(sym) {
       return write("symbol:" + sym.toString());
     },
-    _unkown(value: any, type: string) {
+    unkown(value: any, type: string) {
       write(type);
       if (!value) {
         return;
       }
       write(":");
       if (value && typeof value.entries === "function") {
-        return this._array(Array.from(value.entries()), true /* ordered */);
+        return this.array(Array.from(value.entries()), true /* ordered */);
       }
     },
-    _error(err) {
+    error(err) {
       return write("error:" + err.toString());
     },
-    _boolean(bool) {
+    boolean(bool) {
       return write("bool:" + bool);
     },
-    _string(string) {
+    string(string) {
       write("string:" + string.length + ":");
       write(string);
     },
-    _function(fn) {
+    function(fn) {
       write("fn:");
       if (isNativeFunction(fn)) {
         this.dispatch("[native]");
@@ -237,82 +237,82 @@ function createHasher(options: HashOptions) {
       }
 
       if (options.respectFunctionProperties) {
-        this._object(fn);
+        this.object(fn);
       }
     },
-    _number(number) {
+    number(number) {
       return write("number:" + number);
     },
-    _xml(xml) {
+    xml(xml) {
       return write("xml:" + xml.toString());
     },
-    _null() {
+    null() {
       return write("Null");
     },
-    _undefined() {
+    undefined() {
       return write("Undefined");
     },
-    _regexp(regex) {
+    regexp(regex) {
       return write("regex:" + regex.toString());
     },
-    _uint8array(arr) {
+    uint8array(arr) {
       write("uint8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint8clampedarray(arr) {
+    uint8clampedarray(arr) {
       write("uint8clampedarray:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int8array(arr) {
+    int8array(arr) {
       write("int8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint16array(arr) {
+    uint16array(arr) {
       write("uint16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int16array(arr) {
+    int16array(arr) {
       write("int16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _uint32array(arr) {
+    uint32array(arr) {
       write("uint32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _int32array(arr) {
+    int32array(arr) {
       write("int32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _float32array(arr) {
+    float32array(arr) {
       write("float32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _float64array(arr) {
+    float64array(arr) {
       write("float64array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    _arraybuffer(arr) {
+    arraybuffer(arr) {
       write("arraybuffer:");
       return this.dispatch(new Uint8Array(arr));
     },
-    _url(url) {
+    url(url) {
       return write("url:" + url.toString());
     },
-    _map(map) {
+    map(map) {
       write("map:");
       const arr = [...map];
-      return this._array(arr, options.unorderedSets !== false);
+      return this.array(arr, options.unorderedSets !== false);
     },
-    _set(set) {
+    set(set) {
       write("set:");
       const arr = [...set];
-      return this._array(arr, options.unorderedSets !== false);
+      return this.array(arr, options.unorderedSets !== false);
     },
-    _file(file) {
+    file(file) {
       write("file:");
       return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
     },
-    _blob() {
+    blob() {
       if (options.ignoreUnknown) {
         return write("[blob]");
       }
@@ -321,62 +321,62 @@ function createHasher(options: HashOptions) {
           'Use "options.replacer" or "options.ignoreUnknown"\n'
       );
     },
-    _domwindow() {
+    domwindow() {
       return write("domwindow");
     },
-    _bigint(number) {
+    bigint(number) {
       return write("bigint:" + number.toString());
     },
     /* Node.js standard native objects */
-    _process() {
+    process() {
       return write("process");
     },
-    _timer() {
+    timer() {
       return write("timer");
     },
-    _pipe() {
+    pipe() {
       return write("pipe");
     },
-    _tcp() {
+    tcp() {
       return write("tcp");
     },
-    _udp() {
+    udp() {
       return write("udp");
     },
-    _tty() {
+    tty() {
       return write("tty");
     },
-    _statwatcher() {
+    statwatcher() {
       return write("statwatcher");
     },
-    _securecontext() {
+    securecontext() {
       return write("securecontext");
     },
-    _connection() {
+    connection() {
       return write("connection");
     },
-    _zlib() {
+    zlib() {
       return write("zlib");
     },
-    _context() {
+    context() {
       return write("context");
     },
-    _nodescript() {
+    nodescript() {
       return write("nodescript");
     },
-    _httpparser() {
+    httpparser() {
       return write("httpparser");
     },
-    _dataview() {
+    dataview() {
       return write("dataview");
     },
-    _signal() {
+    signal() {
       return write("signal");
     },
-    _fsevent() {
+    fsevent() {
       return write("fsevent");
     },
-    _tlswrap() {
+    tlswrap() {
       return write("tlswrap");
     },
   };
