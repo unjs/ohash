@@ -44,7 +44,7 @@ export interface HashOptions {
 }
 
 // Defaults
-const defaults: HashOptions = {
+const defaults: HashOptions = Object.freeze({
   ignoreUnknown: false,
   respectType: false,
   respectFunctionNames: false,
@@ -52,7 +52,10 @@ const defaults: HashOptions = {
   unorderedObjects: true,
   unorderedArrays: false,
   unorderedSets: false,
-};
+  excludeKeys: undefined,
+  excludeValues: undefined,
+  replacer: undefined,
+});
 
 /**
  * Hash any JS value into a string with murmur v3 hash
@@ -61,8 +64,12 @@ const defaults: HashOptions = {
  * @return {string} hash value
  * @api public
  */
-export function objectHash(object: any, options: HashOptions = {}): string {
-  options = { ...defaults, ...options };
+export function objectHash(object: any, options?: HashOptions): string {
+  if (!options) {
+    options = defaults;
+  } else {
+    options = { ...defaults, ...options };
+  }
   const hasher = createHasher(options);
   hasher.dispatch(object);
   return hasher.toString();
