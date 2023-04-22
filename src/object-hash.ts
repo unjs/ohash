@@ -70,7 +70,7 @@ export function objectHash(object: any, options: HashOptions = {}): string {
 
 function createHasher(options: HashOptions) {
   let buff = "";
-  let context = [];
+  let context = new Map();
   const write = (str: string) => {
     buff += str;
   };
@@ -111,10 +111,10 @@ function createHasher(options: HashOptions) {
 
       let objectNumber = null;
 
-      if ((objectNumber = context.indexOf(object)) >= 0) {
+      if ((objectNumber = context.get(object)) !== undefined) {
         return this.dispatch("[CIRCULAR:" + objectNumber + "]");
       } else {
-        context.push(object);
+        context.set(object, context.size);
       }
 
       if (
@@ -182,16 +182,18 @@ function createHasher(options: HashOptions) {
       // The unordered case is a little more complicated: since there is no canonical ordering on objects,
       // i.e. {a:1} < {a:2} and {a:1} > {a:2} are both false,
       // We first serialize each entry using a PassThrough stream before sorting.
-      // also: we can’t use the same context array for all entries since the order of hashing should *not* matter. instead,
-      // we keep track of the additions to a copy of the context array and add all of them to the global context array when we’re done
-      const contextAdditions = [];
+      // also: we can’t use the same context for all entries since the order of hashing should *not* matter. instead,
+      // we keep track of the additions to a copy of the context and add all of them to the global context when we’re done
+      const contextAdditions = new Map();
       const entries = arr.map((entry) => {
         const hasher = createHasher(options);
         hasher.dispatch(entry);
-        contextAdditions.push(hasher.getContext());
+        for (const [key, value] of hasher.getContext()) {
+          contextAdditions.set(key, value);
+        }
         return hasher.toString();
       });
-      context = [...context, ...contextAdditions];
+      context = contextAdditions;
       entries.sort();
       return this.array(entries, false);
     },
