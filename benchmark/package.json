@@ -1,0 +1,12 @@
+{
+  "name": "benchmark",
+  "version": "1.0.0",
+  "description": "Benchmark the ohash lib",
+  "scripts": {
+    "bench:object-hash": "node object-hash.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "2.1.4"
+  }
+}
