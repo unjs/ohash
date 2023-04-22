@@ -375,11 +375,15 @@ function createHasher(options: HashOptions) {
   };
 }
 
+const nativeFunc = "[native code] }";
+const nativeFuncLength = nativeFunc.length;
+
 /** Check if the given function is a native function */
 function isNativeFunction(f) {
   if (typeof f !== "function") {
     return false;
   }
-  const exp = /^function\s+\w*\s*\(\s*\)\s*{\s+\[native code]\s+}$/i;
-  return exp.exec(Function.prototype.toString.call(f)) != null;
+  return (
+    Function.prototype.toString.call(f).slice(-nativeFuncLength) === nativeFunc
+  );
 }
