@@ -69,15 +69,15 @@ export function objectHash(object: any, options: HashOptions = {}): string {
 }
 
 function createHasher(options: HashOptions) {
-  const buff: string[] = [];
+  let buff = "";
   let context = [];
   const write = (str: string) => {
-    buff.push(str);
+    buff += str;
   };
 
   return {
     toString() {
-      return buff.join("");
+      return buff;
     },
     getContext() {
       return context;
