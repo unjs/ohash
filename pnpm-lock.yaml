@@ -1,10 +1,5 @@
 lockfileVersion: '6.0'
 
-dependencies:
-  uncrypto:
-    specifier: ^0.1.2
-    version: 0.1.2
-
 devDependencies:
   '@types/benchmark':
     specifier: ^2.1.2
@@ -3657,10 +3652,6 @@ packages:
       - sass
       - supports-color
     dev: true
-
-  /uncrypto@0.1.2:
-    resolution: {integrity: sha512-kuZwRKV615lEw/Xx3Iz56FKk3nOeOVGaVmw0eg+x4Mne28lCotNFbBhDW7dEBCBKyKbRQiCadEZeNAFPVC5cgw==}
-    dev: false
 
   /universalify@2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
