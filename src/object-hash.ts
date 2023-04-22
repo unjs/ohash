@@ -208,11 +208,11 @@ function createHasher(options: HashOptions) {
       return write("error:" + err.toString());
     },
     _boolean(bool) {
-      return write("bool:" + bool.toString());
+      return write("bool:" + bool);
     },
     _string(string) {
       write("string:" + string.length + ":");
-      write(string.toString());
+      write(string);
     },
     _function(fn) {
       write("fn:");
@@ -234,7 +234,7 @@ function createHasher(options: HashOptions) {
       }
     },
     _number(number) {
-      return write("number:" + number.toString());
+      return write("number:" + number);
     },
     _xml(xml) {
       return write("xml:" + xml.toString());
