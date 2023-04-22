@@ -94,13 +94,20 @@ function createHasher(options: HashOptions) {
         return this._object(object.toJSON());
       }
 
-      const pattern = /\[object (.*)]/i;
       const objString = Object.prototype.toString.call(object);
 
-      const _objType = pattern.exec(objString);
-      const objType = _objType
-        ? _objType[1].toLowerCase() // take only the class name
-        : "unknown:[" + objString.toLowerCase() + "]"; // object type did not match [object ...]
+      let objType = "";
+      const objectLength = objString.length;
+
+      // '[object a]'.length === 10, the minimum
+      if (objectLength < 10) {
+        objType = "unknown:[" + objString + "]";
+      } else {
+        // '[object '.length === 8
+        objType = objString.slice(8, objectLength - 1);
+      }
+
+      objType = objType.toLowerCase();
 
       let objectNumber = null;
 
