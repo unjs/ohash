@@ -31,4 +31,4 @@ suite
   .on("cycle", (event) => {
     console.log(event.target.toString());
   })
-  .run();
+  .run({ async: false });
