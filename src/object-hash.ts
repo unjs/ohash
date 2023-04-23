@@ -75,6 +75,12 @@ export function objectHash(object: any, options?: HashOptions): string {
   return hasher.toString();
 }
 
+const defaultPrototypesKeys = Object.freeze([
+  "prototype",
+  "__proto__",
+  "constructor",
+]);
+
 function createHasher(options: HashOptions) {
   let buff = "";
   let context = new Map();
@@ -148,27 +154,37 @@ function createHasher(options: HashOptions) {
         if (options.unorderedObjects) {
           keys = keys.sort();
         }
+        let extraKeys = [];
         // Make sure to incorporate special properties, so Types with different prototypes will produce
         // a different hash and objects derived from different functions (`new Foo`, `new Bar`) will
         // produce different hashes. We never do this for native functions since some seem to break because of that.
         if (options.respectType !== false && !isNativeFunction(object)) {
-          keys.splice(0, 0, "prototype", "__proto__", "letructor");
+          extraKeys = defaultPrototypesKeys;
         }
 
         if (options.excludeKeys) {
           keys = keys.filter(function (key) {
             return !options.excludeKeys(key);
           });
+          extraKeys = extraKeys.filter(function (key) {
+            return !options.excludeKeys(key);
+          });
         }
 
-        write("object:" + keys.length + ":");
-        for (const key of keys) {
+        write("object:" + (keys.length + extraKeys.length) + ":");
+        const dispatchForKey = (key) => {
           this.dispatch(key);
           write(":");
           if (!options.excludeValues) {
             this.dispatch(object[key]);
           }
           write(",");
+        };
+        for (const key of keys) {
+          dispatchForKey(key);
+        }
+        for (const key of extraKeys) {
+          dispatchForKey(key);
         }
       }
     },
