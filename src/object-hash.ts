@@ -68,7 +68,11 @@ export function objectHash(object: any, options: HashOptions = {}): string {
   return hasher.toString();
 }
 
-const defaultPrototypesKeys = Object.freeze(["prototype", "__proto__", "constructor"]);
+const defaultPrototypesKeys = Object.freeze([
+  "prototype",
+  "__proto__",
+  "constructor",
+]);
 
 function createHasher(options: HashOptions) {
   const buff: string[] = [];
