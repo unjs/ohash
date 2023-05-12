@@ -58,10 +58,10 @@ const defaults: HashOptions = Object.freeze({
 });
 
 /**
- * Hash any JS value into a string with murmur v3 hash
+ * Serialize any JS value into a stable, hashable string
  * @param {object} object value to hash
  * @param {HashOptions} options hashing options
- * @return {string} hash value
+ * @return {string} serialized value
  * @api public
  */
 export function objectHash(object: any, options?: HashOptions): string {
