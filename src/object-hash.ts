@@ -154,7 +154,7 @@ function createHasher(options: HashOptions) {
         if (options.unorderedObjects) {
           keys = keys.sort();
         }
-        let extraKeys = [];
+        let extraKeys = [] as readonly string[];
         // Make sure to incorporate special properties, so Types with different prototypes will produce
         // a different hash and objects derived from different functions (`new Foo`, `new Bar`) will
         // produce different hashes. We never do this for native functions since some seem to break because of that.
