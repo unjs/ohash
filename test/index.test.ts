@@ -102,9 +102,9 @@ describe("diff", () => {
 
     expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
       [
-        "[-] Removed nested.y",
-        "[~] Changed nested.bar.baz from \\"123\\" to 123",
-        "[+] Added   nested.x",
+        "Removed \`nested.y\`",
+        "Changed \`nested.bar.baz\` from \`\\"123\\"\` to \`123\`",
+        "Added   \`nested.x\`",
       ]
     `);
   });

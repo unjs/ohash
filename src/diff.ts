@@ -81,15 +81,15 @@ export class DiffEntry {
   toJSON() {
     switch (this.type) {
       case "added": {
-        return `[+] Added   ${this.key}`;
+        return `Added   \`${this.key}\``;
       }
       case "removed": {
-        return `[-] Removed ${this.key}`;
+        return `Removed \`${this.key}\``;
       }
       case "changed": {
-        return `[~] Changed ${this.key} from ${
+        return `Changed \`${this.key}\` from \`${
           this.oldValue?.toString() || "-"
-        } to ${this.newValue.toString()}`;
+        }\` to \`${this.newValue.toString()}\``;
       }
     }
   }
