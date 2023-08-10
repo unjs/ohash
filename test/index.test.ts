@@ -5,9 +5,9 @@ import { sha256base64 } from "../src/crypto/sha256";
 describe("objectHash", () => {
   it("basic object", () => {
     expect(
-      objectHash({ foo: "bar", bar: new Date(0), bool: false })
+      objectHash({ foo: "bar", bar: new Date(0), bool: false }),
     ).toMatchInlineSnapshot(
-      '"object:3:string:3:bar:string:24:1970-01-01T00:00:00.000Z,string:4:bool:bool:false,string:3:foo:string:3:bar,"'
+      '"object:3:string:3:bar:string:24:1970-01-01T00:00:00.000Z,string:4:bool:bool:false,string:3:foo:string:3:bar,"',
     );
   });
 
@@ -17,7 +17,7 @@ describe("objectHash", () => {
     form.set("bar", "baz");
 
     expect(objectHash(form)).toMatchInlineSnapshot(
-      '"formdata:array:2:array:2:string:32:array:2:string:3:barstring:3:bazstring:32:array:2:string:3:foostring:3:bar"'
+      '"formdata:array:2:array:2:string:32:array:2:string:3:barstring:3:bazstring:32:array:2:string:3:foostring:3:bar"',
     );
   });
 
@@ -29,7 +29,7 @@ describe("objectHash", () => {
     }
 
     expect(objectHash(new Test())).toMatchInlineSnapshot(
-      '"object:2:string:3:bar:string:3:baz,string:3:foo:string:3:bar,"'
+      '"object:2:string:3:bar:string:3:baz,string:3:foo:string:3:bar,"',
     );
   });
 });
@@ -40,19 +40,19 @@ it("murmurHash", () => {
 
 it("sha256", () => {
   expect(sha256("Hello World")).toMatchInlineSnapshot(
-    '"a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"'
+    '"a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"',
   );
   expect(sha256("")).toMatchInlineSnapshot(
-    '"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"'
+    '"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"',
   );
 });
 
 it("sha256base64", () => {
   expect(sha256base64("Hello World")).toMatchInlineSnapshot(
-    '"pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"'
+    '"pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"',
   );
   expect(sha256base64("")).toMatchInlineSnapshot(
-    '"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"'
+    '"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"',
   );
 });
 
@@ -90,7 +90,7 @@ describe("diff", () => {
           baz: "123",
         },
       },
-    } as any);
+    }) as any;
 
   it("simple", () => {
     const obj1 = createObject();

@@ -65,10 +65,10 @@ const defaults: HashOptions = Object.freeze({
  * @api public
  */
 export function objectHash(object: any, options?: HashOptions): string {
-  if (!options) {
-    options = defaults;
-  } else {
+  if (options) {
     options = { ...defaults, ...options };
+  } else {
+    options = defaults;
   }
   const hasher = createHasher(options);
   hasher.dispatch(object);
@@ -124,10 +124,10 @@ function createHasher(options: HashOptions) {
 
       let objectNumber = null;
 
-      if ((objectNumber = context.get(object)) !== undefined) {
-        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
-      } else {
+      if ((objectNumber = context.get(object)) === undefined) {
         context.set(object, context.size);
+      } else {
+        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
       }
 
       if (
@@ -190,9 +190,7 @@ function createHasher(options: HashOptions) {
     },
     array(arr, unordered) {
       unordered =
-        typeof unordered !== "undefined"
-          ? unordered
-          : options.unorderedArrays !== false; // default to options.unorderedArrays
+        unordered === undefined ? options.unorderedArrays !== false : unordered; // default to options.unorderedArrays
 
       write("array:" + arr.length + ":");
       if (!unordered || arr.length <= 1) {
@@ -343,7 +341,7 @@ function createHasher(options: HashOptions) {
       }
       throw new Error(
         "Hashing Blob objects is currently not supported\n" +
-          'Use "options.replacer" or "options.ignoreUnknown"\n'
+          'Use "options.replacer" or "options.ignoreUnknown"\n',
       );
     },
     domwindow() {

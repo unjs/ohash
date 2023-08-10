@@ -1,6 +1,6 @@
 import Benchmark from "benchmark";
 import { objectHash } from "ohash";
-import largeJson from './fixture/large.mjs'
+import largeJson from "./fixture/large.mjs";
 
 function generateItems(num) {
   return new Array(num).fill(0).map(() => {

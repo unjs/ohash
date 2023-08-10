@@ -7,7 +7,7 @@ export class WordArray {
   constructor(words?, sigBytes?) {
     words = this.words = words || [];
 
-    this.sigBytes = sigBytes !== undefined ? sigBytes : words.length * 4;
+    this.sigBytes = sigBytes === undefined ? words.length * 4 : sigBytes;
   }
 
   toString(encoder?): string {

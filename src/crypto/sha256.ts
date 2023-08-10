@@ -121,7 +121,7 @@ export class SHA256 extends Hasher {
     // Add padding
     this._data.words[nBitsLeft >>> 5] |= 0x80 << (24 - (nBitsLeft % 32));
     this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(
-      nBitsTotal / 0x1_00_00_00_00
+      nBitsTotal / 0x1_00_00_00_00,
     );
     this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
     this._data.sigBytes = this._data.words.length * 4;

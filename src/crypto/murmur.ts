@@ -48,13 +48,15 @@ export function murmurHash(key: Uint8Array | string, seed = 0) {
   k1 = 0;
 
   switch (remainder) {
-    case 3:
+    case 3: {
       k1 ^= (key[i + 2] & 0xff) << 16;
       break;
-    case 2:
+    }
+    case 2: {
       k1 ^= (key[i + 1] & 0xff) << 8;
       break;
-    case 1:
+    }
+    case 1: {
       k1 ^= key[i] & 0xff;
       k1 =
         ((k1 & 0xff_ff) * c1 + ((((k1 >>> 16) * c1) & 0xff_ff) << 16)) &
@@ -64,6 +66,7 @@ export function murmurHash(key: Uint8Array | string, seed = 0) {
         ((k1 & 0xff_ff) * c2 + ((((k1 >>> 16) * c2) & 0xff_ff) << 16)) &
         0xff_ff_ff_ff;
       h1 ^= k1;
+    }
   }
 
   h1 ^= key.length;
