@@ -4,13 +4,13 @@ export class WordArray {
   words: number[];
   sigBytes: number;
 
-  constructor(words?, sigBytes?) {
+  constructor(words?: number[], sigBytes?: number) {
     words = this.words = words || [];
 
     this.sigBytes = sigBytes === undefined ? words.length * 4 : sigBytes;
   }
 
-  toString(encoder?): string {
+  toString(encoder?: typeof Hex): string {
     return (encoder || Hex).stringify(this);
   }
 
@@ -86,12 +86,12 @@ export const Base64 = {
 };
 
 export const Latin1 = {
-  parse(latin1Str) {
+  parse(latin1Str: string) {
     // Shortcut
     const latin1StrLength = latin1Str.length;
 
     // Convert
-    const words = [];
+    const words: number[] = [];
     for (let i = 0; i < latin1StrLength; i++) {
       words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
     }
@@ -101,28 +101,23 @@ export const Latin1 = {
 };
 
 export const Utf8 = {
-  parse(utf8Str) {
+  parse(utf8Str: string) {
     return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
   },
 };
 
 export class BufferedBlockAlgorithm {
-  _data: WordArray;
-  _nDataBytes: number;
+  _data = new WordArray();
+  _nDataBytes = 0;
   _minBufferSize = 0;
   blockSize = 512 / 32;
 
-  constructor() {
-    this.reset();
-  }
-
   reset() {
-    // Initial values
     this._data = new WordArray();
     this._nDataBytes = 0;
   }
 
-  _append(data) {
+  _append(data: string | WordArray) {
     // Convert string to WordArray, else assume WordArray already
     if (typeof data === "string") {
       data = Utf8.parse(data);
@@ -134,7 +129,7 @@ export class BufferedBlockAlgorithm {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _doProcessBlock(_dataWords, _offset) {}
+  _doProcessBlock(_dataWords: any, _offset: any) {}
 
   _process(doFlush?: boolean) {
     let processedWords;
@@ -174,7 +169,7 @@ export class BufferedBlockAlgorithm {
 }
 
 export class Hasher extends BufferedBlockAlgorithm {
-  update(messageUpdate) {
+  update(messageUpdate: string) {
     // Append
     this._append(messageUpdate);
 
@@ -185,7 +180,7 @@ export class Hasher extends BufferedBlockAlgorithm {
     return this;
   }
 
-  finalize(messageUpdate) {
+  finalize(messageUpdate: string) {
     // Final message update
     if (messageUpdate) {
       this._append(messageUpdate);

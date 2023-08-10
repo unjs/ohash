@@ -42,7 +42,11 @@ function _diff(
   return diffs;
 }
 
-function _toHashedObject(obj, opts: HashOptions, key = ""): DiffHashedObject {
+function _toHashedObject(
+  obj: any,
+  opts: HashOptions,
+  key = "",
+): DiffHashedObject {
   if (obj && typeof obj !== "object") {
     return new DiffHashedObject(key, obj, objectHash(obj, opts));
   }
@@ -83,9 +87,9 @@ export class DiffEntry {
         return `[-] Removed ${this.key}`;
       }
       case "changed": {
-        return `[~] Changed ${
-          this.key
-        } from ${this.oldValue.toString()} to ${this.newValue.toString()}`;
+        return `[~] Changed ${this.key} from ${
+          this.oldValue?.toString() || "-"
+        } to ${this.newValue.toString()}`;
       }
     }
   }
