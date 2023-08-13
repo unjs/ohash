@@ -165,7 +165,7 @@ Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott P
 [npm-version-href]: https://npmjs.com/package/ohash
 [npm-downloads-src]: https://img.shields.io/npm/dm/ohash?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/ohash
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/ohash/ci/main?style=flat-square
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/ohash/ci.yml?branch=main&style=flat-square
 [github-actions-href]: https://github.com/unjs/ohash/actions?query=workflow%3Aci
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/ohash/main?style=flat-square
 [codecov-href]: https://codecov.io/gh/unjs/ohash
