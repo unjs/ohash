@@ -110,7 +110,7 @@ console.log(diff(obj1, obj2));
 
 ### `murmurHash(str)`
 
-Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](<(https://en.wikipedia.org/wiki/MurmurHash)>).
+Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash).
 
 Usage:
 
@@ -156,7 +156,7 @@ Made with 💛
 
 Published under [MIT License](./LICENSE).
 
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](perezd/node-murmurhash) and
+Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](https://github.com/perezd/node-murmurhash) and
 [garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com) and [brix/crypto-js](https://github.com/brix/crypto-js).
 
 <!-- Badges -->
