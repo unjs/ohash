@@ -32,6 +32,9 @@ const W: number[] = [];
 export class SHA256 extends Hasher {
   _hash = new WordArray([...H]);
 
+  /**
+   * Resets the internal state of the hash object to initial values.
+   */
   reset() {
     super.reset();
     this._hash = new WordArray([...H]);
@@ -107,6 +110,12 @@ export class SHA256 extends Hasher {
     H[7] = (H[7] + h) | 0;
   }
 
+  /**
+   * Finishes the hash calculation and returns the hash as a WordArray.
+   * 
+   * @param {string} messageUpdate - Additional message content to include in the hash.
+   * @returns {WordArray} The finalised hash as a WordArray.
+   */
   finalize(messageUpdate: string): WordArray {
     super.finalize(messageUpdate);
 
@@ -129,10 +138,22 @@ export class SHA256 extends Hasher {
   }
 }
 
+/**
+ * Calculates the SHA-256 hash of the message provided.
+ * 
+ * @param {string} message - The message to hash.
+ * @returns {string} The message hash as a hexadecimal string.
+ */
 export function sha256(message: string) {
   return new SHA256().finalize(message).toString();
 }
 
+/**
+ * Calculates the SHA-256 hash of the given message and encodes it in Base64.
+ * 
+ * @param {string} message - The message to hash.
+ * @returns {string} The base64 encoded hash of the message.
+ */
 export function sha256base64(message: string) {
   return new SHA256().finalize(message).toString(Base64);
 }
