@@ -3,7 +3,7 @@ import { objectHash, HashOptions } from "./object-hash";
  * Compare two objects using reference equality and stable deep hashing.
  * @param {any} object1 First object
  * @param {any} object2 Second object
- * @param {HashOptions} hash options
+ * @param {HashOptions} hashOptions. Configuration options for hashing the objects. See {@link HashOptions}.
  * @return {boolean} true if equal and false if not
  * @api public
  */
