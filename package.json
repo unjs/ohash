@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.8",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^2.1.1",
     "benchmark": "^2.1.4",
     "changelogen": "^0.5.5",
     "eslint": "^8.57.0",
@@ -40,7 +40,7 @@
     "prettier": "^3.2.5",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^0.34.6"
+    "vitest": "^2.1.1"
   },
   "packageManager": "pnpm@9.0.6"
 }
