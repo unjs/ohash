@@ -35,7 +35,16 @@ describe("objectHash", () => {
 });
 
 it("murmurHash", () => {
-  expect(murmurHash("Hello World")).toMatchInlineSnapshot("2708020327");
+  expect(murmurHash("Hello World")).toMatchInlineSnapshot("427197390");
+  expect(murmurHash("a")).toMatchInlineSnapshot("1009084850");
+  expect(murmurHash("aa")).toMatchInlineSnapshot("923832745");
+  expect(murmurHash("aaa")).toMatchInlineSnapshot("3033554871");
+  expect(murmurHash("aaaa")).toMatchInlineSnapshot("2129582471");
+  expect(murmurHash("aaaaa")).toMatchInlineSnapshot("3922341931");
+  expect(murmurHash("aaaaaa")).toMatchInlineSnapshot("1736445713");
+  expect(murmurHash("aaaaaaa")).toMatchInlineSnapshot("1497565372");
+  expect(murmurHash("aaaaaaaa")).toMatchInlineSnapshot("3662943087");
+  expect(murmurHash("aaaaaaaaa")).toMatchInlineSnapshot("2724714153");
 });
 
 it("sha256", () => {
