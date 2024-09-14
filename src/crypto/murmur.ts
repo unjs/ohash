@@ -1,7 +1,7 @@
 /**
  * JS Implementation of MurmurHash3 (r136) (as of May 20, 2011)
  *
- * @param {Uint8Array | string} key ASCII only
+ * @param {Uint8Array | string} key
  * @param {number} seed Positive integer only
  * @return {number} 32-bit positive integer hash
  */
