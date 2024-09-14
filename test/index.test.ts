@@ -65,6 +65,9 @@ describe("murmurHash", () => {
       "3581961153",
     );
   });
+  it("Gives correct hash with uint32 maximum value as seed", () => {
+    expect(murmurHash("a", 2_147_483_647)).toMatchInlineSnapshot("3574244913");
+  });
 });
 
 it("sha256", () => {
