@@ -124,26 +124,28 @@ import { murmurHash } from "ohash";
 console.log(murmurHash("Hello World"));
 ```
 
-### `sha256`
+### `sha256` / `sha256Async`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
 
 ```js
-import { sha256 } from "ohash";
+import { sha256, sha256Async } from "ohash";
 
 // "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
 console.log(sha256("Hello World"));
+console.log(await sha256Async("Hello World"));
 ```
 
-### `sha256base64`
+### `sha256base64` / `sha256base64Async`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
 
 ```js
-import { sha256base64 } from "ohash";
+import { sha256base64, sha256base64Async } from "ohash";
 
 // "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
 console.log(sha256base64("Hello World"));
+console.log(await sha256base64Async("Hello World"));
 ```
 
 ## 💻 Development

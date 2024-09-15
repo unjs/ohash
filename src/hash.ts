@@ -1,5 +1,5 @@
 import { objectHash, HashOptions } from "./object-hash";
-import { sha256base64 } from "./crypto/sha256";
+import { sha256base64, sha256base64Async } from "./crypto/sha256";
 
 /**
  * Hash any JS value into a string
@@ -14,26 +14,18 @@ export function hash(object: any, options: HashOptions = {}): string {
   return sha256base64(hashed).slice(0, 10);
 }
 
-export async function hashAsync(
+/**
+ * Hash any JS value into a string
+ * @param {object} object value to hash
+ * @param {HashOptions} options hashing options
+ * @return {Promise<string>} hash value
+ * @api public
+ */
+export function hashAsync(
   object: any,
   options: HashOptions = {},
 ): Promise<string> {
-  if (!globalThis.crypto?.subtle.digest) {
-    return hash(object, options);
-  }
   const hashed =
     typeof object === "string" ? object : objectHash(object, options);
-  const encoded = new TextEncoder().encode(hashed);
-  const digest = await globalThis.crypto?.subtle.digest("SHA-256", encoded);
-  return _arrayBufferToBase64(digest).slice(0, 10);
-}
-
-function _arrayBufferToBase64(buffer: ArrayBuffer) {
-  let binary = "";
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
+  return sha256base64Async(hashed).then((digest) => digest.slice(0, 10));
 }

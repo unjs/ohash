@@ -133,6 +133,53 @@ export function sha256(message: string) {
   return new SHA256().finalize(message).toString();
 }
 
+export function sha256Async(message: string) {
+  if (!globalThis.crypto?.subtle?.digest) {
+    return new SHA256().finalize(message).toString();
+  }
+  return globalThis.crypto.subtle
+    .digest("SHA-256", new TextEncoder().encode(message))
+    .then((digest) => arrayBufferToHex(digest));
+}
+
 export function sha256base64(message: string) {
   return new SHA256().finalize(message).toString(Base64);
+}
+
+export function sha256base64Async(message: string) {
+  if (!globalThis.crypto?.subtle?.digest) {
+    return Promise.resolve(sha256base64(message));
+  }
+  return globalThis.crypto.subtle
+    .digest("SHA-256", new TextEncoder().encode(message))
+    .then((digest) => arrayBufferToBase64(digest));
+}
+
+// --- internal ---
+
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(buffer)
+      .toString("base64")
+      .replace(/[+/=]/g, "");
+  }
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/[+/=]/g, "");
+}
+
+function arrayBufferToHex(buffer: ArrayBuffer) {
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(buffer).toString("hex");
+  }
+  const bytes = new Uint8Array(buffer);
+  const hex = [];
+  for (const byte of bytes) {
+    hex.push(byte.toString(16).padStart(2, "0"));
+  }
+  return hex.join("");
 }

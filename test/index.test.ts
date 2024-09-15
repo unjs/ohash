@@ -4,11 +4,13 @@ import {
   objectHash,
   hash,
   sha256,
+  sha256Async,
+  sha256base64,
+  sha256base64Async,
   isEqual,
   diff,
   hashAsync,
 } from "../src";
-import { sha256base64 } from "../src/crypto/sha256";
 
 describe("objectHash", () => {
   it("basic object", () => {
@@ -87,11 +89,29 @@ it("sha256", () => {
   );
 });
 
+it("sha256Async", async () => {
+  expect(await sha256Async("Hello World")).toMatchInlineSnapshot(
+    '"a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"',
+  );
+  expect(await sha256Async("")).toMatchInlineSnapshot(
+    '"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"',
+  );
+});
+
 it("sha256base64", () => {
   expect(sha256base64("Hello World")).toMatchInlineSnapshot(
     '"pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"',
   );
   expect(sha256base64("")).toMatchInlineSnapshot(
+    '"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"',
+  );
+});
+
+it("sha256base64Async", async () => {
+  expect(await sha256base64Async("Hello World")).toMatchInlineSnapshot(
+    '"pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"',
+  );
+  expect(await sha256base64Async("")).toMatchInlineSnapshot(
     '"47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU"',
   );
 });
