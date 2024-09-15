@@ -128,7 +128,6 @@ export class BufferedBlockAlgorithm {
     this._nDataBytes += data.sigBytes;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _doProcessBlock(_dataWords: any, _offset: any) {}
 
   _process(doFlush?: boolean) {

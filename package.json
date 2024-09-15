@@ -22,8 +22,8 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest dev",
-    "lint": "eslint --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
-    "lint:fix": "eslint --fix --ext .ts,.js,.mjs,.cjs . && prettier -w src test",
+    "lint": "eslint . && prettier -c src test",
+    "lint:fix": "eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
     "benchmark": "node benchmark/object-hash.mjs",
@@ -31,16 +31,16 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^20.11.30",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@types/node": "^22.5.5",
+    "@vitest/coverage-v8": "^2.1.1",
     "benchmark": "^2.1.4",
     "changelogen": "^0.5.5",
-    "eslint": "^8.57.0",
-    "eslint-config-unjs": "^0.2.1",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.3",
+    "eslint": "^9.10.0",
+    "eslint-config-unjs": "^0.3.2",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2",
     "unbuild": "^2.0.0",
-    "vitest": "^0.34.6"
+    "vitest": "^2.1.1"
   },
-  "packageManager": "pnpm@8.15.5"
+  "packageManager": "pnpm@9.10.0"
 }
