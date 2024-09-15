@@ -17,7 +17,7 @@ export function hash(object: any, options: HashOptions = {}): string {
 
 export async function asyncHash(
   object: any,
-  options: HashOptions = {}
+  options: HashOptions = {},
 ): Promise<string> {
   if (!subtle.digest) {
     return hash(object, options);
