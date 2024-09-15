@@ -117,7 +117,7 @@ Usage:
 ```js
 import { murmurHash } from "ohash";
 
-// "2708020327"
+// "427197390"
 console.log(murmurHash("Hello World"));
 ```
 
