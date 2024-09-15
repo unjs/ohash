@@ -14,7 +14,7 @@ export function hash(object: any, options: HashOptions = {}): string {
   return sha256base64(hashed).slice(0, 10);
 }
 
-export async function asyncHash(
+export async function hashAsync(
   object: any,
   options: HashOptions = {},
 ): Promise<string> {

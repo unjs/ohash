@@ -6,7 +6,7 @@ import {
   sha256,
   isEqual,
   diff,
-  asyncHash,
+  hashAsync,
 } from "../src";
 import { sha256base64 } from "../src/crypto/sha256";
 
@@ -100,8 +100,8 @@ it("hash", () => {
   expect(hash({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
 });
 
-it("asyncHash", async () => {
-  expect(await asyncHash({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
+it("hashAsync", async () => {
+  expect(await hashAsync({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
 });
 
 describe("isEqual", () => {

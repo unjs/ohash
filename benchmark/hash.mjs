@@ -1,5 +1,5 @@
 import Benchmark from "benchmark";
-import { hash, asyncHash } from "ohash";
+import { hash, hashAsync } from "ohash";
 import largeJson from "./fixture/large.mjs";
 import { generateItems } from "./_utils.mjs";
 
@@ -19,11 +19,11 @@ for (const [name, data] of Object.entries(dataSets)) {
     hash(data);
   });
   suite.add(
-    `asyncHash(${name})`,
+    `hashAsync(${name})`,
     (ctx) => {
-      asyncHash(data).then(() => ctx.resolve());
+      hashAsync(data).then(() => ctx.resolve());
     },
-    { defer: true }
+    { defer: true },
   );
 }
 

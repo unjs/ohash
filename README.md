@@ -27,23 +27,26 @@ Import:
 
 ```js
 // ESM
-import { hash, objectHash, murmurHash, sha256 } from "ohash";
+import { hash, hashAsync, objectHash, murmurHash, sha256 } from "ohash";
 
 // CommonJS
-const { hash, objectHash, murmurHash, sha256 } = require("ohash");
+const { hash, hashAsync, objectHash, murmurHash, sha256 } = require("ohash");
 ```
 
-### `hash(object, options?)`
+### `hash(object, options?)` / `hashAsync(object, options?)`
 
 Converts object value into a string hash using `objectHash` and then applies `sha256` with Base64 encoding (trimmed by length of 10).
+
+`hashAsync` is slightly faster as will leverage [`SubtleCrypto.digest`](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest) when available.
 
 Usage:
 
 ```js
-import { hash } from "ohash";
+import { hash, hashAsync } from "ohash";
 
 // "dZbtA7f0lK"
 console.log(hash({ foo: "bar" }));
+console.log(await hashAsync({ foo: "bar" }));
 ```
 
 ### `objectHash(object, options?)`
