@@ -24,25 +24,20 @@ const K = [
 ];
 
 // Reusable object
-const W = [];
+const W: number[] = [];
 
 /**
  * SHA-256 hash algorithm.
  */
 export class SHA256 extends Hasher {
-  _hash: WordArray;
-
-  constructor() {
-    super();
-    this.reset();
-  }
+  _hash = new WordArray([...H]);
 
   reset() {
     super.reset();
     this._hash = new WordArray([...H]);
   }
 
-  _doProcessBlock(M, offset) {
+  _doProcessBlock(M: number[], offset: number) {
     // Shortcut
     const H = this._hash.words;
 
@@ -112,7 +107,7 @@ export class SHA256 extends Hasher {
     H[7] = (H[7] + h) | 0;
   }
 
-  finalize(messageUpdate) {
+  finalize(messageUpdate: string): WordArray {
     super.finalize(messageUpdate);
 
     const nBitsTotal = this._nDataBytes * 8;
@@ -121,7 +116,7 @@ export class SHA256 extends Hasher {
     // Add padding
     this._data.words[nBitsLeft >>> 5] |= 0x80 << (24 - (nBitsLeft % 32));
     this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(
-      nBitsTotal / 0x1_00_00_00_00
+      nBitsTotal / 0x1_00_00_00_00,
     );
     this._data.words[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
     this._data.sigBytes = this._data.words.length * 4;

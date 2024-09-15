@@ -110,14 +110,14 @@ console.log(diff(obj1, obj2));
 
 ### `murmurHash(str)`
 
-Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](<(https://en.wikipedia.org/wiki/MurmurHash)>).
+Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash).
 
 Usage:
 
 ```js
 import { murmurHash } from "ohash";
 
-// "2708020327"
+// "427197390"
 console.log(murmurHash("Hello World"));
 ```
 
@@ -156,7 +156,7 @@ Made with 💛
 
 Published under [MIT License](./LICENSE).
 
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](perezd/node-murmurhash) and
+Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](https://github.com/perezd/node-murmurhash) and
 [garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com) and [brix/crypto-js](https://github.com/brix/crypto-js).
 
 <!-- Badges -->
@@ -165,7 +165,7 @@ Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott P
 [npm-version-href]: https://npmjs.com/package/ohash
 [npm-downloads-src]: https://img.shields.io/npm/dm/ohash?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/ohash
-[github-actions-src]: https://img.shields.io/github/workflow/status/unjs/ohash/ci/main?style=flat-square
+[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/ohash/ci.yml?branch=main&style=flat-square
 [github-actions-href]: https://github.com/unjs/ohash/actions?query=workflow%3Aci
 [codecov-src]: https://img.shields.io/codecov/c/gh/unjs/ohash/main?style=flat-square
 [codecov-href]: https://codecov.io/gh/unjs/ohash

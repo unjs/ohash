@@ -1,6 +1,6 @@
 {
   "name": "ohash",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Super fast hashing library based on murmurhash3 written in Vanilla JS",
   "repository": "unjs/ohash",
   "license": "MIT",
@@ -22,29 +22,25 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest dev",
-    "lint": "eslint --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
-    "lint:fix": "eslint --fix --ext .ts,.js,.mjs,.cjs . && prettier -w src test",
+    "lint": "eslint . && prettier -c src test",
+    "lint:fix": "eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
     "benchmark": "node benchmark/object-hash.mjs",
-    "test": "pnpm lint && vitest run"
+    "test": "pnpm lint && vitest run && pnpm typecheck",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/benchmark": "^2.1.2",
-    "@types/node": "^18.15.13",
-    "@vitest/coverage-c8": "^0.30.1",
+    "@types/node": "^22.5.5",
+    "@vitest/coverage-v8": "^2.1.1",
     "benchmark": "^2.1.4",
-    "c8": "^7.13.0",
-    "changelogen": "^0.5.3",
-    "eslint": "^8.39.0",
-    "eslint-config-unjs": "^0.1.0",
-    "prettier": "^2.8.7",
-    "typescript": "^5.0.4",
-    "unbuild": "^1.2.1",
-    "vitest": "^0.30.1"
+    "changelogen": "^0.5.5",
+    "eslint": "^9.10.0",
+    "eslint-config-unjs": "^0.3.2",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2",
+    "unbuild": "^2.0.0",
+    "vitest": "^2.1.1"
   },
-  "packageManager": "pnpm@8.3.1",
-  "dependencies": {
-    "uncrypto": "^0.1.2"
-  }
+  "packageManager": "pnpm@9.10.0"
 }

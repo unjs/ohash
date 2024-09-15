@@ -3,7 +3,7 @@ import { objectHash, HashOptions } from "./object-hash";
 export function diff(
   obj1: any,
   obj2: any,
-  opts: HashOptions = {}
+  opts: HashOptions = {},
 ): DiffEntry[] {
   const h1 = _toHashedObject(obj1, opts);
   const h2 = _toHashedObject(obj2, opts);
@@ -13,7 +13,7 @@ export function diff(
 function _diff(
   h1: DiffHashedObject,
   h2: DiffHashedObject,
-  opts: HashOptions = {}
+  opts: HashOptions = {},
 ): DiffEntry[] {
   const diffs = [];
 
@@ -29,7 +29,7 @@ function _diff(
         diffs.push(..._diff(h1.props?.[prop], h2.props?.[prop], opts));
       } else if (p1 || p2) {
         diffs.push(
-          new DiffEntry((p2 || p1).key, p1 ? "removed" : "added", p2, p1)
+          new DiffEntry((p2 || p1).key, p1 ? "removed" : "added", p2, p1),
         );
       }
     }
@@ -42,7 +42,11 @@ function _diff(
   return diffs;
 }
 
-function _toHashedObject(obj, opts: HashOptions, key = ""): DiffHashedObject {
+function _toHashedObject(
+  obj: any,
+  opts: HashOptions,
+  key = "",
+): DiffHashedObject {
   if (obj && typeof obj !== "object") {
     return new DiffHashedObject(key, obj, objectHash(obj, opts));
   }
@@ -52,7 +56,7 @@ function _toHashedObject(obj, opts: HashOptions, key = ""): DiffHashedObject {
     props[_key] = _toHashedObject(
       obj[_key],
       opts,
-      key ? `${key}.${_key}` : _key
+      key ? `${key}.${_key}` : _key,
     );
     hashes.push(props[_key].hash);
   }
@@ -62,12 +66,11 @@ function _toHashedObject(obj, opts: HashOptions, key = ""): DiffHashedObject {
 // --- Internal classes ---
 
 export class DiffEntry {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     public key: string,
     public type: "changed" | "added" | "removed",
     public newValue: DiffHashedObject,
-    public oldValue?: DiffHashedObject
+    public oldValue?: DiffHashedObject,
   ) {}
 
   toString() {
@@ -76,32 +79,34 @@ export class DiffEntry {
 
   toJSON() {
     switch (this.type) {
-      case "added":
-        return `[+] Added   ${this.key}`;
-      case "removed":
-        return `[-] Removed ${this.key}`;
-      case "changed":
-        return `[~] Changed ${
-          this.key
-        } from ${this.oldValue.toString()} to ${this.newValue.toString()}`;
+      case "added": {
+        return `Added   \`${this.key}\``;
+      }
+      case "removed": {
+        return `Removed \`${this.key}\``;
+      }
+      case "changed": {
+        return `Changed \`${this.key}\` from \`${
+          this.oldValue?.toString() || "-"
+        }\` to \`${this.newValue.toString()}\``;
+      }
     }
   }
 }
 
 export class DiffHashedObject {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     public key: string,
     public value: any,
     public hash?: string,
-    public props?: Record<string, DiffHashedObject>
+    public props?: Record<string, DiffHashedObject>,
   ) {}
 
   toString() {
-    if (!this.props) {
-      return JSON.stringify(this.value);
-    } else {
+    if (this.props) {
       return `{${Object.keys(this.props).join(",")}}`;
+    } else {
+      return JSON.stringify(this.value);
     }
   }
 

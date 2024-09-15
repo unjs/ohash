@@ -44,7 +44,7 @@ export interface HashOptions {
 }
 
 // Defaults
-const defaults: HashOptions = {
+const defaults: HashOptions = Object.freeze({
   ignoreUnknown: false,
   respectType: false,
   respectFunctionNames: false,
@@ -52,21 +52,34 @@ const defaults: HashOptions = {
   unorderedObjects: true,
   unorderedArrays: false,
   unorderedSets: false,
-};
+  excludeKeys: undefined,
+  excludeValues: undefined,
+  replacer: undefined,
+});
 
 /**
- * Hash any JS value into a string with murmur v3 hash
+ * Serialize any JS value into a stable, hashable string
  * @param {object} object value to hash
  * @param {HashOptions} options hashing options
- * @return {string} hash value
+ * @return {string} serialized value
  * @api public
  */
-export function objectHash(object: any, options: HashOptions = {}): string {
-  options = { ...defaults, ...options };
+export function objectHash(object: any, options?: HashOptions): string {
+  if (options) {
+    options = { ...defaults, ...options };
+  } else {
+    options = defaults;
+  }
   const hasher = createHasher(options);
   hasher.dispatch(object);
   return hasher.toString();
 }
+
+const defaultPrototypesKeys = Object.freeze([
+  "prototype",
+  "__proto__",
+  "constructor",
+]);
 
 function createHasher(options: HashOptions) {
   let buff = "";
@@ -82,14 +95,14 @@ function createHasher(options: HashOptions) {
     getContext() {
       return context;
     },
-    dispatch(value) {
+    dispatch(value: any): string | void {
       if (options.replacer) {
         value = options.replacer(value);
       }
       const type = value === null ? "null" : typeof value;
       return this[type](value);
     },
-    object(object) {
+    object(object: any): string | void {
       if (object && typeof object.toJSON === "function") {
         return this.object(object.toJSON());
       }
@@ -111,10 +124,10 @@ function createHasher(options: HashOptions) {
 
       let objectNumber = null;
 
-      if ((objectNumber = context.get(object)) !== undefined) {
-        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
-      } else {
+      if ((objectNumber = context.get(object)) === undefined) {
         context.set(object, context.size);
+      } else {
+        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
       }
 
       if (
@@ -131,7 +144,9 @@ function createHasher(options: HashOptions) {
         objType !== "function" &&
         objType !== "asyncfunction"
       ) {
+        // @ts-ignore
         if (this[objType]) {
+          // @ts-ignore
           this[objType](object);
         } else if (!options.ignoreUnknown) {
           this.unkown(object, objType);
@@ -141,35 +156,43 @@ function createHasher(options: HashOptions) {
         if (options.unorderedObjects) {
           keys = keys.sort();
         }
+        let extraKeys = [] as readonly string[];
         // Make sure to incorporate special properties, so Types with different prototypes will produce
         // a different hash and objects derived from different functions (`new Foo`, `new Bar`) will
         // produce different hashes. We never do this for native functions since some seem to break because of that.
         if (options.respectType !== false && !isNativeFunction(object)) {
-          keys.splice(0, 0, "prototype", "__proto__", "letructor");
+          extraKeys = defaultPrototypesKeys;
         }
 
         if (options.excludeKeys) {
-          keys = keys.filter(function (key) {
-            return !options.excludeKeys(key);
+          keys = keys.filter((key) => {
+            return !options.excludeKeys!(key);
+          });
+          extraKeys = extraKeys.filter((key) => {
+            return !options.excludeKeys!(key);
           });
         }
 
-        write("object:" + keys.length + ":");
-        for (const key of keys) {
+        write("object:" + (keys.length + extraKeys.length) + ":");
+        const dispatchForKey = (key: string) => {
           this.dispatch(key);
           write(":");
           if (!options.excludeValues) {
             this.dispatch(object[key]);
           }
           write(",");
+        };
+        for (const key of keys) {
+          dispatchForKey(key);
+        }
+        for (const key of extraKeys) {
+          dispatchForKey(key);
         }
       }
     },
-    array(arr, unordered) {
+    array(arr: any, unordered: boolean): string | void {
       unordered =
-        typeof unordered !== "undefined"
-          ? unordered
-          : options.unorderedArrays !== false; // default to options.unorderedArrays
+        unordered === undefined ? options.unorderedArrays !== false : unordered; // default to options.unorderedArrays
 
       write("array:" + arr.length + ":");
       if (!unordered || arr.length <= 1) {
@@ -185,7 +208,7 @@ function createHasher(options: HashOptions) {
       // also: we can’t use the same context for all entries since the order of hashing should *not* matter. instead,
       // we keep track of the additions to a copy of the context and add all of them to the global context when we’re done
       const contextAdditions = new Map();
-      const entries = arr.map((entry) => {
+      const entries = arr.map((entry: any) => {
         const hasher = createHasher(options);
         hasher.dispatch(entry);
         for (const [key, value] of hasher.getContext()) {
@@ -197,10 +220,10 @@ function createHasher(options: HashOptions) {
       entries.sort();
       return this.array(entries, false);
     },
-    date(date) {
+    date(date: any) {
       return write("date:" + date.toJSON());
     },
-    symbol(sym) {
+    symbol(sym: any) {
       return write("symbol:" + sym.toString());
     },
     unkown(value: any, type: string) {
@@ -213,17 +236,17 @@ function createHasher(options: HashOptions) {
         return this.array(Array.from(value.entries()), true /* ordered */);
       }
     },
-    error(err) {
+    error(err: any) {
       return write("error:" + err.toString());
     },
-    boolean(bool) {
+    boolean(bool: any) {
       return write("bool:" + bool);
     },
-    string(string) {
+    string(string: any) {
       write("string:" + string.length + ":");
       write(string);
     },
-    function(fn) {
+    function(fn: any) {
       write("fn:");
       if (isNativeFunction(fn)) {
         this.dispatch("[native]");
@@ -242,10 +265,10 @@ function createHasher(options: HashOptions) {
         this.object(fn);
       }
     },
-    number(number) {
+    number(number: any) {
       return write("number:" + number);
     },
-    xml(xml) {
+    xml(xml: any) {
       return write("xml:" + xml.toString());
     },
     null() {
@@ -254,63 +277,63 @@ function createHasher(options: HashOptions) {
     undefined() {
       return write("Undefined");
     },
-    regexp(regex) {
+    regexp(regex: any) {
       return write("regex:" + regex.toString());
     },
-    uint8array(arr) {
+    uint8array(arr: any) {
       write("uint8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    uint8clampedarray(arr) {
+    uint8clampedarray(arr: any) {
       write("uint8clampedarray:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    int8array(arr) {
+    int8array(arr: any) {
       write("int8array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    uint16array(arr) {
+    uint16array(arr: any) {
       write("uint16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    int16array(arr) {
+    int16array(arr: any) {
       write("int16array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    uint32array(arr) {
+    uint32array(arr: any) {
       write("uint32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    int32array(arr) {
+    int32array(arr: any) {
       write("int32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    float32array(arr) {
+    float32array(arr: any) {
       write("float32array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    float64array(arr) {
+    float64array(arr: any) {
       write("float64array:");
       return this.dispatch(Array.prototype.slice.call(arr));
     },
-    arraybuffer(arr) {
+    arraybuffer(arr: any) {
       write("arraybuffer:");
       return this.dispatch(new Uint8Array(arr));
     },
-    url(url) {
+    url(url: any) {
       return write("url:" + url.toString());
     },
-    map(map) {
+    map(map: any) {
       write("map:");
       const arr = [...map];
       return this.array(arr, options.unorderedSets !== false);
     },
-    set(set) {
+    set(set: any) {
       write("set:");
       const arr = [...set];
       return this.array(arr, options.unorderedSets !== false);
     },
-    file(file) {
+    file(file: any) {
       write("file:");
       return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
     },
@@ -320,13 +343,13 @@ function createHasher(options: HashOptions) {
       }
       throw new Error(
         "Hashing Blob objects is currently not supported\n" +
-          'Use "options.replacer" or "options.ignoreUnknown"\n'
+          'Use "options.replacer" or "options.ignoreUnknown"\n',
       );
     },
     domwindow() {
       return write("domwindow");
     },
-    bigint(number) {
+    bigint(number: number) {
       return write("bigint:" + number.toString());
     },
     /* Node.js standard native objects */
@@ -388,7 +411,7 @@ const nativeFunc = "[native code] }";
 const nativeFuncLength = nativeFunc.length;
 
 /** Check if the given function is a native function */
-function isNativeFunction(f) {
+function isNativeFunction(f: any) {
   if (typeof f !== "function") {
     return false;
   }

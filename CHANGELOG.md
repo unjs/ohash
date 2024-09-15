@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.3
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.2...v1.1.3)
+
+### 🔥 Performance
+
+- **object-hash:** Avoid using array to just concatenate the string ([#36](https://github.com/unjs/ohash/pull/36))
+- **object-hash:** Avoid toString when we know that the value is already a string ([#33](https://github.com/unjs/ohash/pull/33))
+- **object-hash:** Faster `isNativeFunction` check ([#30](https://github.com/unjs/ohash/pull/30))
+- **object-hash:** Faster extract object type from toString ([#31](https://github.com/unjs/ohash/pull/31))
+- **object-hash:** Faster object access by avoid string concat ([#32](https://github.com/unjs/ohash/pull/32))
+- **object-hash:** Faster circular checking by using map ([#34](https://github.com/unjs/ohash/pull/34))
+- **object-hash:** Reuse default options when is not passed ([#37](https://github.com/unjs/ohash/pull/37))
+- **object-hash:** Avoid splice method to insert values ([#35](https://github.com/unjs/ohash/pull/35))
+
+### 💅 Refactors
+
+- Simplify diff formatting ([8e6cabc](https://github.com/unjs/ohash/commit/8e6cabc))
+
+### 📖 Documentation
+
+- Improve jsdoc for `objectHash()` ([#43](https://github.com/unjs/ohash/pull/43))
+
+### 🏡 Chore
+
+- Add benchmark scripts ([#40](https://github.com/unjs/ohash/pull/40))
+- Update dev dependencies ([f1ab5f7](https://github.com/unjs/ohash/commit/f1ab5f7))
+- Lint repo ([cd42064](https://github.com/unjs/ohash/commit/cd42064))
+- Add autofix ci ([af19f81](https://github.com/unjs/ohash/commit/af19f81))
+- Fix ts issue ([68a3429](https://github.com/unjs/ohash/commit/68a3429))
+- Enable strict type checking ([2ed5b67](https://github.com/unjs/ohash/commit/2ed5b67))
+
+### ❤️  Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Owen Kieffer-Jones 
+- Vinicius Lourenço
+
 ## v1.1.2
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.1...v1.1.2)

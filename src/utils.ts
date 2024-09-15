@@ -10,7 +10,7 @@ import { objectHash, HashOptions } from "./object-hash";
 export function isEqual(
   object1: any,
   object2: any,
-  hashOptions: HashOptions = {}
+  hashOptions: HashOptions = {},
 ): boolean {
   if (object1 === object2) {
     return true;

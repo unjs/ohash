@@ -1,7 +1,7 @@
 /**
  * JS Implementation of MurmurHash3 (r136) (as of May 20, 2011)
  *
- * @param {Uint8Array | string} key ASCII only
+ * @param {Uint8Array | string} key
  * @param {number} seed Positive integer only
  * @return {number} 32-bit positive integer hash
  */
@@ -48,13 +48,15 @@ export function murmurHash(key: Uint8Array | string, seed = 0) {
   k1 = 0;
 
   switch (remainder) {
-    case 3:
+    case 3: {
       k1 ^= (key[i + 2] & 0xff) << 16;
-      break;
-    case 2:
+      /* falls through */
+    }
+    case 2: {
       k1 ^= (key[i + 1] & 0xff) << 8;
-      break;
-    case 1:
+      /* falls through */
+    }
+    case 1: {
       k1 ^= key[i] & 0xff;
       k1 =
         ((k1 & 0xff_ff) * c1 + ((((k1 >>> 16) * c1) & 0xff_ff) << 16)) &
@@ -64,6 +66,7 @@ export function murmurHash(key: Uint8Array | string, seed = 0) {
         ((k1 & 0xff_ff) * c2 + ((((k1 >>> 16) * c2) & 0xff_ff) << 16)) &
         0xff_ff_ff_ff;
       h1 ^= k1;
+    }
   }
 
   h1 ^= key.length;
