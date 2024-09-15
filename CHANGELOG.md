@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.4
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.3...v1.1.4)
+
+### 🩹 Fixes
+
+- **murmurHash:** Fix murmurHash3 implementation, add tests ([#83](https://github.com/unjs/ohash/pull/83))
+
+### 📖 Documentation
+
+- Improved and finalized jsdocs in exported functions ([#74](https://github.com/unjs/ohash/pull/74))
+
+### 🏡 Chore
+
+- Update badge ([#46](https://github.com/unjs/ohash/pull/46))
+- Update links in readme ([#59](https://github.com/unjs/ohash/pull/59))
+- Update repo ([e09027f](https://github.com/unjs/ohash/commit/e09027f))
+
+### ❤️ Contributors
+
+- Max ([@onmax](http://github.com/onmax))
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+- Hexagon <robinnilsson@gmail.com>
+- Estéban ([@Barbapapazes](http://github.com/Barbapapazes))
+- Luke Nelson <luke@nelson.zone>
+
 ## v1.1.3
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.2...v1.1.3)
