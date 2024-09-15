@@ -4,7 +4,7 @@ import { sha256base64 } from "./crypto/sha256";
 /**
  * Hash any JS value into a string
  * @param {object} object value to hash
- * @param {HashOptions} options hashing options
+ * @param {HashOptions} options hashing options. See {@link HashOptions}.
  * @return {string} hash value
  * @api public
  */

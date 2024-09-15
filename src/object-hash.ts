@@ -2,43 +2,73 @@
 
 export interface HashOptions {
   /**
-   *
+   * Function to determine if a key should be excluded from hashing.
+   * @optional
+   * @param key - The key to check for exclusion.
+   * @returns {boolean} - Returns true to exclude the key from hashing.
    */
   excludeKeys?: ((key: string) => boolean) | undefined;
+
   /**
-   * hash object keys, values ignored
+   * Specifies whether to exclude values from hashing, so that only the object keys are hashed.
+   * @optional
    */
   excludeValues?: boolean | undefined;
+
   /**
-   * ignore unknown object types
+   * Specifies whether to ignore objects of unknown type (not directly serialisable) when hashing.
+   * @optional
+   * @default false
    */
   ignoreUnknown?: boolean | undefined;
+
   /**
-   * optional function that replaces values before hashing
+   * A function that replaces values before they are hashed, which can be used to customise the hashing process.
+   * @optional
+   * @param value - The current value to be hashed.
+   * @returns {any} - The value to use for hashing instead.
    */
   replacer?: ((value: any) => any) | undefined;
+
   /**
-   * consider 'name' property of functions for hashing
+   * Specifies whether the 'name' property of functions should be taken into account when hashing.
+   * @optional
+   * @default false
    */
   respectFunctionNames?: boolean | undefined;
+
   /**
-   * consider function properties when hashing
+   * Specifies whether properties of functions should be taken into account when hashing.
+   * @optional
+   * @default false
    */
   respectFunctionProperties?: boolean | undefined;
+
   /**
-   * Respect special properties (prototype, letructor) when hashing to distinguish between types
+   * Specifies whether to include type-specific properties such as prototype or constructor in the hash to distinguish between types.
+   * @optional
+   * @default false
    */
   respectType?: boolean | undefined;
+
   /**
-   * Sort all arrays before hashing
+   * Specifies whether arrays should be sorted before hashing to ensure consistent order.
+   * @optional
+   * @default false
    */
   unorderedArrays?: boolean | undefined;
+
   /**
-   * Sort `Set` and `Map` instances before hashing
+   * Specifies whether Set and Map instances should be sorted by key before hashing to ensure consistent order.
+   * @optional
+   * @default true
    */
   unorderedObjects?: boolean | undefined;
+
   /**
-   * Sort `Set` and `Map` instances before hashing
+   * Specifies whether the elements of `Set' and keys of `Map' should be sorted before hashing to ensure consistent order.
+   * @optional
+   * @default false
    */
   unorderedSets?: boolean | undefined;
 }
@@ -60,7 +90,7 @@ const defaults: HashOptions = Object.freeze({
 /**
  * Serialize any JS value into a stable, hashable string
  * @param {object} object value to hash
- * @param {HashOptions} options hashing options
+ * @param {HashOptions} options hashing options. See {@link HashOptions}.
  * @return {string} serialized value
  * @api public
  */
