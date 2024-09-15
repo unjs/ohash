@@ -66,7 +66,6 @@ function _toHashedObject(
 // --- Internal classes ---
 
 export class DiffEntry {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     public key: string,
     public type: "changed" | "added" | "removed",
@@ -96,7 +95,6 @@ export class DiffEntry {
 }
 
 export class DiffHashedObject {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     public key: string,
     public value: any,

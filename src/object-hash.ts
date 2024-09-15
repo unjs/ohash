@@ -166,11 +166,9 @@ function createHasher(options: HashOptions) {
 
         if (options.excludeKeys) {
           keys = keys.filter((key) => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return !options.excludeKeys!(key);
           });
           extraKeys = extraKeys.filter((key) => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return !options.excludeKeys!(key);
           });
         }

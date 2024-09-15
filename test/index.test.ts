@@ -111,7 +111,6 @@ describe("isEqual", () => {
 });
 
 describe("diff", () => {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   const createObject = () =>
     ({
       foo: "bar",
@@ -135,7 +134,7 @@ describe("diff", () => {
     expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
       [
         "Removed \`nested.y\`",
-        "Changed \`nested.bar.baz\` from \`\\"123\\"\` to \`123\`",
+        "Changed \`nested.bar.baz\` from \`"123"\` to \`123\`",
         "Added   \`nested.x\`",
       ]
     `);
