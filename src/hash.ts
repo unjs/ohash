@@ -1,4 +1,3 @@
-import { subtle } from "uncrypto";
 import { objectHash, HashOptions } from "./object-hash";
 import { sha256base64 } from "./crypto/sha256";
 
@@ -19,13 +18,13 @@ export async function asyncHash(
   object: any,
   options: HashOptions = {},
 ): Promise<string> {
-  if (!subtle.digest) {
+  if (!globalThis.crypto?.subtle.digest) {
     return hash(object, options);
   }
   const hashed =
     typeof object === "string" ? object : objectHash(object, options);
   const encoded = new TextEncoder().encode(hashed);
-  const digest = await subtle.digest("SHA-256", encoded);
+  const digest = await globalThis.crypto?.subtle.digest("SHA-256", encoded);
   return _arrayBufferToBase64(digest).slice(0, 10);
 }
 
