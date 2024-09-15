@@ -112,7 +112,7 @@ export class SHA256 extends Hasher {
 
   /**
    * Finishes the hash calculation and returns the hash as a WordArray.
-   * 
+   *
    * @param {string} messageUpdate - Additional message content to include in the hash.
    * @returns {WordArray} The finalised hash as a WordArray.
    */
@@ -140,7 +140,7 @@ export class SHA256 extends Hasher {
 
 /**
  * Calculates the SHA-256 hash of the message provided.
- * 
+ *
  * @param {string} message - The message to hash.
  * @returns {string} The message hash as a hexadecimal string.
  */
@@ -150,7 +150,7 @@ export function sha256(message: string) {
 
 /**
  * Calculates the SHA-256 hash of the given message and encodes it in Base64.
- * 
+ *
  * @param {string} message - The message to hash.
  * @returns {string} The base64 encoded hash of the message.
  */
