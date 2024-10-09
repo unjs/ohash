@@ -27,23 +27,26 @@ Import:
 
 ```js
 // ESM
-import { hash, objectHash, murmurHash, sha256 } from "ohash";
+import { hash, hashAsync, objectHash, murmurHash, sha256 } from "ohash";
 
 // CommonJS
-const { hash, objectHash, murmurHash, sha256 } = require("ohash");
+const { hash, hashAsync, objectHash, murmurHash, sha256 } = require("ohash");
 ```
 
-### `hash(object, options?)`
+### `hash(object, options?)` / `hashAsync(object, options?)`
 
 Converts object value into a string hash using `objectHash` and then applies `sha256` with Base64 encoding (trimmed by length of 10).
+
+`hashAsync` is slightly faster as will leverage [`SubtleCrypto.digest`](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest) when available.
 
 Usage:
 
 ```js
-import { hash } from "ohash";
+import { hash, hashAsync } from "ohash";
 
 // "dZbtA7f0lK"
 console.log(hash({ foo: "bar" }));
+console.log(await hashAsync({ foo: "bar" }));
 ```
 
 ### `objectHash(object, options?)`
@@ -121,26 +124,28 @@ import { murmurHash } from "ohash";
 console.log(murmurHash("Hello World"));
 ```
 
-### `sha256`
+### `sha256` / `sha256Async`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
 
 ```js
-import { sha256 } from "ohash";
+import { sha256, sha256Async } from "ohash";
 
 // "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
 console.log(sha256("Hello World"));
+console.log(await sha256Async("Hello World"));
 ```
 
-### `sha256base64`
+### `sha256base64` / `sha256base64Async`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
 
 ```js
-import { sha256base64 } from "ohash";
+import { sha256base64, sha256base64Async } from "ohash";
 
 // "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
 console.log(sha256base64("Hello World"));
+console.log(await sha256base64Async("Hello World"));
 ```
 
 ## 💻 Development
