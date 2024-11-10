@@ -31,7 +31,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^22.8.7",
+    "@types/node": "^22.9.0",
     "@vitest/coverage-v8": "^2.1.4",
     "benchmark": "^2.1.4",
     "changelogen": "^0.5.7",
