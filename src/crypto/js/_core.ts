@@ -23,8 +23,8 @@ export class WordArray {
       // Copy one byte at a time
       for (let i = 0; i < wordArray.sigBytes; i++) {
         const thatByte =
-          (wordArray.words[i >>> 2]! >>> (24 - (i % 4) * 8)) & 0xff;
-        this.words[(this.sigBytes + i) >>> 2]! |=
+          (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+        this.words[(this.sigBytes + i) >>> 2] |=
           thatByte << (24 - ((this.sigBytes + i) % 4) * 8);
       }
     } else {
@@ -41,7 +41,7 @@ export class WordArray {
 
   clamp() {
     // Clamp
-    this.words[this.sigBytes >>> 2]! &=
+    this.words[this.sigBytes >>> 2] &=
       0xff_ff_ff_ff << (32 - (this.sigBytes % 4) * 8);
     this.words.length = Math.ceil(this.sigBytes / 4);
   }
@@ -56,7 +56,7 @@ export const Hex = {
     // Convert
     const hexChars: string[] = [];
     for (let i = 0; i < wordArray.sigBytes; i++) {
-      const bite = (wordArray.words[i >>> 2]! >>> (24 - (i % 4) * 8)) & 0xff;
+      const bite = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
       hexChars.push((bite >>> 4).toString(16), (bite & 0x0f).toString(16));
     }
 
@@ -70,11 +70,11 @@ export const Base64 = {
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const base64Chars: string[] = [];
     for (let i = 0; i < wordArray.sigBytes; i += 3) {
-      const byte1 = (wordArray.words[i >>> 2]! >>> (24 - (i % 4) * 8)) & 0xff;
+      const byte1 = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
       const byte2 =
-        (wordArray.words[(i + 1) >>> 2]! >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
+        (wordArray.words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
       const byte3 =
-        (wordArray.words[(i + 2) >>> 2]! >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
+        (wordArray.words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
 
       const triplet = (byte1 << 16) | (byte2 << 8) | byte3;
       for (let j = 0; j < 4 && i * 8 + j * 6 < wordArray.sigBytes * 8; j++) {
@@ -93,7 +93,7 @@ export const Latin1 = {
     // Convert
     const words: number[] = [];
     for (let i = 0; i < latin1StrLength; i++) {
-      words[i >>> 2]! |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+      words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
     }
 
     return new WordArray(words, latin1StrLength);
