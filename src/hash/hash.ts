@@ -1,5 +1,5 @@
 import { objectHash, HashOptions } from "./object-hash";
-import { sha256base64 } from "./crypto/sha256";
+import { sha256base64 } from "../crypto/sha256";
 
 /**
  * Hash any JS value into a string
