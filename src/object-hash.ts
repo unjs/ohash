@@ -179,7 +179,7 @@ function createHasher(options: HashOptions) {
           // @ts-ignore
           this[objType](object);
         } else if (!options.ignoreUnknown) {
-          this.unkown(object, objType);
+          this.unknown(object, objType);
         }
       } else {
         let keys = Object.keys(object);
@@ -256,7 +256,7 @@ function createHasher(options: HashOptions) {
     symbol(sym: any) {
       return write("symbol:" + sym.toString());
     },
-    unkown(value: any, type: string) {
+    unknown(value: any, type: string) {
       write(type);
       if (!value) {
         return;
