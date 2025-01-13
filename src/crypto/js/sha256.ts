@@ -1,6 +1,6 @@
 // Based on https://github.com/brix/crypto-js 4.1.1 (MIT)
 
-import { WordArray, Hasher, Base64 } from "./core";
+import { WordArray, Hasher, Base64 } from "./_core";
 
 // Initialization and round constants tables
 const H = [
