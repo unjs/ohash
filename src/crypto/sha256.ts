@@ -35,12 +35,12 @@ export class SHA256 extends Hasher {
   /**
    * Resets the internal state of the hash object to initial values.
    */
-  reset() {
+  override reset() {
     super.reset();
     this._hash = new WordArray([...H]);
   }
 
-  _doProcessBlock(M: number[], offset: number) {
+  override _doProcessBlock(M: number[], offset: number) {
     // Shortcut
     const H = this._hash.words;
 
@@ -116,7 +116,7 @@ export class SHA256 extends Hasher {
    * @param {string} messageUpdate - Additional message content to include in the hash.
    * @returns {WordArray} The finalised hash as a WordArray.
    */
-  finalize(messageUpdate: string): WordArray {
+  override finalize(messageUpdate: string): WordArray {
     super.finalize(messageUpdate);
 
     const nBitsTotal = this._nDataBytes * 8;

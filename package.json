@@ -27,8 +27,8 @@
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
     "benchmark": "node benchmark/object-hash.mjs",
-    "test": "pnpm lint && vitest run && pnpm typecheck",
-    "typecheck": "tsc --noEmit"
+    "test": "pnpm lint && vitest run && pnpm test:types",
+    "test:types": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",

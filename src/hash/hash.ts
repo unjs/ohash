@@ -1,4 +1,4 @@
-import { objectHash, HashOptions } from "./object-hash";
+import { objectHash, type HashOptions } from "./object-hash";
 import { sha256base64 } from "../crypto/sha256";
 
 /**

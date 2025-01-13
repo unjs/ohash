@@ -1,4 +1,4 @@
-import { objectHash, HashOptions } from "../hash/object-hash";
+import { objectHash, type HashOptions } from "../hash/object-hash";
 /**
  * Compare two objects using reference equality and stable deep hashing.
  * @param {any} object1 First object

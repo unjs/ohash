@@ -1,4 +1,4 @@
-import { objectHash, HashOptions } from "../hash/object-hash";
+import { objectHash, type HashOptions } from "../hash/object-hash";
 
 /**
  * Calculates the difference between two objects and returns a list of differences.
