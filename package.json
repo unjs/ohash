@@ -11,6 +11,16 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs"
+    },
+    "./crypto": {
+      "node": {
+        "import": "./dist/crypto/node.mjs",
+        "require": "./dist/crypto/node.cjs"
+      },
+      "default": {
+        "import": "./dist/crypto/js.mjs",
+        "require": "./dist/crypto/js.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
