@@ -108,19 +108,6 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
-### `murmurHash(str)`
-
-Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash).
-
-Usage:
-
-```js
-import { murmurHash } from "ohash";
-
-// "427197390"
-console.log(murmurHash("Hello World"));
-```
-
 ### `sha256`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
