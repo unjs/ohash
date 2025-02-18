@@ -29,8 +29,8 @@ Import:
 // ESM
 import { hash, objectHash, sha256 } from "ohash";
 
-// CommonJS
-const { hash, objectHash, sha256 } = require("ohash");
+// Or dnamic import in strict CommonJS contexts
+const { hash, objectHash, sha256 } = await import("ohash");
 ```
 
 ### `hash(object, options?)`
