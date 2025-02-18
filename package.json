@@ -14,12 +14,12 @@
     },
     "./crypto": {
       "node": {
-        "import": "./dist/crypto/node.mjs",
-        "require": "./dist/crypto/node.cjs"
+        "import": "./dist/crypto/node/index.mjs",
+        "require": "./dist/crypto/node/index.cjs"
       },
       "default": {
-        "import": "./dist/crypto/js.mjs",
-        "require": "./dist/crypto/js.cjs"
+        "import": "./dist/crypto/js/index.mjs",
+        "require": "./dist/crypto/js/index.cjs"
       }
     }
   },
