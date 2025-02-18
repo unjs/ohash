@@ -8,24 +8,21 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     },
     "./crypto": {
       "node": {
-        "import": "./dist/crypto/node/index.mjs",
-        "require": "./dist/crypto/node/index.cjs"
+        "types": "./dist/crypto/node/index.mjs",
+        "default": "./dist/crypto/node/index.mjs"
       },
       "default": {
-        "import": "./dist/crypto/js/index.mjs",
-        "require": "./dist/crypto/js/index.cjs"
+        "types": "./dist/crypto/js/index.mjs",
+        "default": "./dist/crypto/js/index.mjs"
       }
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
