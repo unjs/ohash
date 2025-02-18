@@ -27,10 +27,10 @@ Import:
 
 ```js
 // ESM
-import { hash, objectHash, murmurHash, sha256 } from "ohash";
+import { hash, objectHash, sha256 } from "ohash";
 
 // CommonJS
-const { hash, objectHash, murmurHash, sha256 } = require("ohash");
+const { hash, objectHash, sha256 } = require("ohash");
 ```
 
 ### `hash(object, options?)`
@@ -108,19 +108,6 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
-### `murmurHash(str)`
-
-Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash).
-
-Usage:
-
-```js
-import { murmurHash } from "ohash";
-
-// "427197390"
-console.log(murmurHash("Hello World"));
-```
-
 ### `sha256`
 
 Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
@@ -156,8 +143,7 @@ Made with 💛
 
 Published under [MIT License](./LICENSE).
 
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and implementations from [perezd/node-murmurhash](https://github.com/perezd/node-murmurhash) and
-[garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com) and [brix/crypto-js](https://github.com/brix/crypto-js).
+Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and [brix/crypto-js](https://github.com/brix/crypto-js).
 
 <!-- Badges -->
 

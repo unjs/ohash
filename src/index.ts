@@ -3,7 +3,6 @@ export { objectHash } from "./hash/object-hash";
 export { hash } from "./hash/hash";
 
 // Crypto
-export { murmurHash } from "./crypto/js/murmur";
 export { sha256, sha256base64 } from "./crypto/js/sha256";
 
 // Utils
