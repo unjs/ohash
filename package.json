@@ -13,11 +13,11 @@
     },
     "./crypto": {
       "node": {
-        "types": "./dist/crypto/node/index.mjs",
+        "types": "./dist/crypto/node/index.d.mts",
         "default": "./dist/crypto/node/index.mjs"
       },
       "default": {
-        "types": "./dist/crypto/js/index.mjs",
+        "types": "./dist/crypto/js/index.d.mts",
         "default": "./dist/crypto/js/index.mjs"
       }
     }
