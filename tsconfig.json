@@ -13,5 +13,9 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src",
+    "test"
+  ]
 }
