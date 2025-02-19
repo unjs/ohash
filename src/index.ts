@@ -1,5 +1,5 @@
 // Hash
-export { serialize, type SerializeOptions } from "./serialize";
+export { serialize } from "./serialize";
 export { hash } from "./hash";
 
 // Crypto

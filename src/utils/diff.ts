@@ -1,4 +1,4 @@
-import { serialize, type SerializeOptions } from "../serialize";
+import { serialize } from "../serialize";
 
 /**
  * Calculates the difference between two objects and returns a list of differences.
@@ -8,21 +8,13 @@ import { serialize, type SerializeOptions } from "../serialize";
  * @param {HashOptions} [opts={}] - Configuration options for hashing the objects. See {@link HashOptions}.
  * @returns {DiffEntry[]} An array with the differences between the two objects.
  */
-export function diff(
-  obj1: any,
-  obj2: any,
-  opts: SerializeOptions = {},
-): DiffEntry[] {
-  const h1 = _toHashedObject(obj1, opts);
-  const h2 = _toHashedObject(obj2, opts);
-  return _diff(h1, h2, opts);
+export function diff(obj1: any, obj2: any): DiffEntry[] {
+  const h1 = _toHashedObject(obj1);
+  const h2 = _toHashedObject(obj2);
+  return _diff(h1, h2);
 }
 
-function _diff(
-  h1: DiffHashedObject,
-  h2: DiffHashedObject,
-  opts: SerializeOptions = {},
-): DiffEntry[] {
+function _diff(h1: DiffHashedObject, h2: DiffHashedObject): DiffEntry[] {
   const diffs = [];
 
   const allProps = new Set([
@@ -34,7 +26,7 @@ function _diff(
       const p1 = h1.props[prop];
       const p2 = h2.props[prop];
       if (p1 && p2) {
-        diffs.push(..._diff(h1.props?.[prop], h2.props?.[prop], opts));
+        diffs.push(..._diff(h1.props?.[prop], h2.props?.[prop]));
       } else if (p1 || p2) {
         diffs.push(
           new DiffEntry((p2 || p1).key, p1 ? "removed" : "added", p2, p1),
@@ -50,22 +42,14 @@ function _diff(
   return diffs;
 }
 
-function _toHashedObject(
-  obj: any,
-  opts: SerializeOptions,
-  key = "",
-): DiffHashedObject {
+function _toHashedObject(obj: any, key = ""): DiffHashedObject {
   if (obj && typeof obj !== "object") {
-    return new DiffHashedObject(key, obj, serialize(obj, opts));
+    return new DiffHashedObject(key, obj, serialize(obj));
   }
   const props: Record<string, DiffHashedObject> = {};
   const hashes = [];
   for (const _key in obj) {
-    props[_key] = _toHashedObject(
-      obj[_key],
-      opts,
-      key ? `${key}.${_key}` : _key,
-    );
+    props[_key] = _toHashedObject(obj[_key], key ? `${key}.${_key}` : _key);
     hashes.push(props[_key].hash);
   }
   return new DiffHashedObject(key, obj, `{${hashes.join(":")}}`, props);

@@ -49,11 +49,11 @@ const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
 
 </details>
 
-## `hash(input, options?)`
+## `hash(input)`
 
 Hashes any JS value into a string.
 
-The input is first [serialized](#serializeinput-options) into a string like `object:1:string:3:foo:string:3:bar,`, then it is [hashed](#digeststr) and truncated to a length of `10`.
+The input is first [serialized](#serializeinput) into a string like `object:1:string:3:foo:string:3:bar,`, then it is [hashed](#digeststr) and truncated to a length of `10`.
 
 ```js
 import { hash } from "ohash";
@@ -62,7 +62,7 @@ import { hash } from "ohash";
 console.log(hash({ foo: "bar" }));
 ```
 
-## `serialize(input, options?)`
+## `serialize(input)`
 
 Serializes any input value into a string for hashing.
 
@@ -84,9 +84,9 @@ import { digest } from "ohash";
 console.log(digest("Hello World"));
 ```
 
-## `isEqual(obj1, obj2, options?)`
+## `isEqual(obj1, obj2)`
 
-Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput-options) values.
+Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput) values.
 
 ```js
 import { isEqual } from "ohash/utils";
@@ -95,7 +95,7 @@ import { isEqual } from "ohash/utils";
 console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }));
 ```
 
-## `diff(obj1, obj2, options?)`
+## `diff(obj1, obj2)`
 
 Compare two objects with nested [serialization](#serializeinput-options). Returns an array of changes.
 
