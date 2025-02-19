@@ -9,7 +9,7 @@
 
 <!-- /automd -->
 
-Simple data [hashing](https://en.wikipedia.org/wiki/Hash_function) utils.
+Simple object hashing, serialization and comparison utils.
 
 > [!NOTE]
 > You are on active v2 development branch. Check [v1](https://github.com/unjs/ohash/tree/v1) for ohash v1 docs.
@@ -49,27 +49,30 @@ const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
 
 </details>
 
-## `hash(input, options?)`
+## `hash(input)`
 
 Hashes any JS value into a string.
 
-The input is first [serialized](#serializeinput-options) into a string like `object:1:string:3:foo:string:3:bar,`, then it is [hashed](#digeststr) and truncated to a length of `10`.
+The input is first [serialized](#serializeinput) then it is [hashed](#digeststr) and truncated to a length of `10`.
 
 ```js
 import { hash } from "ohash";
 
-// "dZbtA7f0lK"
+// "g82Nh7Lh3C"
 console.log(hash({ foo: "bar" }));
 ```
 
-## `serialize(input, options?)`
+## `serialize(input)`
 
-Serializes any input value into a string for usable hashing.
+Serializes any input value into a string for hashing.
+
+> [!IMPORTANT]
+> `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
 
 ```js
 import { serialize } from "ohash";
 
-// "object:1:string:3:foo:string:3:bar,"
+// "{foo:'bar'}"
 console.log(serialize({ foo: "bar" }));
 ```
 
@@ -80,13 +83,13 @@ Hashes a string using the [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorit
 ```ts
 import { digest } from "ohash";
 
-// "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
-console.log(digest("Hello World"));
+// "f4OxZX_x_FO5LcGBSKHWXfwtSx-j1ncoSt3SABJtkGk"
+console.log(digest("Hello World!"));
 ```
 
-## `isEqual(obj1, obj2, options?)`
+## `isEqual(obj1, obj2)`
 
-Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput-options) values.
+Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput) values.
 
 ```js
 import { isEqual } from "ohash/utils";
@@ -95,7 +98,7 @@ import { isEqual } from "ohash/utils";
 console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }));
 ```
 
-## `diff(obj1, obj2, options?)`
+## `diff(obj1, obj2)`
 
 Compare two objects with nested [serialization](#serializeinput-options). Returns an array of changes.
 
@@ -140,4 +143,6 @@ console.log(diff(obj1, obj2));
 
 Made with 💛 Published under [MIT License](./LICENSE).
 
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and [brix/crypto-js](https://github.com/brix/crypto-js).
+Object serialization originally based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/).
+
+sha256 implementation originally based on [brix/crypto-js](https://github.com/brix/crypto-js).

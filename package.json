@@ -1,7 +1,7 @@
 {
   "name": "ohash",
   "version": "1.1.4",
-  "description": "fast data hashing utils",
+  "description": "Simple object hashing, serialization and comparison utils.",
   "repository": "unjs/ohash",
   "license": "MIT",
   "sideEffects": false,
@@ -38,7 +38,7 @@
     "lint:fix": "automd && eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
-    "test": "pnpm lint && vitest run && pnpm test:types",
+    "test": "pnpm lint && vitest run --coverage && pnpm test:types",
     "test:types": "tsc --noEmit"
   },
   "devDependencies": {

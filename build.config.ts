@@ -8,10 +8,8 @@ export default defineBuildConfig({
       opts.plugins.push({
         name: "selective-minify",
         async transform(code, id) {
-          if (id.includes("crypto/js")) {
-            const res = await transform(code, {
-              minify: true,
-            });
+          if (id.includes("crypto/js") || id.includes("serialize")) {
+            const res = await transform(code, { minify: true });
             return res.code;
           }
         },

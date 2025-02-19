@@ -1,146 +1,77 @@
-// Based on https://github.com/puleos/object-hash v3.0.0 (MIT)
-
-export interface SerializeOptions {
-  /**
-   * Function to determine if a key should be excluded from hashing.
-   * @optional
-   * @param key - The key to check for exclusion.
-   * @returns {boolean} - Returns true to exclude the key from hashing.
-   */
-  excludeKeys?: ((key: string) => boolean) | undefined;
-
-  /**
-   * Specifies whether to exclude values from hashing, so that only the object keys are hashed.
-   * @optional
-   */
-  excludeValues?: boolean | undefined;
-
-  /**
-   * Specifies whether to ignore objects of unknown type (not directly serialisable) when hashing.
-   * @optional
-   * @default false
-   */
-  ignoreUnknown?: boolean | undefined;
-
-  /**
-   * A function that replaces values before they are hashed, which can be used to customise the hashing process.
-   * @optional
-   * @param value - The current value to be hashed.
-   * @returns {any} - The value to use for hashing instead.
-   */
-  replacer?: ((value: any) => any) | undefined;
-
-  /**
-   * Specifies whether the 'name' property of functions should be taken into account when hashing.
-   * @optional
-   * @default false
-   */
-  respectFunctionNames?: boolean | undefined;
-
-  /**
-   * Specifies whether properties of functions should be taken into account when hashing.
-   * @optional
-   * @default false
-   */
-  respectFunctionProperties?: boolean | undefined;
-
-  /**
-   * Specifies whether to include type-specific properties such as prototype or constructor in the hash to distinguish between types.
-   * @optional
-   * @default false
-   */
-  respectType?: boolean | undefined;
-
-  /**
-   * Specifies whether arrays should be sorted before hashing to ensure consistent order.
-   * @optional
-   * @default false
-   */
-  unorderedArrays?: boolean | undefined;
-
-  /**
-   * Specifies whether Set and Map instances should be sorted by key before hashing to ensure consistent order.
-   * @optional
-   * @default true
-   */
-  unorderedObjects?: boolean | undefined;
-
-  /**
-   * Specifies whether the elements of `Set' and keys of `Map' should be sorted before hashing to ensure consistent order.
-   * @optional
-   * @default false
-   */
-  unorderedSets?: boolean | undefined;
-}
-
-// Defaults
-const defaults: SerializeOptions = Object.freeze({
-  ignoreUnknown: false,
-  respectType: false,
-  respectFunctionNames: false,
-  respectFunctionProperties: false,
-  unorderedObjects: true,
-  unorderedArrays: false,
-  unorderedSets: false,
-  excludeKeys: undefined,
-  excludeValues: undefined,
-  replacer: undefined,
-});
+// Originally based on https://github.com/puleos/object-hash v3.0.0 (MIT)
 
 /**
- * Serialize any JS value into a stable, hashable string
+ * Serializes any input value into a string for hashing.
  *
- * @param {object} object value to hash
- * @param {SerializeOptions} options hashing options. See {@link SerializeOptions}.
- * @return {string} serialized value
- * @api public
+ * This method uses best efforts to generate stable serialized values.
+ * However, it is not designed for security purposes.
+ * Keep in mind that there is always a chance of intentional collisions caused by user input.
+ *
+ * @param input any value to serialize
+ * @return {string} serialized string value
  */
-export function serialize(object: any, options?: SerializeOptions): string {
-  if (typeof object === "string" && !options) {
-    return `string:${object.length}:${object}`;
+export function serialize(input: any): string {
+  if (typeof input === "string") {
+    return `'${input}'`;
   }
-  if (options) {
-    options = { ...defaults, ...options };
-  } else {
-    options = defaults;
-  }
-  const hasher = createHasher(options);
-  hasher.dispatch(object);
-  return hasher.toString();
+  const serializer = new Serializer();
+  serializer.dispatch(input);
+  return serializer.serialized;
 }
 
-const defaultPrototypesKeys = Object.freeze([
-  "prototype",
-  "__proto__",
-  "constructor",
-]);
+const Serializer = /*@__PURE__*/ (function () {
+  class Serializer {
+    serialized = "";
 
-function createHasher(options: SerializeOptions) {
-  let buff = "";
-  let context = new Map();
-  const write = (str: string) => {
-    buff += str;
-  };
+    #context = new Map();
 
-  return {
-    toString() {
-      return buff;
-    },
-    getContext() {
-      return context;
-    },
+    write(str: string) {
+      this.serialized += str;
+    }
+
     dispatch(value: any): string | void {
-      if (options.replacer) {
-        value = options.replacer(value);
-      }
       const type = value === null ? "null" : typeof value;
-      return this[type](value);
-    },
-    object(object: any): string | void {
-      if (object && typeof object.toJSON === "function") {
-        return this.object(object.toJSON());
-      }
+      // @ts-ignore
+      const handler = this["$" + type];
+      return handler.call(this, value);
+    }
 
+    compare(a: any, b: any): number {
+      if (typeof a === "string" && typeof b === "string") {
+        return a.localeCompare(b);
+      }
+      return serialize(a).localeCompare(serialize(b));
+    }
+
+    objectEntries(type: string, entries: Iterable<[string, any]>) {
+      const sortedEntries = Array.from(entries).sort((a, b) =>
+        this.compare(a[0], b[0]),
+      );
+      this.write(`${type}{`);
+      for (let i = 0; i < sortedEntries.length; i++) {
+        const [key, value] = sortedEntries[i];
+        this.write(`${key}:`);
+        this.dispatch(value);
+        if (i < sortedEntries.length - 1) {
+          this.write(",");
+        }
+      }
+      this.write("}");
+    }
+
+    $string(string: any) {
+      this.write("'" + string + "'");
+    }
+
+    $symbol(symbol: symbol) {
+      this.write(symbol.toString());
+    }
+
+    $bigint(bigint: bigint) {
+      this.write(`${bigint}n`);
+    }
+
+    $object(object: any): string | void {
       const objString = Object.prototype.toString.call(object);
 
       let objType = "";
@@ -154,302 +85,110 @@ function createHasher(options: SerializeOptions) {
         objType = objString.slice(8, objectLength - 1);
       }
 
-      objType = objType.toLowerCase();
-
       let objectNumber = null;
 
-      if ((objectNumber = context.get(object)) === undefined) {
-        context.set(object, context.size);
+      if ((objectNumber = this.#context.get(object)) === undefined) {
+        this.#context.set(object, this.#context.size);
       } else {
-        return this.dispatch("[CIRCULAR:" + objectNumber + "]");
+        return this.write(`#${objectNumber}`);
       }
 
       if (
-        typeof Buffer !== "undefined" &&
-        Buffer.isBuffer &&
-        Buffer.isBuffer(object)
+        objType !== "Object" &&
+        objType !== "Function" &&
+        objType !== "AsyncFunction"
       ) {
-        write("buffer:");
-        return write(object.toString("utf8"));
-      }
-
-      if (
-        objType !== "object" &&
-        objType !== "function" &&
-        objType !== "asyncfunction"
-      ) {
-        // @ts-ignore
-        if (this[objType]) {
-          // @ts-ignore
-          this[objType](object);
-        } else if (!options.ignoreUnknown) {
-          this.unknown(object, objType);
-        }
-      } else {
-        let keys = Object.keys(object);
-        if (options.unorderedObjects) {
-          keys = keys.sort();
-        }
-        let extraKeys = [] as readonly string[];
-        // Make sure to incorporate special properties, so Types with different prototypes will produce
-        // a different hash and objects derived from different functions (`new Foo`, `new Bar`) will
-        // produce different hashes. We never do this for native functions since some seem to break because of that.
-        if (options.respectType !== false && !isNativeFunction(object)) {
-          extraKeys = defaultPrototypesKeys;
-        }
-
-        if (options.excludeKeys) {
-          keys = keys.filter((key) => {
-            return !options.excludeKeys!(key);
-          });
-          extraKeys = extraKeys.filter((key) => {
-            return !options.excludeKeys!(key);
-          });
-        }
-
-        write("object:" + (keys.length + extraKeys.length) + ":");
-        const dispatchForKey = (key: string) => {
-          this.dispatch(key);
-          write(":");
-          if (!options.excludeValues) {
-            this.dispatch(object[key]);
+        // @ts-expect-error
+        const handler = this["$" + objType];
+        if (handler) {
+          handler.call(this, object);
+        } else {
+          if (typeof object?.entries === "function") {
+            return this.objectEntries(objType, object.entries());
           }
-          write(",");
-        };
-        for (const key of keys) {
-          dispatchForKey(key);
+          throw new Error(`Cannot serialize ${objType}`);
         }
-        for (const key of extraKeys) {
-          dispatchForKey(key);
-        }
-      }
-    },
-    array(arr: any, unordered: boolean): string | void {
-      unordered =
-        unordered === undefined ? options.unorderedArrays !== false : unordered; // default to options.unorderedArrays
-
-      write("array:" + arr.length + ":");
-      if (!unordered || arr.length <= 1) {
-        for (const entry of arr) {
-          this.dispatch(entry);
-        }
-        return;
-      }
-
-      // The unordered case is a little more complicated: since there is no canonical ordering on objects,
-      // i.e. {a:1} < {a:2} and {a:1} > {a:2} are both false,
-      // We first serialize each entry using a PassThrough stream before sorting.
-      // also: we can’t use the same context for all entries since the order of hashing should *not* matter. instead,
-      // we keep track of the additions to a copy of the context and add all of them to the global context when we’re done
-      const contextAdditions = new Map();
-      const entries = arr.map((entry: any) => {
-        const hasher = createHasher(options);
-        hasher.dispatch(entry);
-        for (const [key, value] of hasher.getContext()) {
-          contextAdditions.set(key, value);
-        }
-        return hasher.toString();
-      });
-      context = contextAdditions;
-      entries.sort();
-      return this.array(entries, false);
-    },
-    date(date: any) {
-      return write("date:" + date.toJSON());
-    },
-    symbol(sym: any) {
-      return write("symbol:" + sym.toString());
-    },
-    unknown(value: any, type: string) {
-      write(type);
-      if (!value) {
-        return;
-      }
-      write(":");
-      if (value && typeof value.entries === "function") {
-        return this.array(Array.from(value.entries()), true /* ordered */);
-      }
-    },
-    error(err: any) {
-      return write("error:" + err.toString());
-    },
-    boolean(bool: any) {
-      return write("bool:" + bool);
-    },
-    string(string: any) {
-      write("string:" + string.length + ":");
-      write(string);
-    },
-    function(fn: any) {
-      write("fn:");
-      if (isNativeFunction(fn)) {
-        this.dispatch("[native]");
       } else {
-        this.dispatch(fn.toString());
+        const constructor = object.constructor.name;
+        const objectName = constructor === "Object" ? "" : constructor;
+        if (typeof object.toJSON === "function") {
+          if (objectName) {
+            this.write(objectName);
+          }
+          return this.$object(object.toJSON());
+        }
+        return this.objectEntries(objectName, Object.entries(object));
       }
+    }
 
-      if (options.respectFunctionNames !== false) {
-        // Make sure we can still distinguish native functions
-        // by their name, otherwise String and Function will
-        // have the same hash
-        this.dispatch("function-name:" + String(fn.name));
+    $function(fn: any) {
+      const fnStr = Function.prototype.toString.call(fn);
+      if (
+        fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
+      ) {
+        return this.write(`${fn.name || ""}()[native]`);
       }
+      this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
+    }
 
-      if (options.respectFunctionProperties) {
-        this.object(fn);
+    $Array(arr: any[]): string | void {
+      this.write("[");
+      for (const entry of arr) {
+        this.dispatch(entry);
+        this.write(",");
       }
-    },
-    number(number: any) {
-      return write("number:" + number);
-    },
-    xml(xml: any) {
-      return write("xml:" + xml.toString());
-    },
-    null() {
-      return write("Null");
-    },
-    undefined() {
-      return write("Undefined");
-    },
-    regexp(regex: any) {
-      return write("regex:" + regex.toString());
-    },
-    uint8array(arr: any) {
-      write("uint8array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    uint8clampedarray(arr: any) {
-      write("uint8clampedarray:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    int8array(arr: any) {
-      write("int8array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    uint16array(arr: any) {
-      write("uint16array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    int16array(arr: any) {
-      write("int16array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    uint32array(arr: any) {
-      write("uint32array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    int32array(arr: any) {
-      write("int32array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    float32array(arr: any) {
-      write("float32array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    float64array(arr: any) {
-      write("float64array:");
-      return this.dispatch(Array.prototype.slice.call(arr));
-    },
-    arraybuffer(arr: any) {
-      write("arraybuffer:");
-      return this.dispatch(new Uint8Array(arr));
-    },
-    url(url: any) {
-      return write("url:" + url.toString());
-    },
-    map(map: any) {
-      write("map:");
-      const arr = [...map];
-      return this.array(arr, options.unorderedSets !== false);
-    },
-    set(set: any) {
-      write("set:");
-      const arr = [...set];
-      return this.array(arr, options.unorderedSets !== false);
-    },
-    file(file: any) {
-      write("file:");
-      return this.dispatch([file.name, file.size, file.type, file.lastModfied]);
-    },
-    blob() {
-      if (options.ignoreUnknown) {
-        return write("[blob]");
-      }
-      throw new Error(
-        "Hashing Blob objects is currently not supported\n" +
-          'Use "options.replacer" or "options.ignoreUnknown"\n',
+      this.write("]");
+    }
+
+    $Date(date: any) {
+      return this.write(`Date(${date.toJSON()})`);
+    }
+
+    $ArrayBuffer(arr: ArrayBuffer) {
+      this.write(
+        `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`,
       );
-    },
-    domwindow() {
-      return write("domwindow");
-    },
-    bigint(number: number) {
-      return write("bigint:" + number.toString());
-    },
-    /* Node.js standard native objects */
-    process() {
-      return write("process");
-    },
-    timer() {
-      return write("timer");
-    },
-    pipe() {
-      return write("pipe");
-    },
-    tcp() {
-      return write("tcp");
-    },
-    udp() {
-      return write("udp");
-    },
-    tty() {
-      return write("tty");
-    },
-    statwatcher() {
-      return write("statwatcher");
-    },
-    securecontext() {
-      return write("securecontext");
-    },
-    connection() {
-      return write("connection");
-    },
-    zlib() {
-      return write("zlib");
-    },
-    context() {
-      return write("context");
-    },
-    nodescript() {
-      return write("nodescript");
-    },
-    httpparser() {
-      return write("httpparser");
-    },
-    dataview() {
-      return write("dataview");
-    },
-    signal() {
-      return write("signal");
-    },
-    fsevent() {
-      return write("fsevent");
-    },
-    tlswrap() {
-      return write("tlswrap");
-    },
-  };
-}
+    }
 
-const nativeFunc = "[native code] }";
-const nativeFuncLength = nativeFunc.length;
+    $Set(set: Set<any>) {
+      this.write(`Set`);
+      this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)));
+    }
 
-/** Check if the given function is a native function */
-function isNativeFunction(f: any) {
-  if (typeof f !== "function") {
-    return false;
+    $Map(map: Map<any, any>) {
+      return this.objectEntries("Map", map.entries());
+    }
   }
-  return (
-    Function.prototype.toString.call(f).slice(-nativeFuncLength) === nativeFunc
-  );
-}
+
+  for (const type of ["boolean", "number", "null", "undefined"] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (val: any) {
+      return this.write(val);
+    };
+  }
+
+  for (const type of ["Error", "RegExp", "URL"] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (val: any) {
+      return this.write(`${type}(${val.toString()})`);
+    };
+  }
+
+  for (const type of [
+    "Uint8Array",
+    "Uint8ClampedArray",
+    "Unt8Array",
+    "Uint16Array",
+    "Unt16Array",
+    "Uint32Array",
+    "Unt32Array",
+    "Float32Array",
+    "Float64Array",
+  ] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
+      this.write(`${type}[${Array.prototype.slice.call(arr).join(",")}]`);
+    };
+  }
+  return Serializer;
+})();
