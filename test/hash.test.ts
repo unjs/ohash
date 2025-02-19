@@ -3,12 +3,9 @@ import { hash } from "../src";
 
 describe("hash", () => {
   it("hash", () => {
-    expect(hash({ foo: "bar" })).toMatchInlineSnapshot(`"g82Nh7Lh3C"`);
-  });
-
-  it("hash", () => {
-    expect(hash("object:1:string:3:foo:string:3:bar,")).toMatchInlineSnapshot(
-      `"DB1F7673Yx"`,
+    const obj = { foo: "bar" }
+    expect(hash(obj)).toMatchInlineSnapshot(
+      `"g82Nh7Lh3CURFX9zCBhc5xgU0K7L0V1qkoHyRsKNqA4"`,
     );
   });
 });

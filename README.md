@@ -53,7 +53,7 @@ const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
 
 Hashes any JS value into a string.
 
-The input is first [serialized](#serializeinput) then it is [hashed](#digeststr) and truncated to a length of `10`.
+The input is first [serialized](#serializeinput) then it is [hashed](#digeststr).
 
 ```js
 import { hash } from "ohash";
