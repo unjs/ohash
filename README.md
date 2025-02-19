@@ -27,21 +27,24 @@ npx nypm i ohash
 
 ```js
 // ESM import
-import { hash, serialize, isEqual, diff, digest } from "ohash";
+import { hash, serialize, digest } from "ohash";
+import { isEqual, diff } from "ohash/utils";
 
 // Dynamic import
-const { hash } = await import("ohash");
+const { hash, serialize, digest } = await import("ohash");
+const { isEqual, diff } = await import("ohash/utils");
 ```
 
 <details>
   <summary>Import from CDN</summary>
 
 ```js
-// ESM import
-import { hash } from "https://esm.sh/ohash";
+import { hash, serialize, digest } from "https://esm.sh/ohash";
+import { isEqual, diff } from "https://esm.sh/ohash/utils";
 
 // Dynamic import
-const { hash } = await import("https://esm.sh/ohash");
+const { hash, serialize, digest } = await import("https://esm.sh/ohash");
+const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
 ```
 
 </details>
@@ -86,7 +89,7 @@ console.log(digest("Hello World"));
 Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput-options) values.
 
 ```js
-import { isEqual } from "ohash";
+import { isEqual } from "ohash/utils";
 
 // true
 console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }));
@@ -99,7 +102,7 @@ Compare two objects with nested [serialization](#serializeinput-options). Return
 The returned value is an array of diff entries with `$key`, `$hash`, `$value`, and `$props`. When logging, a string version of the changelog is displayed.
 
 ```js
-import { diff } from "ohash";
+import { diff } from "ohash/utils";
 
 const createObject = () => ({
   foo: "bar",
