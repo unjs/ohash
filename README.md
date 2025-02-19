@@ -9,7 +9,7 @@
 
 <!-- /automd -->
 
-Simple data [hashing](https://en.wikipedia.org/wiki/Hash_function) utils.
+Simple object hashing, serialization and comparison utils.
 
 > [!NOTE]
 > You are on active v2 development branch. Check [v1](https://github.com/unjs/ohash/tree/v1) for ohash v1 docs.
