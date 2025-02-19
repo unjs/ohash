@@ -11,16 +11,14 @@ const impls = {
   // distJs: cryptoDistJS,
 };
 
-describe("crypto:stringDigest", () => {
-  for (const [name, { stringDigest }] of Object.entries(impls)) {
+describe("crypto:digest", () => {
+  for (const [name, { digest }] of Object.entries(impls)) {
     describe(name, () => {
-      it("stringDigest", () => {
-        expect(stringDigest("Hello World")).toBe(
+      it("digest", () => {
+        expect(digest("Hello World")).toBe(
           "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4",
         );
-        expect(stringDigest("")).toBe(
-          "47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU",
-        );
+        expect(digest("")).toBe("47DEQpj8HBSaTImW5JCeuQeRkm5NMpJWZG3hSuFU");
       });
     });
   }

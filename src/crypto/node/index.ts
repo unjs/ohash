@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
  * **Note:** The `+`, `/`, and `=` characters are removed from the base64 result to maximize compatibility.
  * This behavior differs from standard SHA-256 + Base64 encoding.
  */
-export function stringDigest(date: string): string {
+export function digest(date: string): string {
   return createHash("sha256")
     .update(date)
     .digest("base64")

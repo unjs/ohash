@@ -43,10 +43,10 @@ deno install ohash
 
 ```js
 // ESM import
-import { hash, serialize, isEqual, diff, stringDigest } from "ohash";
+import { hash, serialize, isEqual, diff, digest } from "ohash";
 
 // ..or dnamic import
-const { hash, serialize, stringDigest } = await import("ohash");
+const { hash, serialize, digest } = await import("ohash");
 ```
 
 ### `hash(object, options?)`
@@ -130,7 +130,7 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
-### `stringDigest`
+### `digest`
 
 Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input and returns the hash as a base64 string.
 
@@ -139,10 +139,10 @@ Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input and ret
 > This behavior differs from standard SHA-256 + Base64 encoding.
 
 ```ts
-import { stringDigest } from "ohash";
+import { digest } from "ohash";
 
 // "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
-console.log(stringDigest("Hello World"));
+console.log(digest("Hello World"));
 ```
 
 ## 💻 Development

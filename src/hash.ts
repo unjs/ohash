@@ -1,5 +1,5 @@
 import { serialize, type SerializeOptions } from "./serialize";
-import { stringDigest } from "ohash/crypto";
+import { digest } from "ohash/crypto";
 
 /**
  * Hashes any JS value into a string.
@@ -16,5 +16,5 @@ import { stringDigest } from "ohash/crypto";
 export function hash(object: any, options: SerializeOptions = {}): string {
   const hashed =
     typeof object === "string" ? object : serialize(object, options);
-  return stringDigest(hashed).slice(0, 10);
+  return digest(hashed).slice(0, 10);
 }
