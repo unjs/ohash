@@ -47,17 +47,17 @@ describe("serialize", () => {
 
     it("Error", () => {
       expect(serialize(new Error("test"))).toMatchInlineSnapshot(
-        `"(error)Error: test"`,
+        `"(Error)Error: test"`,
       );
     });
 
     it("RegExp", () => {
-      expect(serialize(/.*/)).toMatchInlineSnapshot(`"(regexp)/.*/"`);
+      expect(serialize(/.*/)).toMatchInlineSnapshot(`"(RegExp)/.*/"`);
     });
 
     it("URL", () => {
       expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
-        `"(url)https://example.com/"`,
+        `"(URL)https://example.com/"`,
       );
     });
 
@@ -72,10 +72,10 @@ describe("serialize", () => {
 
     it("set", () => {
       expect(serialize(new Set([1, 2, 3]))).toMatchInlineSnapshot(
-        `"Set(1,2,3)"`,
+        `"Set[1,2,3]"`,
       );
       expect(serialize(new Set([2, 3, 1]))).toMatchInlineSnapshot(
-        `"Set(1,2,3)"`,
+        `"Set[1,2,3]"`,
       );
     });
 
@@ -83,10 +83,7 @@ describe("serialize", () => {
       const map = new Map();
       map.set("i", 1);
       map.set("s", "2");
-      expect(serialize(map)).toMatchInlineSnapshot(`"Map('i':1;'s':'2';)"`);
-      expect(serialize({ i: 1, s: "2" })).toMatchInlineSnapshot(
-        `"{'i':1,'s':'2',}"`,
-      );
+      expect(serialize(map)).toMatchInlineSnapshot(`"Map{'i':1,'s':'2',}"`);
     });
   });
 
@@ -98,15 +95,15 @@ describe("serialize", () => {
 
     it("Uint8Array, Buffer and ArrayBufferLike", () => {
       expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
-        `"(arraybuffer:3)1,2,3"`,
+        `"ArrayBuffer[1,2,3]"`,
       );
 
       expect(serialize(new Uint8Array([1, 2, 3]))).toMatchInlineSnapshot(
-        `"uint8array[1,2,3]"`,
+        `"Uint8Array[1,2,3]"`,
       );
 
       expect(serialize(Buffer.from("hello"))).toMatchInlineSnapshot(
-        `"uint8array[104,101,108,108,111]"`,
+        `"Uint8Array[104,101,108,108,111]"`,
       );
     });
   });

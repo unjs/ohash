@@ -28,11 +28,26 @@ const Serializer = /*@__PURE__*/ (function () {
     dispatch(value: any): string | void {
       const type = value === null ? "null" : typeof value;
       // @ts-ignore
-      const handler = this[type];
+      const handler = this["$" + type];
+      if (!handler) {
+        throw new Error(`Cannot serialize ${type}`);
+      }
       return handler.call(this, value);
     }
 
-    object(object: any): string | void {
+    unknown(value: any, type: string) {
+      this.write(`(${type})`);
+      if (typeof value?.entries === "function") {
+        return this.$Array(Array.from(value.entries()), true /* ordered */);
+      }
+      throw new Error(`Cannot serialize ${type}`);
+    }
+
+    $string(string: any) {
+      this.write("'" + string + "'");
+    }
+
+    $object(object: any): string | void {
       const objString = Object.prototype.toString.call(object);
 
       let objType = "";
@@ -60,7 +75,7 @@ const Serializer = /*@__PURE__*/ (function () {
         objType !== "AsyncFunction"
       ) {
         // @ts-expect-error
-        const handler = this[objType.toLowerCase()];
+        const handler = this["$" + objType];
         if (handler) {
           handler.call(this, object);
         } else {
@@ -72,7 +87,7 @@ const Serializer = /*@__PURE__*/ (function () {
           this.write(`${constructor}`);
         }
         if (typeof object.toJSON === "function") {
-          return this.object(object.toJSON());
+          return this.$object(object.toJSON());
         }
         this.write("{");
         for (const key of Object.keys(object).sort()) {
@@ -85,7 +100,17 @@ const Serializer = /*@__PURE__*/ (function () {
       }
     }
 
-    array(arr: any, unordered: boolean = false): string | void {
+    $function(fn: any) {
+      const fnStr = Function.prototype.toString.call(fn);
+      if (
+        fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
+      ) {
+        return this.write(`${fn.name || ""}()[native]`);
+      }
+      this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
+    }
+
+    $Array(arr: any, unordered: boolean = false): string | void {
       if (!unordered || arr.length <= 1) {
         this.write("[");
         for (const entry of arr) {
@@ -111,83 +136,62 @@ const Serializer = /*@__PURE__*/ (function () {
         return hasher.toString();
       });
       this.#context = contextAdditions;
-      return this.array(entries.sort(), false);
+      return this.$Array(entries.sort(), false);
     }
 
-    unknown(value: any, type: string) {
-      this.write(`(${type})`);
-      if (typeof value?.entries === "function") {
-        return this.array(Array.from(value.entries()), true /* ordered */);
-      }
-      throw new Error(`Cannot serialize ${type}`);
-    }
-
-    string(string: any) {
-      this.write("'" + string + "'");
-    }
-
-    date(date: any) {
+    $Date(date: any) {
       return this.write(`Date(${date.toJSON()})`);
     }
 
-    arraybuffer(arr: ArrayBuffer) {
-      this.write(`(arraybuffer:${arr.byteLength})`);
-      this.write(Array.prototype.slice.call(new Uint8Array(arr)).join(","));
+    $ArrayBuffer(arr: ArrayBuffer) {
+      this.write(
+        `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`,
+      );
     }
 
-    set(set: Set<any>) {
-      this.write(`Set(${[...set].sort().join(",")})`);
+    $Set(set: Set<any>) {
+      this.write(`Set[${[...set].sort().join(",")}]`);
     }
 
-    map(map: Map<any, any>) {
-      this.write(`Map(`);
+    $Map(map: Map<any, any>) {
+      this.write(`Map{`);
       for (const [key, value] of map) {
         this.dispatch(key);
         this.write(":");
         this.dispatch(value);
-        this.write(";");
+        this.write(",");
       }
-      this.write(")");
-    }
-
-    function(fn: any) {
-      const fnStr = Function.prototype.toString.call(fn);
-      if (
-        fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
-      ) {
-        return this.write(`${fn.name || ""}()[native]`);
-      }
-      this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
+      this.write("}");
     }
   }
 
   for (const type of ["boolean", "number", "null", "undefined"] as const) {
     // @ts-ignore
-    Serializer.prototype[type] = function (val: any) {
+    Serializer.prototype["$" + type] = function (val: any) {
       return this.write(val);
     };
   }
 
-  for (const type of ["error", "regexp", "url", "bigint", "symbol"] as const) {
+  for (const type of ["Error", "RegExp", "URL", "Bigint", "Symbol"] as const) {
     // @ts-ignore
-    Serializer.prototype[type] = function (val: any) {
+    Serializer.prototype["$" + type] = function (val: any) {
       return this.write(`(${type})${val.toString()}`);
     };
   }
 
   for (const type of [
-    "uint8array",
-    "uint8clampedarray",
-    "int8array",
-    "uint16array",
-    "int16array",
-    "uint32array",
-    "int32array",
-    "float32array",
-    "float64array",
+    "Uint8Array",
+    "Uint8ClampedArray",
+    "Unt8Array",
+    "Uint16Array",
+    "Unt16Array",
+    "Uint32Array",
+    "Unt32Array",
+    "Float32Array",
+    "Float64Array",
   ] as const) {
     // @ts-ignore
-    Serializer.prototype[type] = function (arr: ArrayBufferLike) {
+    Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
       this.write(`${type}[${Array.prototype.slice.call(arr).join(",")}]`);
     };
   }
