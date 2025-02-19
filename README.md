@@ -43,10 +43,10 @@ deno install ohash
 
 ```js
 // ESM import
-import { hash, objectHash, isEqual, diff, stringDigest } from "ohash";
+import { hash, serialize, isEqual, diff, stringDigest } from "ohash";
 
 // ..or dnamic import
-const { hash, objectHash, stringDigest } = await import("ohash");
+const { hash, serialize, stringDigest } = await import("ohash");
 ```
 
 ### `hash(object, options?)`
@@ -64,26 +64,26 @@ console.log(hash({ foo: "bar" }));
 
 **How it works:**
 
-- Input will be serialized into a string like `"object:1:string:3:foo:string:3:bar,"`
-- Then it is hashed using [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encoded as a [base64](https://en.wikipedia.org/wiki/Base64) string
-- `+`, `/` and `=` characters will be removed and string trimmed to `10` chars
+- Input will be serialized into a string like `object:1:string:3:foo:string:3:bar,`.
+- Then it is hashed using [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encoded as a [base64](https://en.wikipedia.org/wiki/Base64) string.
+- `+`, `/` and `=` characters will be removed and string trimmed to `10` chars.
 
-### `objectHash(object, options?)`
+### `serialize(object, options?)`
 
 Serializes any value into a stable and safe string for hashing.
 
 **Usage:**
 
 ```js
-import { objectHash } from "ohash";
+import { serialize } from "ohash";
 
 // "object:1:string:3:foo:string:3:bar,"
-console.log(objectHash({ foo: "bar" }));
+console.log(serialize({ foo: "bar" }));
 ```
 
 ### `isEqual(obj1, obj2, options?)`
 
-Compare two objects using reference equality and stable object hashing.
+Compare two objects using `==` then fallbacks to compare using `serialize`.
 
 Usage:
 
