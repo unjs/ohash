@@ -25,6 +25,17 @@ describe("bundle size", () => {
     expect(bytes).toBeLessThanOrEqual(2400); // <2.4kb
     expect(gzipSize).toBeLessThanOrEqual(1000); // <1kb
   });
+
+  it.only("hash", async () => {
+    const code = /* js */ `
+      import { hash } from "../src";
+      hash("")
+    `;
+    const { bytes, gzipSize } = await getBundleSize(code);
+    // console.log({ bytes, gzipSize });
+    expect(bytes).toBeLessThanOrEqual(2500); // <2.5kb
+    expect(gzipSize).toBeLessThanOrEqual(1100); // <1.1kb
+  });
 });
 
 async function getBundleSize(code: string) {
