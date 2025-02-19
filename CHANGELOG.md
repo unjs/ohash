@@ -2,6 +2,72 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.0
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.4...v2.0.0)
+
+### 🔥 Performance
+
+- Reduce js `digest` size ([#109](https://github.com/unjs/ohash/pull/109))
+
+### 🩹 Fixes
+
+- **hash, serialize:** ⚠️  Always serialize string inputs ([#110](https://github.com/unjs/ohash/pull/110))
+
+### 💅 Refactors
+
+- ⚠️  Drop `murmurHash` support ([#104](https://github.com/unjs/ohash/pull/104))
+- ⚠️  Rename `sha256*` to `stringDigest` ([#106](https://github.com/unjs/ohash/pull/106))
+- ⚠️  Rename `objectHash` to `serialize` ([#107](https://github.com/unjs/ohash/pull/107))
+- Rename `stringDigest` to `digest` ([d4dd808](https://github.com/unjs/ohash/commit/d4dd808))
+- ⚠️  Use standard base64url for `digest` ([#111](https://github.com/unjs/ohash/pull/111))
+- ⚠️  Rewrite serializer ([#113](https://github.com/unjs/ohash/pull/113))
+
+### 📖 Documentation
+
+- Clarify what `hash()` does ([8f7e829](https://github.com/unjs/ohash/commit/8f7e829))
+
+### 📦 Build
+
+- ⚠️  Esm only ([#105](https://github.com/unjs/ohash/pull/105))
+- Selectively minify js hash impl ([fe3db66](https://github.com/unjs/ohash/commit/fe3db66))
+- ⚠️  Move utils to `ohash/utils` ([#112](https://github.com/unjs/ohash/pull/112))
+
+### 🏡 Chore
+
+- Update deps ([f7c6273](https://github.com/unjs/ohash/commit/f7c6273))
+- Fix typo ([92dc287](https://github.com/unjs/ohash/commit/92dc287))
+- Organize src dir ([c94e04a](https://github.com/unjs/ohash/commit/c94e04a))
+- More strict type checks ([033a043](https://github.com/unjs/ohash/commit/033a043))
+- Update repo ([c5eced5](https://github.com/unjs/ohash/commit/c5eced5))
+- Update readme ([b3a6fdf](https://github.com/unjs/ohash/commit/b3a6fdf))
+- Remove legacy benchmark ([46221d7](https://github.com/unjs/ohash/commit/46221d7))
+- Remove legacy benchmark scripts ([04fb415](https://github.com/unjs/ohash/commit/04fb415))
+- Update readme ([b1cfd79](https://github.com/unjs/ohash/commit/b1cfd79))
+- Update readme ([cbb0cc9](https://github.com/unjs/ohash/commit/cbb0cc9))
+- Fix tests ([8079b69](https://github.com/unjs/ohash/commit/8079b69))
+
+### ✅ Tests
+
+- Split tests ([37fe050](https://github.com/unjs/ohash/commit/37fe050))
+- Split hash/serialize ([2ffee80](https://github.com/unjs/ohash/commit/2ffee80))
+- Add bench and bundle tests ([f828319](https://github.com/unjs/ohash/commit/f828319))
+
+#### ⚠️ Breaking Changes
+
+- **hash, serialize:** ⚠️  Always serialize string inputs ([#110](https://github.com/unjs/ohash/pull/110))
+- ⚠️  Drop `murmurHash` support ([#104](https://github.com/unjs/ohash/pull/104))
+- ⚠️  Rename `sha256*` to `stringDigest` ([#106](https://github.com/unjs/ohash/pull/106))
+- ⚠️  Rename `objectHash` to `serialize` ([#107](https://github.com/unjs/ohash/pull/107))
+- ⚠️  Use standard base64url for `digest` ([#111](https://github.com/unjs/ohash/pull/111))
+- ⚠️  Rewrite serializer ([#113](https://github.com/unjs/ohash/pull/113))
+- ⚠️  Esm only ([#105](https://github.com/unjs/ohash/pull/105))
+- ⚠️  Move utils to `ohash/utils` ([#112](https://github.com/unjs/ohash/pull/112))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v1.1.4
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.3...v1.1.4)

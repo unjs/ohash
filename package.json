@@ -1,6 +1,6 @@
 {
   "name": "ohash",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "description": "Simple object hashing, serialization and comparison utils.",
   "repository": "unjs/ohash",
   "license": "MIT",
