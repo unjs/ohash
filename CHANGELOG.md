@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.1
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.0...v2.0.1)
+
+### 💅 Refactors
+
+- **hash:** Avoid `truncate` ([0642ec5](https://github.com/unjs/ohash/commit/0642ec5))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v2.0.0
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.4...v2.0.0)
