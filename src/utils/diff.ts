@@ -1,4 +1,4 @@
-import { objectHash, type HashOptions } from "../hash/object-hash";
+import { serialize, type SerializeOptions } from "../serialize";
 
 /**
  * Calculates the difference between two objects and returns a list of differences.
@@ -11,7 +11,7 @@ import { objectHash, type HashOptions } from "../hash/object-hash";
 export function diff(
   obj1: any,
   obj2: any,
-  opts: HashOptions = {},
+  opts: SerializeOptions = {},
 ): DiffEntry[] {
   const h1 = _toHashedObject(obj1, opts);
   const h2 = _toHashedObject(obj2, opts);
@@ -21,7 +21,7 @@ export function diff(
 function _diff(
   h1: DiffHashedObject,
   h2: DiffHashedObject,
-  opts: HashOptions = {},
+  opts: SerializeOptions = {},
 ): DiffEntry[] {
   const diffs = [];
 
@@ -52,11 +52,11 @@ function _diff(
 
 function _toHashedObject(
   obj: any,
-  opts: HashOptions,
+  opts: SerializeOptions,
   key = "",
 ): DiffHashedObject {
   if (obj && typeof obj !== "object") {
-    return new DiffHashedObject(key, obj, objectHash(obj, opts));
+    return new DiffHashedObject(key, obj, serialize(obj, opts));
   }
   const props: Record<string, DiffHashedObject> = {};
   const hashes = [];

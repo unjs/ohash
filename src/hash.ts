@@ -1,4 +1,4 @@
-import { objectHash, type HashOptions } from "./object-hash";
+import { serialize, type SerializeOptions } from "./serialize";
 import { stringDigest } from "ohash/crypto";
 
 /**
@@ -10,11 +10,11 @@ import { stringDigest } from "ohash/crypto";
  * - `+`, `/` and `=` characters will be removed and string trimmed to `10` chars
  *
  * @param {object} object value to hash
- * @param {HashOptions} options hashing options. See {@link HashOptions}.
+ * @param {SerializeOptions} options hashing options. See {@link SerializeOptions}.
  * @return {string} hash value
  */
-export function hash(object: any, options: HashOptions = {}): string {
+export function hash(object: any, options: SerializeOptions = {}): string {
   const hashed =
-    typeof object === "string" ? object : objectHash(object, options);
+    typeof object === "string" ? object : serialize(object, options);
   return stringDigest(hashed).slice(0, 10);
 }

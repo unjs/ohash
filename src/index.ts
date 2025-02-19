@@ -1,6 +1,6 @@
 // Hash
-export { objectHash } from "./hash/object-hash";
-export { hash } from "./hash/hash";
+export { serialize, type SerializeOptions } from "./serialize";
+export { hash } from "./hash";
 
 // Crypto
 export { stringDigest } from "ohash/crypto";

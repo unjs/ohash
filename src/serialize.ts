@@ -1,6 +1,6 @@
 // Based on https://github.com/puleos/object-hash v3.0.0 (MIT)
 
-export interface HashOptions {
+export interface SerializeOptions {
   /**
    * Function to determine if a key should be excluded from hashing.
    * @optional
@@ -74,7 +74,7 @@ export interface HashOptions {
 }
 
 // Defaults
-const defaults: HashOptions = Object.freeze({
+const defaults: SerializeOptions = Object.freeze({
   ignoreUnknown: false,
   respectType: false,
   respectFunctionNames: false,
@@ -94,7 +94,7 @@ const defaults: HashOptions = Object.freeze({
  * @return {string} serialized value
  * @api public
  */
-export function objectHash(object: any, options?: HashOptions): string {
+export function serialize(object: any, options?: SerializeOptions): string {
   if (options) {
     options = { ...defaults, ...options };
   } else {
@@ -111,7 +111,7 @@ const defaultPrototypesKeys = Object.freeze([
   "constructor",
 ]);
 
-function createHasher(options: HashOptions) {
+function createHasher(options: SerializeOptions) {
   let buff = "";
   let context = new Map();
   const write = (str: string) => {
