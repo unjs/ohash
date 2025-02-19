@@ -53,7 +53,7 @@ const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
 
 Hashes any JS value into a string.
 
-The input is first [serialized](#serializeinput) into a string like `object:1:string:3:foo:string:3:bar,`, then it is [hashed](#digeststr) and truncated to a length of `10`.
+The input is first [serialized](#serializeinput) then it is [hashed](#digeststr) and truncated to a length of `10`.
 
 ```js
 import { hash } from "ohash";
@@ -67,7 +67,7 @@ console.log(hash({ foo: "bar" }));
 Serializes any input value into a string for hashing.
 
 > [!IMPORTANT]
-> `serial` uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
+> `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
 
 ```js
 import { serialize } from "ohash";

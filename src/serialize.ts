@@ -3,6 +3,10 @@
 /**
  * Serializes any input value into a string for hashing.
  *
+ * This method uses best efforts to generate stable serialized values.
+ * However, it is not designed for security purposes.
+ * Keep in mind that there is always a chance of intentional collisions caused by user input.
+ *
  * @param input any value to serialize
  * @return {string} serialized string value
  */
