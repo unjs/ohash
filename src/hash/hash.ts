@@ -1,8 +1,9 @@
 import { objectHash, type HashOptions } from "./object-hash";
-import { sha256base64 } from "ohash/crypto";
+import { stringDigest } from "ohash/crypto";
 
 /**
- * Hash any JS value into a string
+ * Hash any JS value into a string.
+ *
  * @param {object} object value to hash
  * @param {HashOptions} options hashing options. See {@link HashOptions}.
  * @return {string} hash value
@@ -11,5 +12,5 @@ import { sha256base64 } from "ohash/crypto";
 export function hash(object: any, options: HashOptions = {}): string {
   const hashed =
     typeof object === "string" ? object : objectHash(object, options);
-  return sha256base64(hashed).slice(0, 10);
+  return stringDigest(hashed).slice(0, 10);
 }

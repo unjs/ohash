@@ -1,10 +1,12 @@
 import { createHash } from "node:crypto";
 
-export function sha256(data: string): string {
-  return createHash("sha256").update(data).digest("hex").replace(/=+$/, "");
-}
-
-export function sha256base64(date: string): string {
+/**
+ * Hashes string using SHA-256 algorithm and returns the hash as a base64 string.
+ *
+ * **Note:** The `+`, `/`, and `=` characters are removed from the base64 result to maximize compatibility.
+ * This behavior differs from standard SHA-256 + Base64 encoding.
+ */
+export function stringDigest(date: string): string {
   return createHash("sha256")
     .update(date)
     .digest("base64")
