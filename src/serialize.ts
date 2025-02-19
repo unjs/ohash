@@ -89,12 +89,16 @@ const defaults: SerializeOptions = Object.freeze({
 
 /**
  * Serialize any JS value into a stable, hashable string
+ *
  * @param {object} object value to hash
- * @param {HashOptions} options hashing options. See {@link HashOptions}.
+ * @param {SerializeOptions} options hashing options. See {@link SerializeOptions}.
  * @return {string} serialized value
  * @api public
  */
 export function serialize(object: any, options?: SerializeOptions): string {
+  if (typeof object === "string" && !options) {
+    return `string:${object.length}:${object}`;
+  }
   if (options) {
     options = { ...defaults, ...options };
   } else {

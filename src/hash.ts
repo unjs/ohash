@@ -14,7 +14,5 @@ import { stringDigest } from "ohash/crypto";
  * @return {string} hash value
  */
 export function hash(object: any, options: SerializeOptions = {}): string {
-  const hashed =
-    typeof object === "string" ? object : serialize(object, options);
-  return stringDigest(hashed).slice(0, 10);
+  return stringDigest(serialize(object, options)).slice(0, 10);
 }
