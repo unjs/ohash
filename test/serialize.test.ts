@@ -2,6 +2,12 @@ import { describe, expect, it } from "vitest";
 import { serialize } from "../src";
 
 describe("serialize", () => {
+  it("string", () => {
+    expect(serialize("hello world 😎")).toMatchInlineSnapshot(
+      `"string:14:hello world 😎"`,
+    );
+  });
+
   it("basic object", () => {
     expect(
       serialize({ foo: "bar", bar: new Date(0), bool: false }),

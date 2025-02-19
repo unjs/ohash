@@ -50,17 +50,14 @@ const { hash } = await import("https://esm.sh/ohash");
 
 Hashes any JS value into a string.
 
+The input is first [serialized](#serializeinput-options) into a string like `object:1:string:3:foo:string:3:bar,`, then it is [hashed](#digeststr) and truncated to a length of `10`.
+
 ```js
 import { hash } from "ohash";
 
 // "dZbtA7f0lK"
 console.log(hash({ foo: "bar" }));
 ```
-
-**How it works:**
-
-- If the input is not a string, it will be serialized into a string like `object:1:string:3:foo:string:3:bar,` using [`serialize()`](#serializeinput-options).
-- Then it is hashed using [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encoded as a [Base64](https://en.wikipedia.org/wiki/Base64) string using [`digest()`](#digeststr).
 
 ## `serialize(input, options?)`
 
