@@ -47,43 +47,47 @@ describe("serialize", () => {
 
     it("Error", () => {
       expect(serialize(new Error("test"))).toMatchInlineSnapshot(
-        `"(Error)Error: test"`,
+        `"Error(Error: test)"`,
       );
     });
 
     it("RegExp", () => {
-      expect(serialize(/.*/)).toMatchInlineSnapshot(`"(RegExp)/.*/"`);
+      expect(serialize(/.*/)).toMatchInlineSnapshot(`"RegExp(/.*/)"`);
     });
 
     it("URL", () => {
       expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
-        `"(URL)https://example.com/"`,
+        `"URL(https://example.com/)"`,
       );
     });
 
     it("Symbol", () => {
-      expect(Symbol("test")).toMatchInlineSnapshot(`Symbol(test)`);
-      expect(Symbol.for("test")).toMatchInlineSnapshot(`Symbol(test)`);
+      expect(serialize(Symbol("test"))).toMatchInlineSnapshot(`"Symbol(test)"`);
+      expect(serialize(Symbol.for("test"))).toMatchInlineSnapshot(
+        `"Symbol(test)"`,
+      );
     });
 
     it("BigInt", () => {
-      expect(BigInt(100_000)).toMatchInlineSnapshot(`100000n`);
+      expect(serialize(9_007_199_254_740_991n)).toMatchInlineSnapshot(
+        `"9007199254740991n"`,
+      );
     });
 
     it("set", () => {
       expect(serialize(new Set([1, 2, 3]))).toMatchInlineSnapshot(
-        `"Set[1,2,3]"`,
+        `"Set[1,2,3,]"`,
       );
       expect(serialize(new Set([2, 3, 1]))).toMatchInlineSnapshot(
-        `"Set[1,2,3]"`,
+        `"Set[1,2,3,]"`,
       );
     });
 
     it("map", () => {
       const map = new Map();
-      map.set("i", 1);
-      map.set("s", "2");
-      expect(serialize(map)).toMatchInlineSnapshot(`"Map{'i':1,'s':'2',}"`);
+      map.set("z", 2);
+      map.set("a", "1");
+      expect(serialize(map)).toMatchInlineSnapshot(`"Map{'a':'1','z':2,}"`);
     });
   });
 
@@ -158,7 +162,7 @@ describe("serialize", () => {
       form.set("bar", "baz");
 
       expect(serialize(form)).toMatchInlineSnapshot(
-        `"(FormData)['[object Object]','[object Object]',]"`,
+        `"FormData{'bar':'baz','foo':'bar',}"`,
       );
     });
   });

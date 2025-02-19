@@ -29,22 +29,27 @@ const Serializer = /*@__PURE__*/ (function () {
       const type = value === null ? "null" : typeof value;
       // @ts-ignore
       const handler = this["$" + type];
-      if (!handler) {
-        throw new Error(`Cannot serialize ${type}`);
-      }
       return handler.call(this, value);
     }
 
-    unknown(value: any, type: string) {
-      this.write(`(${type})`);
-      if (typeof value?.entries === "function") {
-        return this.$Array(Array.from(value.entries()), true /* ordered */);
-      }
-      throw new Error(`Cannot serialize ${type}`);
+    compare(input1: any, input2: any) {
+      const s1 = new Serializer();
+      s1.dispatch(input1);
+      const s2 = new Serializer();
+      s2.dispatch(input2);
+      return s1.serialized.localeCompare(s2.serialized);
     }
 
     $string(string: any) {
       this.write("'" + string + "'");
+    }
+
+    $symbol(symbol: symbol) {
+      this.write(symbol.toString());
+    }
+
+    $bigint(bigint: bigint) {
+      this.write(`${bigint}n`);
     }
 
     $object(object: any): string | void {
@@ -79,7 +84,21 @@ const Serializer = /*@__PURE__*/ (function () {
         if (handler) {
           handler.call(this, object);
         } else {
-          this.unknown(object, objType);
+          if (typeof object?.entries === "function") {
+            this.write(`${objType}{`);
+            const entries = [...object.entries()].sort((a, b) =>
+              this.compare(a[0], b[0]),
+            );
+            for (const [key, value] of entries) {
+              this.dispatch(key);
+              this.write(":");
+              this.dispatch(value);
+              this.write(",");
+            }
+            this.write("}");
+            return;
+          }
+          throw new Error(`Cannot serialize ${objType}`);
         }
       } else {
         const constructor = object.constructor.name;
@@ -110,33 +129,13 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
     }
 
-    $Array(arr: any, unordered: boolean = false): string | void {
-      if (!unordered || arr.length <= 1) {
-        this.write("[");
-        for (const entry of arr) {
-          this.dispatch(entry);
-          this.write(",");
-        }
-        this.write("]");
-        return;
+    $Array(arr: any[]): string | void {
+      this.write("[");
+      for (const entry of arr) {
+        this.dispatch(entry);
+        this.write(",");
       }
-
-      // The unordered case is a little more complicated: since there is no canonical ordering on objects,
-      // i.e. {a:1} < {a:2} and {a:1} > {a:2} are both false,
-      // We first serialize each entry using a PassThrough stream before sorting.
-      // also: we can’t use the same context for all entries since the order of hashing should *not* matter. instead,
-      // we keep track of the additions to a copy of the context and add all of them to the global context when we’re done
-      const contextAdditions = new Map();
-      const entries = arr.map((entry: any) => {
-        const hasher = new Serializer();
-        hasher.dispatch(entry);
-        for (const [key, value] of hasher.#context) {
-          contextAdditions.set(key, value);
-        }
-        return hasher.toString();
-      });
-      this.#context = contextAdditions;
-      return this.$Array(entries.sort(), false);
+      this.write("]");
     }
 
     $Date(date: any) {
@@ -150,12 +149,14 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      this.write(`Set[${[...set].sort().join(",")}]`);
+      this.write(`Set`);
+      this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)));
     }
 
     $Map(map: Map<any, any>) {
       this.write(`Map{`);
-      for (const [key, value] of map) {
+      const entries = [...map.entries()].sort((a, b) => this.compare(a, b));
+      for (const [key, value] of entries) {
         this.dispatch(key);
         this.write(":");
         this.dispatch(value);
@@ -172,10 +173,10 @@ const Serializer = /*@__PURE__*/ (function () {
     };
   }
 
-  for (const type of ["Error", "RegExp", "URL", "Bigint", "Symbol"] as const) {
+  for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(`(${type})${val.toString()}`);
+      return this.write(`${type}(${val.toString()})`);
     };
   }
 
