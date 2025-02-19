@@ -147,13 +147,3 @@ export class SHA256 extends Hasher {
 export function sha256(message: string) {
   return new SHA256().finalize(message).toString();
 }
-
-/**
- * Calculates the SHA-256 hash of the given message and encodes it in Base64.
- *
- * @param {string} message - The message to hash.
- * @returns {string} The base64 encoded hash of the message.
- */
-export function sha256base64(message: string) {
-  return new SHA256().finalize(message).toString(Base64);
-}

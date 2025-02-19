@@ -43,15 +43,15 @@ Import:
 
 ```js
 // ESM import
-import { hash, objectHash, sha256 } from "ohash";
+import { hash, objectHash, stringDigest } from "ohash";
 
 // ..or dnamic import
-const { hash, objectHash, sha256 } = await import("ohash");
+const { hash, objectHash, stringDigest } = await import("ohash");
 ```
 
 ### `hash(object, options?)`
 
-Converts object value into a string hash using `objectHash` and then applies `sha256` with Base64 encoding (trimmed by length of 10).
+Serializes any value into a string hash using `objectHash` and then hashes result sha256+base64 (using `stringDigest`) trimmed by length of `10`.
 
 **Usage:**
 
@@ -124,26 +124,19 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
-### `sha256`
+### `stringDigest`
 
-Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
+Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input and returns the hash as a base64 string.
 
-```js
-import { sha256 } from "ohash";
+> [!IMPORTANT]
+> The `+`, `/`, and `=` characters are removed from base64 result to maximize compatibility.
+> This behavior differs from standard SHA-256 + Base64 encoding.
 
-// "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
-console.log(sha256("Hello World"));
-```
-
-### `sha256base64`
-
-Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
-
-```js
-import { sha256base64 } from "ohash";
+```ts
+import { stringDigest } from "ohash";
 
 // "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
-console.log(sha256base64("Hello World"));
+console.log(stringDigest("Hello World"));
 ```
 
 ## 💻 Development
