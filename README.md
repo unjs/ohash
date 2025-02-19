@@ -12,7 +12,7 @@
 Simple object hashing, serialization and comparison utils.
 
 > [!NOTE]
-> You are on active v2 development branch. Check [v1](https://github.com/unjs/ohash/tree/v1) for ohash v1 docs.
+> You are on active v2 development branch. Check [v1](https://github.com/unjs/ohash/tree/v1) for old ohash v1 docs and [release notes](https://github.com/unjs/ohash/releases/tag/v2.0.1) for migration.
 
 ## Usage
 
