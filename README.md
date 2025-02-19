@@ -1,18 +1,26 @@
 # ohash
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions][github-actions-src]][github-actions-href]
-[![Codecov][codecov-src]][codecov-href]
-[![bundle size][bundle-src]][bundle-href]
+<!-- automd:badges bundlephobia codecov -->
 
-> Super fast hashing library written in Vanilla JS
+[![npm version](https://img.shields.io/npm/v/ohash)](https://npmjs.com/package/ohash)
+[![npm downloads](https://img.shields.io/npm/dm/ohash)](https://npm.chart.dev/ohash)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/ohash)](https://bundlephobia.com/package/ohash)
+[![codecov](https://img.shields.io/codecov/c/gh/unjs/ohash)](https://codecov.io/gh/unjs/ohash)
+
+<!-- /automd -->
+
+Fast data [hashing](https://en.wikipedia.org/wiki/Hash_function) utils.
 
 ## Usage
 
 Install package:
 
+<!--automd:pm-install -->
+
 ```sh
+# ✨ Auto-detect
+npx nypm install ohash
+
 # npm
 npm install ohash
 
@@ -21,15 +29,23 @@ yarn add ohash
 
 # pnpm
 pnpm install ohash
+
+# bun
+bun install ohash
+
+# deno
+deno install ohash
 ```
+
+<!--/automd -->
 
 Import:
 
 ```js
-// ESM
+// ESM import
 import { hash, objectHash, sha256 } from "ohash";
 
-// Or dnamic import in strict CommonJS contexts
+// ..or dnamic import
 const { hash, objectHash, sha256 } = await import("ohash");
 ```
 
@@ -37,7 +53,7 @@ const { hash, objectHash, sha256 } = await import("ohash");
 
 Converts object value into a string hash using `objectHash` and then applies `sha256` with Base64 encoding (trimmed by length of 10).
 
-Usage:
+**Usage:**
 
 ```js
 import { hash } from "ohash";
@@ -48,9 +64,9 @@ console.log(hash({ foo: "bar" }));
 
 ### `objectHash(object, options?)`
 
-Converts a nest object value into a stable and safe string for hashing.
+Serializes any value into a stable and safe string for hashing.
 
-Usage:
+**Usage:**
 
 ```js
 import { objectHash } from "ohash";
@@ -78,7 +94,7 @@ Compare two objects with nested hashing. Returns an array of changes.
 
 Returned value is an array of diff entries with `$key`, `$hash`, `$value` and `$props`. When logging, a string version of changelog is displayed.
 
-Usage:
+**Usage:**
 
 ```js
 import { diff } from "ohash";
@@ -110,7 +126,7 @@ console.log(diff(obj1, obj2));
 
 ### `sha256`
 
-Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
+Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input string.
 
 ```js
 import { sha256 } from "ohash";
@@ -121,7 +137,7 @@ console.log(sha256("Hello World"));
 
 ### `sha256base64`
 
-Create a secure [SHA 256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
+Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest in Base64 encoding from input string.
 
 ```js
 import { sha256base64 } from "ohash";
@@ -133,7 +149,7 @@ console.log(sha256base64("Hello World"));
 ## 💻 Development
 
 - Clone this repository
-- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable` (use `npm i -g corepack` for Node.js < 16.10)
+- Enable [Corepack](https://github.com/nodejs/corepack) using `corepack enable`
 - Install dependencies using `pnpm install`
 - Run interactive tests using `pnpm dev`
 
@@ -141,19 +157,4 @@ console.log(sha256base64("Hello World"));
 
 Made with 💛
 
-Published under [MIT License](./LICENSE).
-
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and [brix/crypto-js](https://github.com/brix/crypto-js).
-
-<!-- Badges -->
-
-[npm-version-src]: https://img.shields.io/npm/v/ohash?style=flat-square
-[npm-version-href]: https://npmjs.com/package/ohash
-[npm-downloads-src]: https://img.shields.io/npm/dm/ohash?style=flat-square
-[npm-downloads-href]: https://npmjs.com/package/ohash
-[github-actions-src]: https://img.shields.io/github/actions/workflow/status/unjs/ohash/ci.yml?branch=main&style=flat-square
-[github-actions-href]: https://github.com/unjs/ohash/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/ohash/main?style=flat-square
-[codecov-href]: https://codecov.io/gh/unjs/ohash
-[bundle-src]: https://flat.badgen.net/bundlephobia/minzip/ohash
-[bundle-href]: https://bundlephobia.com/package/ohash
+Published under [MIT License](./LICENSE). Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and [brix/crypto-js](https://github.com/brix/crypto-js).
