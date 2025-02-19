@@ -72,10 +72,7 @@ console.log(serialize({ foo: "bar" }));
 
 ## `digest(str)`
 
-Create a [sha256](https://en.wikipedia.org/wiki/SHA-2) digest from input (string) and return the hash as a base64 string.
-
-> [!IMPORTANT]
-> The `+`, `/`, and `=` characters are removed from base64 result to maximize compatibility.
+Hashes a string using the [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encodes it in [Base64URL](https://base64.guru/standards/base64url) format.
 
 ```ts
 import { digest } from "ohash";

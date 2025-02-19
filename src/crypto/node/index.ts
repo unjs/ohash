@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
 
 /**
- * Hashes string using SHA-256 algorithm and returns the hash as a base64 string.
+ * Hashes a string using the SHA-256 algorithm and encodes it in Base64URL format.
  *
- * **Note:** The `+`, `/`, and `=` characters are removed from the base64 result to maximize compatibility.
- * This behavior differs from standard SHA-256 + Base64 encoding.
+ * @param {string} message - The message to hash.
+ *
+ * @returns {string} The hash of the message.
  */
 export function digest(date: string): string {
   return createHash("sha256").update(date).digest("base64url");
