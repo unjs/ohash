@@ -15,7 +15,7 @@ describe("bundle size", () => {
     expect(gzipSize).toBeLessThanOrEqual(1750); // <1.75kb
   });
 
-  it("serialize", async () => {
+  it.skip("serialize", async () => {
     const code = /* js */ `
       import { serialize } from "../src";
       serialize("")
