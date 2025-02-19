@@ -29,6 +29,9 @@ importers:
       eslint-config-unjs:
         specifier: ^0.4.2
         version: 0.4.2(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      mitata:
+        specifier: ^1.0.34
+        version: 1.0.34
       prettier:
         specifier: ^3.5.1
         version: 3.5.1
@@ -1821,6 +1824,9 @@ packages:
   minizlib@2.1.2:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
+
+  mitata@1.0.34:
+    resolution: {integrity: sha512-Mc3zrtNBKIMeHSCQ0XqRLo1vbdIx1wvFV9c8NJAiyho6AjNfMY8bVhbS12bwciUdd1t4rj8099CH3N3NFahaUA==}
 
   mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
@@ -4253,6 +4259,8 @@ snapshots:
     dependencies:
       minipass: 3.3.6
       yallist: 4.0.0
+
+  mitata@1.0.34: {}
 
   mkdirp@1.0.4: {}
 

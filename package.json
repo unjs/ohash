@@ -27,6 +27,7 @@
     "dist"
   ],
   "scripts": {
+    "bench": "vitest bench",
     "build": "unbuild",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c src test",
@@ -44,6 +45,7 @@
     "esbuild": "^0.25.0",
     "eslint": "^9.20.1",
     "eslint-config-unjs": "^0.4.2",
+    "mitata": "^1.0.34",
     "prettier": "^3.5.1",
     "typescript": "^5.7.3",
     "unbuild": "^3.3.1",
