@@ -11,8 +11,8 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(3800); // <3.8kb
-    expect(gzipSize).toBeLessThanOrEqual(1900); // <1.9kb
+    expect(bytes).toBeLessThanOrEqual(3200); // <3.2kb
+    expect(gzipSize).toBeLessThanOrEqual(1750); // <1.75kb
   });
 
   it("serialize", async () => {
