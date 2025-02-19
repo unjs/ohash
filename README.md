@@ -13,7 +13,7 @@ Fast data [hashing](https://en.wikipedia.org/wiki/Hash_function) utils.
 
 ## Usage
 
-Install package:
+Install `ohash`:
 
 <!--automd:pm-install -->
 
@@ -39,11 +39,11 @@ deno install ohash
 
 <!--/automd -->
 
-Import:
+**Import:**
 
 ```js
 // ESM import
-import { hash, objectHash, stringDigest } from "ohash";
+import { hash, objectHash, isEqual, diff, stringDigest } from "ohash";
 
 // ..or dnamic import
 const { hash, objectHash, stringDigest } = await import("ohash");
@@ -51,7 +51,7 @@ const { hash, objectHash, stringDigest } = await import("ohash");
 
 ### `hash(object, options?)`
 
-Serializes any value into a string hash using `objectHash` and then hashes result sha256+base64 (using `stringDigest`) trimmed by length of `10`.
+Hashes any JS value into a string.
 
 **Usage:**
 
@@ -61,6 +61,12 @@ import { hash } from "ohash";
 // "dZbtA7f0lK"
 console.log(hash({ foo: "bar" }));
 ```
+
+**How it works:**
+
+- Input will be serialized into a string like `"object:1:string:3:foo:string:3:bar,"`
+- Then it is hashed using [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encoded as a [base64](https://en.wikipedia.org/wiki/Base64) string
+- `+`, `/` and `=` characters will be removed and string trimmed to `10` chars
 
 ### `objectHash(object, options?)`
 
