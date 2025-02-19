@@ -11,6 +11,10 @@
       "types": "./dist/index.d.mts",
       "default": "./dist/index.mjs"
     },
+    "./utils": {
+      "types": "./dist/utils/index.d.mts",
+      "default": "./dist/utils/index.mjs"
+    },
     "./crypto": {
       "node": {
         "types": "./dist/crypto/node/index.d.mts",
