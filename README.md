@@ -144,4 +144,5 @@ console.log(diff(obj1, obj2));
 Made with 💛 Published under [MIT License](./LICENSE).
 
 Object serialization originally based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/).
-JS sha256 polyfill originally based on [brix/crypto-js](https://github.com/brix/crypto-js).
+
+sha256 implementation originally based on [brix/crypto-js](https://github.com/brix/crypto-js).
