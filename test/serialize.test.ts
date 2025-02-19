@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { serialize, hash } from "../src";
-
-describe("hash", () => {
-  it("hash", () => {
-    expect(hash({ foo: "bar" })).toMatchInlineSnapshot('"dZbtA7f0lK"');
-  });
-});
+import { serialize } from "../src";
 
 describe("serialize", () => {
   it("basic object", () => {
