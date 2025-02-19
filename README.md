@@ -64,7 +64,7 @@ console.log(hash({ foo: "bar" }));
 
 ## `serialize(input, options?)`
 
-Serializes any input value into a string for usable hashing.
+Serializes any input value into a string for hashing.
 
 ```js
 import { serialize } from "ohash";

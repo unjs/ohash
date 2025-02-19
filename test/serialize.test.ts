@@ -12,7 +12,37 @@ describe("serialize", () => {
     expect(
       serialize({ foo: "bar", bar: new Date(0), bool: false }),
     ).toMatchInlineSnapshot(
-      '"object:3:string:3:bar:string:24:1970-01-01T00:00:00.000Z,string:4:bool:bool:false,string:3:foo:string:3:bar,"',
+      `"object:3:string:3:bar:date:1970-01-01T00:00:00.000Z,string:4:bool:bool:false,string:3:foo:string:3:bar,"`,
+    );
+  });
+
+  it("blob", () => {
+    expect(() => serialize(new Blob(["x"]))).toThrow("Cannot serialize Blob");
+  });
+
+  it("date", () => {
+    const obj: any = {};
+    obj.foo = obj;
+    expect(serialize(new Date(0))).toMatchInlineSnapshot(
+      `"date:1970-01-01T00:00:00.000Z"`,
+    );
+  });
+
+  it("circular", () => {
+    const obj: any = {};
+    obj.foo = obj;
+    expect(serialize(obj)).toMatchInlineSnapshot(
+      `"object:1:string:3:foo:string:12:[CIRCULAR:0],"`,
+    );
+  });
+
+  it("Buffer", () => {
+    expect(serialize(Buffer.from([1, 2, 3]))).toMatchInlineSnapshot(
+      `"object:2:string:4:data:array:3:number:1number:2number:3,string:4:type:string:6:Buffer,"`,
+    );
+
+    expect(serialize({ buff: Buffer.from([1, 2, 3]) })).toMatchInlineSnapshot(
+      `"object:1:string:4:buff:object:2:string:4:data:array:3:number:1number:2number:3,string:4:type:string:6:Buffer,,"`,
     );
   });
 
