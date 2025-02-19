@@ -15,15 +15,15 @@ describe("bundle size", () => {
     expect(gzipSize).toBeLessThanOrEqual(1750); // <1.75kb
   });
 
-  it.skip("serialize", async () => {
+  it("serialize", async () => {
     const code = /* js */ `
       import { serialize } from "../src";
       serialize("")
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(3400); // <3.4kb
-    expect(gzipSize).toBeLessThanOrEqual(1400); // <1.4kb
+    expect(bytes).toBeLessThanOrEqual(2400); // <2.4kb
+    expect(gzipSize).toBeLessThanOrEqual(1000); // <1kb
   });
 });
 
