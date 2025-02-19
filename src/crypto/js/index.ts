@@ -22,7 +22,7 @@ const K = [
 ];
 
 const base64KeyStr =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 // Reusable object
 const W: number[] = [];

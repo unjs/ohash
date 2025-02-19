@@ -7,8 +7,5 @@ import { createHash } from "node:crypto";
  * This behavior differs from standard SHA-256 + Base64 encoding.
  */
 export function digest(date: string): string {
-  return createHash("sha256")
-    .update(date)
-    .digest("base64")
-    .replace(/[+/=]/g, "");
+  return createHash("sha256").update(date).digest("base64url");
 }
