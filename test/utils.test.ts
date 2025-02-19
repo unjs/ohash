@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isEqual, diff } from "../src";
+import { isEqual, diff } from "../src/utils";
 
 describe("isEqual", () => {
   const cases = [
