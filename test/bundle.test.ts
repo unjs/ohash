@@ -26,7 +26,7 @@ describe("bundle size", () => {
     expect(gzipSize).toBeLessThanOrEqual(1000); // <1kb
   });
 
-  it.only("hash", async () => {
+  it("hash", async () => {
     const code = /* js */ `
       import { hash } from "../src";
       hash("")
