@@ -58,7 +58,7 @@ The input is first [serialized](#serializeinput) into a string like `object:1:st
 ```js
 import { hash } from "ohash";
 
-// "dZbtA7f0lK"
+// "g82Nh7Lh3C"
 console.log(hash({ foo: "bar" }));
 ```
 
@@ -69,7 +69,7 @@ Serializes any input value into a string for hashing.
 ```js
 import { serialize } from "ohash";
 
-// "object:1:string:3:foo:string:3:bar,"
+// "{foo:'bar'}"
 console.log(serialize({ foo: "bar" }));
 ```
 
@@ -80,8 +80,8 @@ Hashes a string using the [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorit
 ```ts
 import { digest } from "ohash";
 
-// "pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4"
-console.log(digest("Hello World"));
+// "f4OxZX_x_FO5LcGBSKHWXfwtSx-j1ncoSt3SABJtkGk"
+console.log(digest("Hello World!"));
 ```
 
 ## `isEqual(obj1, obj2)`
@@ -140,4 +140,5 @@ console.log(diff(obj1, obj2));
 
 Made with 💛 Published under [MIT License](./LICENSE).
 
-Based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/), and [brix/crypto-js](https://github.com/brix/crypto-js).
+Object serialization originally based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/).
+JS sha256 polyfill originally based on [brix/crypto-js](https://github.com/brix/crypto-js).

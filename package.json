@@ -38,7 +38,7 @@
     "lint:fix": "automd && eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
-    "test": "pnpm lint && vitest run && pnpm test:types",
+    "test": "pnpm lint && vitest run --coverage && pnpm test:types",
     "test:types": "tsc --noEmit"
   },
   "devDependencies": {

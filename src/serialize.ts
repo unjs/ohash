@@ -32,12 +32,27 @@ const Serializer = /*@__PURE__*/ (function () {
       return handler.call(this, value);
     }
 
-    compare(input1: any, input2: any) {
-      const s1 = new Serializer();
-      s1.dispatch(input1);
-      const s2 = new Serializer();
-      s2.dispatch(input2);
-      return s1.serialized.localeCompare(s2.serialized);
+    compare(a: any, b: any): number {
+      if (typeof a === "string" && typeof b === "string") {
+        return a.localeCompare(b);
+      }
+      return serialize(a).localeCompare(serialize(b));
+    }
+
+    objectEntries(type: string, entries: Iterable<[string, any]>) {
+      const sortedEntries = Array.from(entries).sort((a, b) =>
+        this.compare(a[0], b[0]),
+      );
+      this.write(`${type}{`);
+      for (let i = 0; i < sortedEntries.length; i++) {
+        const [key, value] = sortedEntries[i];
+        this.write(`${key}:`);
+        this.dispatch(value);
+        if (i < sortedEntries.length - 1) {
+          this.write(",");
+        }
+      }
+      this.write("}");
     }
 
     $string(string: any) {
@@ -85,37 +100,20 @@ const Serializer = /*@__PURE__*/ (function () {
           handler.call(this, object);
         } else {
           if (typeof object?.entries === "function") {
-            this.write(`${objType}{`);
-            const entries = [...object.entries()].sort((a, b) =>
-              this.compare(a[0], b[0]),
-            );
-            for (const [key, value] of entries) {
-              this.dispatch(key);
-              this.write(":");
-              this.dispatch(value);
-              this.write(",");
-            }
-            this.write("}");
-            return;
+            return this.objectEntries(objType, object.entries());
           }
           throw new Error(`Cannot serialize ${objType}`);
         }
       } else {
         const constructor = object.constructor.name;
-        if (constructor !== "Object") {
-          this.write(`${constructor}`);
-        }
+        const objectName = constructor === "Object" ? "" : constructor;
         if (typeof object.toJSON === "function") {
+          if (objectName) {
+            this.write(objectName);
+          }
           return this.$object(object.toJSON());
         }
-        this.write("{");
-        for (const key of Object.keys(object).sort()) {
-          this.dispatch(key);
-          this.write(":");
-          this.dispatch(object[key]);
-          this.write(",");
-        }
-        this.write("}");
+        return this.objectEntries(objectName, Object.entries(object));
       }
     }
 
@@ -154,15 +152,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Map(map: Map<any, any>) {
-      this.write(`Map{`);
-      const entries = [...map.entries()].sort((a, b) => this.compare(a, b));
-      for (const [key, value] of entries) {
-        this.dispatch(key);
-        this.write(":");
-        this.dispatch(value);
-        this.write(",");
-      }
-      this.write("}");
+      return this.objectEntries("Map", map.entries());
     }
   }
 

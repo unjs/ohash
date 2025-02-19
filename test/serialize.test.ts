@@ -9,7 +9,7 @@ describe("serialize", () => {
       );
 
       expect(serialize({ msg: "hello world 😎" })).toMatchInlineSnapshot(
-        `"{'msg':'hello world 😎',}"`,
+        `"{msg:'hello world 😎'}"`,
       );
     });
 
@@ -81,13 +81,16 @@ describe("serialize", () => {
       expect(serialize(new Set([2, 3, 1]))).toMatchInlineSnapshot(
         `"Set[1,2,3,]"`,
       );
+      expect(serialize(new Set([{ b: 1 }, { a: 1 }]))).toMatchInlineSnapshot(
+        `"Set[{a:1},{b:1},]"`,
+      );
     });
 
     it("map", () => {
       const map = new Map();
       map.set("z", 2);
       map.set("a", "1");
-      expect(serialize(map)).toMatchInlineSnapshot(`"Map{'a':'1','z':2,}"`);
+      expect(serialize(map)).toMatchInlineSnapshot(`"Map{a:'1',z:2}"`);
     });
   });
 
@@ -114,19 +117,15 @@ describe("serialize", () => {
 
   describe("object", () => {
     it("object", () => {
-      expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(
-        `"{'a':1,'b':2,}"`,
-      );
+      expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
 
-      expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(
-        `"{'a':1,'b':2,}"`,
-      );
+      expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
     });
 
     it("circular", () => {
       const obj: any = {};
       obj.foo = obj;
-      expect(serialize(obj)).toMatchInlineSnapshot(`"{'foo':#0,}"`);
+      expect(serialize(obj)).toMatchInlineSnapshot(`"{foo:#0}"`);
     });
 
     it("symbol key", () => {
@@ -134,13 +133,10 @@ describe("serialize", () => {
     });
 
     it("class", () => {
-      expect(
-        serialize(
-          new (class Foo {
-            x = 1;
-          })(),
-        ),
-      ).toMatchInlineSnapshot(`"Foo{'x':1,}"`);
+      class Test {
+        x = 1;
+      }
+      expect(serialize(new Test())).toMatchInlineSnapshot(`"Test{x:1}"`);
     });
 
     it("with toJSON()", () => {
@@ -150,9 +146,8 @@ describe("serialize", () => {
         }
       }
       expect(serialize(new Test())).toMatchInlineSnapshot(`"Test[1,2,3,]"`);
-
       expect(serialize({ x: new Test() })).toMatchInlineSnapshot(
-        `"{'x':Test[1,2,3,],}"`,
+        `"{x:Test[1,2,3,]}"`,
       );
     });
 
@@ -160,9 +155,8 @@ describe("serialize", () => {
       const form = new FormData();
       form.set("foo", "bar");
       form.set("bar", "baz");
-
       expect(serialize(form)).toMatchInlineSnapshot(
-        `"FormData{'bar':'baz','foo':'bar',}"`,
+        `"FormData{bar:'baz',foo:'bar'}"`,
       );
     });
   });

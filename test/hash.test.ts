@@ -3,7 +3,7 @@ import { hash } from "../src";
 
 describe("hash", () => {
   it("hash", () => {
-    expect(hash({ foo: "bar" })).toMatchInlineSnapshot(`"OfMmx-pTkc"`);
+    expect(hash({ foo: "bar" })).toMatchInlineSnapshot(`"g82Nh7Lh3C"`);
   });
 
   it("hash", () => {
