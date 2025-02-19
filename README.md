@@ -58,7 +58,7 @@ The input is first [serialized](#serializeinput) then it is [hashed](#digeststr)
 ```js
 import { hash } from "ohash";
 
-// "g82Nh7Lh3C"
+// "g82Nh7Lh3CURFX9zCBhc5xgU0K7L0V1qkoHyRsKNqA4"
 console.log(hash({ foo: "bar" }));
 ```
 
