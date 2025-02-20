@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.4
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.3...v2.0.4)
+
+### 🩹 Fixes
+
+- Use `process.getBuiltinModule` to import fast hash ([#118](https://github.com/unjs/ohash/pull/118))
+
+### 📦 Build
+
+- Minify `dist/crypto/node` ([76bd382](https://github.com/unjs/ohash/commit/76bd382))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
+## v2.0.3
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.2...v2.0.3)
+
+### 🔥 Performance
+
+- Use node crypto `hash` when available ([#116](https://github.com/unjs/ohash/pull/116))
+
+### 🩹 Fixes
+
+- Workaround for stackblitz ([#117](https://github.com/unjs/ohash/pull/117))
+- Remove trailing slash from arrays ([c2b8250](https://github.com/unjs/ohash/commit/c2b8250))
+
+### 🏡 Chore
+
+- Lint ([e12dd18](https://github.com/unjs/ohash/commit/e12dd18))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v2.0.2
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.1...v2.0.2)

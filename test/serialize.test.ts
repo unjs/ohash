@@ -76,13 +76,13 @@ describe("serialize", () => {
 
     it("set", () => {
       expect(serialize(new Set([1, 2, 3]))).toMatchInlineSnapshot(
-        `"Set[1,2,3,]"`,
+        `"Set[1,2,3]"`,
       );
       expect(serialize(new Set([2, 3, 1]))).toMatchInlineSnapshot(
-        `"Set[1,2,3,]"`,
+        `"Set[1,2,3]"`,
       );
       expect(serialize(new Set([{ b: 1 }, { a: 1 }]))).toMatchInlineSnapshot(
-        `"Set[{a:1},{b:1},]"`,
+        `"Set[{a:1},{b:1}]"`,
       );
     });
 
@@ -96,8 +96,8 @@ describe("serialize", () => {
 
   describe("array", () => {
     it("array", () => {
-      expect(serialize([1, 2, "x", 3])).toMatchInlineSnapshot(`"[1,2,'x',3,]"`);
-      expect(serialize([2, 3, "x", 1])).toMatchInlineSnapshot(`"[2,3,'x',1,]"`);
+      expect(serialize([1, 2, "x", 3])).toMatchInlineSnapshot(`"[1,2,'x',3]"`);
+      expect(serialize([2, 3, "x", 1])).toMatchInlineSnapshot(`"[2,3,'x',1]"`);
     });
 
     it("Uint8Array, Buffer and ArrayBufferLike", () => {
@@ -139,9 +139,9 @@ describe("serialize", () => {
           return [1, 2, 3];
         }
       }
-      expect(serialize(new Test())).toMatchInlineSnapshot(`"Test[1,2,3,]"`);
+      expect(serialize(new Test())).toMatchInlineSnapshot(`"Test[1,2,3]"`);
       expect(serialize({ x: new Test() })).toMatchInlineSnapshot(
-        `"{x:Test[1,2,3,]}"`,
+        `"{x:Test[1,2,3]}"`,
       );
     });
 
