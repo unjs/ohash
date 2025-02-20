@@ -23,7 +23,7 @@ describe("bundle size", () => {
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
     expect(bytes).toBeLessThanOrEqual(2500); // <2.5kb
-    expect(gzipSize).toBeLessThanOrEqual(1100); // <1.1kb
+    expect(gzipSize).toBeLessThanOrEqual(1000); // <1.0kb
   });
 
   it("hash", async () => {
