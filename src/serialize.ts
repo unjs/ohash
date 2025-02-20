@@ -24,6 +24,7 @@ const Serializer = /*@__PURE__*/ (function () {
     serialized = "";
 
     #context = new Map();
+    #content = new WeakMap();
 
     write(str: string) {
       this.serialized += str;
@@ -71,7 +72,7 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${bigint}n`);
     }
 
-    $object(object: any): string | void {
+    $object(object: any): void {
       const objString = Object.prototype.toString.call(object);
 
       let objType = "";
@@ -88,37 +89,52 @@ const Serializer = /*@__PURE__*/ (function () {
       let objectNumber = null;
 
       if ((objectNumber = this.#context.get(object)) === undefined) {
-        this.#context.set(object, this.#context.size);
+        objectNumber = this.#context.size;
+
+        this.#context.set(object, objectNumber);
       } else {
+        const content = this.#content.get(object);
+
+        if (content) {
+          return this.write(content);
+        }
+
         return this.write(`#${objectNumber}`);
       }
 
-      if (
-        objType !== "Object" &&
-        objType !== "Function" &&
-        objType !== "AsyncFunction"
-      ) {
-        // @ts-expect-error
-        const handler = this["$" + objType];
-        if (handler) {
-          handler.call(this, object);
+      const length = this.serialized.length;
+
+      (() => {
+        if (
+          objType !== "Object" &&
+          objType !== "Function" &&
+          objType !== "AsyncFunction"
+        ) {
+          // @ts-expect-error
+          const handler = this["$" + objType];
+          if (handler) {
+            handler.call(this, object);
+          } else {
+            if (typeof object?.entries === "function") {
+              console.log("A");
+              return this.objectEntries(objType, object.entries());
+            }
+            throw new Error(`Cannot serialize ${objType}`);
+          }
         } else {
-          if (typeof object?.entries === "function") {
-            return this.objectEntries(objType, object.entries());
+          const constructor = object.constructor.name;
+          const objectName = constructor === "Object" ? "" : constructor;
+          if (typeof object.toJSON === "function") {
+            if (objectName) {
+              this.write(objectName);
+            }
+            return this.$object(object.toJSON());
           }
-          throw new Error(`Cannot serialize ${objType}`);
+          return this.objectEntries(objectName, Object.entries(object));
         }
-      } else {
-        const constructor = object.constructor.name;
-        const objectName = constructor === "Object" ? "" : constructor;
-        if (typeof object.toJSON === "function") {
-          if (objectName) {
-            this.write(objectName);
-          }
-          return this.$object(object.toJSON());
-        }
-        return this.objectEntries(objectName, Object.entries(object));
-      }
+      })();
+
+      this.#content.set(object, this.serialized.slice(length));
     }
 
     $function(fn: any) {
