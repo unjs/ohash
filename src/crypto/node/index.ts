@@ -5,6 +5,9 @@ import { createHash } from "node:crypto";
 const fastHash = /*@__PURE__*/ (() =>
   globalThis.process?.getBuiltinModule?.("crypto")?.hash)();
 
+const algorithm = "sha256";
+const encoding = "base64url";
+
 /**
  * Hashes a string using the SHA-256 algorithm and encodes it in Base64URL format.
  *
@@ -14,14 +17,14 @@ const fastHash = /*@__PURE__*/ (() =>
  */
 export function digest(data: string): string {
   if (fastHash) {
-    return fastHash("sha256", data, "base64url");
+    return fastHash(algorithm, data, encoding);
   }
 
-  const h = createHash("sha256").update(data);
+  const h = createHash(algorithm).update(data);
 
   // Use digest().toString("base64url") as workaround for stackblitz
   // https://github.com/unjs/ohash/issues/115
   return globalThis.process?.versions?.webcontainer
-    ? h.digest().toString("base64url")
-    : h.digest("base64url");
+    ? h.digest().toString(encoding)
+    : h.digest(encoding);
 }
