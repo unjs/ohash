@@ -18,9 +18,7 @@ export function digest(data: string): string {
 
   // Use digest().toString("base64url") as workaround for stackblitz
   // https://github.com/unjs/ohash/issues/115
-  if (globalThis.process?.versions?.webcontainer) {
-    return h.digest().toString("base64url");
-  }
-
-  return h.digest("base64url");
+  return globalThis.process?.versions?.webcontainer
+    ? h.digest().toString("base64url")
+    : h.digest("base64url");
 }
