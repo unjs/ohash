@@ -23,8 +23,7 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     serialized = "";
 
-    #context = new Map();
-    #contents = new WeakMap();
+    #contents = new Map();
 
     write(str: string) {
       this.serialized += str;
@@ -61,7 +60,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $string(string: any) {
-      this.write("'" + string + "'");
+      this.write(`'${string}'`);
     }
 
     $symbol(symbol: symbol) {
@@ -73,31 +72,24 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $object(object: any): void {
-      const objString = Object.prototype.toString.call(object);
+      let content = null;
 
-      let objType = "";
-      const objectLength = objString.length;
-
-      // '[object a]'.length === 10, the minimum
-      if (objectLength < 10) {
-        objType = "unknown:[" + objString + "]";
+      if ((content = this.#contents.get(object)) === undefined) {
+        this.#contents.set(object, `#${this.#contents.size}`);
       } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, objectLength - 1);
+        return this.write(content);
       }
 
-      let objectNumber = null;
+      const objString = Object.prototype.toString.call(object);
 
-      if ((objectNumber = this.#context.get(object)) === undefined) {
-        this.#context.set(object, this.#context.size);
+      let objType: string;
+
+      // '[object a]'.length === 10, the minimum
+      if (objString.length < 10) {
+        objType = `unknown:[${objString}]`;
       } else {
-        const content = this.#contents.get(object);
-
-        if (content) {
-          return this.write(content);
-        }
-
-        return this.write(`#${objectNumber}`);
+        // '[object '.length === 8
+        objType = objString.slice(8, -1);
       }
 
       const currentLength = this.serialized.length;
