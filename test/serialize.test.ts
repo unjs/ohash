@@ -201,7 +201,7 @@ describe("serialize", () => {
     it("handles circular references in arrays", () => {
       const arr: any[] = [];
       arr.push(arr);
-      expect(serialize(arr)).toMatchInlineSnapshot(`"[#0,]"`);
+      expect(serialize(arr)).toMatchInlineSnapshot(`"[#0]"`);
     });
 
     it("handles deep circular references", () => {
@@ -213,7 +213,7 @@ describe("serialize", () => {
     it("handles mixed object and array references", () => {
       const obj: any = { a: [] };
       obj.a.push(obj);
-      expect(serialize(obj)).toMatchInlineSnapshot(`"{a:[#0,]}"`);
+      expect(serialize(obj)).toMatchInlineSnapshot(`"{a:[#0]}"`);
     });
 
     it("handles self-referencing objects with multiple keys", () => {
@@ -239,7 +239,7 @@ describe("serialize", () => {
     it("handles circular references within Set objects", () => {
       const set = new Set();
       set.add(set);
-      expect(serialize(set)).toMatchInlineSnapshot(`"Set[#0,]"`);
+      expect(serialize(set)).toMatchInlineSnapshot(`"Set[#0]"`);
     });
 
     it("handles multiple circular references within the same object", () => {
