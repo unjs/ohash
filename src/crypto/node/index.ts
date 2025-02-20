@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 // Available in Node.js v21.7.0+, v20.12.0+
 // https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-outputencoding
 const fastHash = /*@__PURE__*/ (() =>
-  globalThis.process.getBuiltinModule("crypto")?.hash)();
+  globalThis.process?.getBuiltinModule?.("crypto")?.hash)();
 
 /**
  * Hashes a string using the SHA-256 algorithm and encodes it in Base64URL format.
