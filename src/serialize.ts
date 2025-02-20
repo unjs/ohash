@@ -24,7 +24,7 @@ const Serializer = /*@__PURE__*/ (function () {
     serialized = "";
 
     #context = new Map();
-    #content = new WeakMap();
+    #contents = new WeakMap();
 
     write(str: string) {
       this.serialized += str;
@@ -89,11 +89,9 @@ const Serializer = /*@__PURE__*/ (function () {
       let objectNumber = null;
 
       if ((objectNumber = this.#context.get(object)) === undefined) {
-        objectNumber = this.#context.size;
-
-        this.#context.set(object, objectNumber);
+        this.#context.set(object, this.#context.size);
       } else {
-        const content = this.#content.get(object);
+        const content = this.#contents.get(object);
 
         if (content) {
           return this.write(content);
@@ -102,7 +100,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return this.write(`#${objectNumber}`);
       }
 
-      const length = this.serialized.length;
+      const currentLength = this.serialized.length;
 
       (() => {
         if (
@@ -134,7 +132,7 @@ const Serializer = /*@__PURE__*/ (function () {
         }
       })();
 
-      this.#content.set(object, this.serialized.slice(length));
+      this.#contents.set(object, this.serialized.slice(currentLength));
     }
 
     $function(fn: any) {
