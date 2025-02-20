@@ -114,7 +114,6 @@ const Serializer = /*@__PURE__*/ (function () {
             handler.call(this, object);
           } else {
             if (typeof object?.entries === "function") {
-              console.log("A");
               return this.objectEntries(objType, object.entries());
             }
             throw new Error(`Cannot serialize ${objType}`);
