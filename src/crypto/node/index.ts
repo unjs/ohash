@@ -9,6 +9,8 @@ import { createHash, hash } from "node:crypto";
  */
 export function digest(data: string): string {
   if (hash) {
+    // Available in Node.js v21.7.0+, v20.12.0+
+    // https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-outputencoding
     return hash("sha256", data, "base64url");
   }
   return createHash("sha256").update(data).digest("base64url");
