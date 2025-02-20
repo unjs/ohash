@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.2
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.1...v2.0.2)
+
+### 📦 Build
+
+- Mark `Serializer` as pure to allow tree-shaking ([83fe375](https://github.com/unjs/ohash/commit/83fe375))
+
+### 🏡 Chore
+
+- Lint ([9de88d3](https://github.com/unjs/ohash/commit/9de88d3))
+- Update readme ([e56b7e8](https://github.com/unjs/ohash/commit/e56b7e8))
+- Remove `.only` from test ([d336d53](https://github.com/unjs/ohash/commit/d336d53))
+- Update readme ([be6c8cd](https://github.com/unjs/ohash/commit/be6c8cd))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v2.0.1
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.0...v2.0.1)
