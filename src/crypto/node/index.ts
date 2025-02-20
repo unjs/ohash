@@ -13,5 +13,12 @@ export function digest(data: string): string {
     // https://nodejs.org/api/crypto.html#cryptohashalgorithm-data-outputencoding
     return hash("sha256", data, "base64url");
   }
-  return createHash("sha256").update(data).digest("base64url");
+
+  const h = createHash("sha256").update(data);
+
+  // Use digest().toString("base64url") as workaround for stackblitz
+  // https://github.com/unjs/ohash/issues/115
+  return globalThis.process?.versions?.webcontainer
+    ? h.digest().toString("base64url")
+    : h.digest("base64url");
 }
