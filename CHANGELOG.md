@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.4
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.3...v2.0.4)
+
+### 🩹 Fixes
+
+- Use `process.getBuiltinModule` to import fast hash ([#118](https://github.com/unjs/ohash/pull/118))
+
+### 📦 Build
+
+- Minify `dist/crypto/node` ([76bd382](https://github.com/unjs/ohash/commit/76bd382))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](http://github.com/pi0))
+
 ## v2.0.3
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.2...v2.0.3)
