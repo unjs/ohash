@@ -102,34 +102,34 @@ const Serializer = /*@__PURE__*/ (function () {
 
       const currentLength = this.serialized.length;
 
-      (() => {
-        if (
-          objType !== "Object" &&
-          objType !== "Function" &&
-          objType !== "AsyncFunction"
-        ) {
-          // @ts-expect-error
-          const handler = this["$" + objType];
-          if (handler) {
-            handler.call(this, object);
-          } else {
-            if (typeof object?.entries === "function") {
-              return this.objectEntries(objType, object.entries());
-            }
-            throw new Error(`Cannot serialize ${objType}`);
-          }
+      if (
+        objType !== "Object" &&
+        objType !== "Function" &&
+        objType !== "AsyncFunction"
+      ) {
+        // @ts-expect-error
+        const handler = this["$" + objType];
+        if (handler) {
+          handler.call(this, object);
         } else {
-          const constructor = object.constructor.name;
-          const objectName = constructor === "Object" ? "" : constructor;
-          if (typeof object.toJSON === "function") {
-            if (objectName) {
-              this.write(objectName);
-            }
-            return this.$object(object.toJSON());
+          if (typeof object?.entries === "function") {
+            this.objectEntries(objType, object.entries());
+          } else {
+            throw new TypeError(`Cannot serialize ${objType}`);
           }
-          return this.objectEntries(objectName, Object.entries(object));
         }
-      })();
+      } else {
+        const constructor = object.constructor.name;
+        const objectName = constructor === "Object" ? "" : constructor;
+        if (typeof object.toJSON === "function") {
+          if (objectName) {
+            this.write(objectName);
+          }
+          this.$object(object.toJSON());
+        } else {
+          this.objectEntries(objectName, Object.entries(object));
+        }
+      }
 
       this.#contents.set(object, this.serialized.slice(currentLength));
     }

@@ -179,7 +179,9 @@ describe("serialize", () => {
     it("blob", () => {
       expect(() =>
         serialize(new Blob(["x"])),
-      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
+      ).toThrowErrorMatchingInlineSnapshot(
+        `[TypeError: Cannot serialize Blob]`,
+      );
     });
   });
 
