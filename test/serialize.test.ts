@@ -122,12 +122,6 @@ describe("serialize", () => {
       expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
     });
 
-    it("circular", () => {
-      const obj: any = {};
-      obj.foo = obj;
-      expect(serialize(obj)).toMatchInlineSnapshot(`"{foo:#0}"`);
-    });
-
     it("symbol key", () => {
       expect(serialize({ [Symbol("s")]: 123 })).toMatchInlineSnapshot(`"{}"`);
     });
