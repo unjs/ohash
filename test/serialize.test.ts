@@ -188,4 +188,54 @@ describe("serialize", () => {
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
     });
   });
+
+  describe("consistency", () => {
+    const v = {
+      a: { value: 1 },
+      b: { value: 1 },
+      c: { value: 1 },
+    };
+
+    const o: Record<string, unknown> = {
+      vvv: {
+        value: { value: 1 },
+        values: [{ value: 1 }, { value: 1 }],
+      },
+      aaa: {
+        value: v.a,
+        values: [v.a, v.a],
+      },
+      aab: {
+        value: v.a,
+        values: [v.a, v.b],
+      },
+      aac: {
+        value: v.a,
+        values: [v.a, v.c],
+      },
+      aca: {
+        value: v.a,
+        values: [v.c, v.a],
+      },
+      bbb: {
+        value: v.b,
+        values: [v.b, v.b],
+      },
+      bbc: {
+        value: v.b,
+        values: [v.b, v.c],
+      },
+      cca: {
+        value: v.c,
+        values: [v.c, v.a],
+      },
+    };
+
+    Object.keys(o).flatMap((keyA) =>
+      Object.keys(o).map((keyB) =>
+        it(`Expected: "${keyA}" equals Received: "${keyB}"`, () =>
+          expect(serialize(o[keyB])).toBe(serialize(o[keyA]))),
+      ),
+    );
+  });
 });
