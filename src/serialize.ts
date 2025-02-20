@@ -43,7 +43,51 @@ const Serializer = /*@__PURE__*/ (function () {
       return serialize(a).localeCompare(serialize(b));
     }
 
-    objectEntries(type: string, entries: Iterable<[string, any]>) {
+    writeObject(object: any): void {
+      const objString = Object.prototype.toString.call(object);
+
+      let objType: string;
+
+      // '[object a]'.length === 10, the minimum
+      if (objString.length < 10) {
+        objType = `unknown:[${objString}]`;
+      } else {
+        // '[object '.length === 8
+        objType = objString.slice(8, -1);
+      }
+
+      if (
+        objType !== "Object" &&
+        objType !== "Function" &&
+        objType !== "AsyncFunction"
+      ) {
+        // @ts-expect-error
+        const handler = this["$" + objType];
+        if (handler) {
+          return handler.call(this, object);
+        }
+
+        if (typeof object?.entries === "function") {
+          return this.writeObjectEntries(objType, object.entries());
+        }
+
+        throw new TypeError(`Cannot serialize ${objType}`);
+      }
+
+      const constructor = object.constructor.name;
+
+      objType = constructor === "Object" ? "" : constructor;
+
+      if (typeof object.toJSON === "function") {
+        this.write(objType);
+
+        return this.$object(object.toJSON());
+      }
+
+      this.writeObjectEntries(objType, Object.entries(object));
+    }
+
+    writeObjectEntries(type: string, entries: Iterable<[string, any]>): void {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
@@ -72,58 +116,16 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $object(object: any): void {
-      let content = null;
+      const content = this.#contents.get(object);
 
-      if ((content = this.#contents.get(object)) === undefined) {
-        this.#contents.set(object, `#${this.#contents.size}`);
-      } else {
+      if (content) {
         return this.write(content);
       }
 
-      const objString = Object.prototype.toString.call(object);
-
-      let objType: string;
-
-      // '[object a]'.length === 10, the minimum
-      if (objString.length < 10) {
-        objType = `unknown:[${objString}]`;
-      } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, -1);
-      }
-
-      const currentLength = this.serialized.length;
-
-      if (
-        objType !== "Object" &&
-        objType !== "Function" &&
-        objType !== "AsyncFunction"
-      ) {
-        // @ts-expect-error
-        const handler = this["$" + objType];
-        if (handler) {
-          handler.call(this, object);
-        } else {
-          if (typeof object?.entries === "function") {
-            this.objectEntries(objType, object.entries());
-          } else {
-            throw new TypeError(`Cannot serialize ${objType}`);
-          }
-        }
-      } else {
-        const constructor = object.constructor.name;
-        const objectName = constructor === "Object" ? "" : constructor;
-        if (typeof object.toJSON === "function") {
-          if (objectName) {
-            this.write(objectName);
-          }
-          this.$object(object.toJSON());
-        } else {
-          this.objectEntries(objectName, Object.entries(object));
-        }
-      }
-
-      this.#contents.set(object, this.serialized.slice(currentLength));
+      this.#contents.set(object, `#${this.#contents.size}`);
+      const fromLength = this.serialized.length;
+      this.writeObject(object);
+      this.#contents.set(object, this.serialized.slice(fromLength));
     }
 
     $function(fn: any) {
@@ -163,7 +165,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Map(map: Map<any, any>) {
-      return this.objectEntries("Map", map.entries());
+      return this.writeObjectEntries("Map", map.entries());
     }
   }
 
