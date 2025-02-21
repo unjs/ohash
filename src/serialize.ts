@@ -16,17 +16,29 @@ export function serialize(input: any): string {
   }
   const serializer = new Serializer();
   serializer.dispatch(input);
-  return serializer.serialized;
+  return serializer.getSerialized();
 }
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
-    serialized = "";
+    buffer = "";
+    #serialized = "";
 
     #contents = new Map();
 
+    getSerialized() {
+      this.commit();
+
+      return this.#serialized;
+    }
+
     write(str: string) {
-      this.serialized += str;
+      this.buffer += str;
+    }
+
+    commit() {
+      this.#serialized += this.buffer;
+      this.buffer = "";
     }
 
     dispatch(value: any): string | void {
@@ -122,10 +134,13 @@ const Serializer = /*@__PURE__*/ (function () {
         return this.write(content);
       }
 
+      this.commit();
+
       this.#contents.set(object, `#${this.#contents.size}`);
-      const fromLength = this.serialized.length;
       this.writeObject(object);
-      this.#contents.set(object, this.serialized.slice(fromLength));
+      this.#contents.set(object, this.buffer);
+
+      this.commit();
     }
 
     $function(fn: any) {
