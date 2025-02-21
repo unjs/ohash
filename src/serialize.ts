@@ -127,10 +127,8 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $object(object: any): void {
-      const content = this.#contents.get(object);
-
-      if (content) {
-        return this.write(content);
+      if (this.#contents.has(object)) {
+        return this.write(this.#contents.get(object));
       }
 
       this.#contents.set(object, `#${this.#contents.size}`);
