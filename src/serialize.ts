@@ -21,9 +21,8 @@ export function serialize(input: any): string {
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
-    buffer = "";
+    #buffer = "";
     #serialized = "";
-
     #contents = new Map();
 
     getSerialized() {
@@ -33,12 +32,12 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     write(str: string) {
-      this.buffer += str;
+      this.#buffer += str;
     }
 
     commit() {
-      this.#serialized += this.buffer;
-      this.buffer = "";
+      this.#serialized += this.#buffer;
+      this.#buffer = "";
     }
 
     dispatch(value: any): string | void {
@@ -138,7 +137,7 @@ const Serializer = /*@__PURE__*/ (function () {
 
       this.#contents.set(object, `#${this.#contents.size}`);
       this.writeObject(object);
-      this.#contents.set(object, this.buffer);
+      this.#contents.set(object, this.#buffer);
 
       this.commit();
     }
