@@ -133,13 +133,10 @@ const Serializer = /*@__PURE__*/ (function () {
         return this.write(content);
       }
 
-      this.commit();
-
       this.#contents.set(object, `#${this.#contents.size}`);
+      this.commit();
       this.writeObject(object);
       this.#contents.set(object, this.#buffer);
-
-      this.commit();
     }
 
     $function(fn: any) {
