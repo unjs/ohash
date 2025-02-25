@@ -190,5 +190,17 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${type}[${Array.prototype.slice.call(arr).join(",")}]`);
     };
   }
+
+  for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
+      this.write(
+        `${type}[${Array.prototype.slice
+          .call(arr)
+          .map((n) => `${n}n`)
+          .join(",")}]`,
+      );
+    };
+  }
   return Serializer;
 })();

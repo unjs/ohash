@@ -154,6 +154,18 @@ describe("serialize", () => {
       );
     });
 
+    it("BigInt64Array", () => {
+      expect(serialize(new BigInt64Array([1n, 2n, 3n]))).toMatchInlineSnapshot(
+        `"BigInt64Array[1n,2n,3n]"`,
+      );
+    });
+
+    it("BigUint64Array", () => {
+      expect(serialize(new BigUint64Array([1n, 2n, 3n]))).toMatchInlineSnapshot(
+        `"BigUint64Array[1n,2n,3n]"`,
+      );
+    });
+
     it("Buffer and ArrayBufferLike", () => {
       expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
         `"ArrayBuffer[1,2,3]"`,
