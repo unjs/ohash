@@ -302,6 +302,16 @@ describe("serialize", () => {
       const set = new Set();
       set.add(set);
       expect(serialize(set)).toMatchInlineSnapshot(`"Set[#0]"`);
+
+      const obj = {
+        a: {},
+        b: new Set(),
+      };
+
+      obj.a = obj.b;
+      obj.b.add(obj.a);
+
+      expect(serialize(obj)).toMatchInlineSnapshot(`"{a:Set[#1],b:Set[#1]}"`);
     });
 
     it("handles multiple circular references within the same object", () => {
