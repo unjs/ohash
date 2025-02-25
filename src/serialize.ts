@@ -175,13 +175,13 @@ const Serializer = /*@__PURE__*/ (function () {
   }
 
   for (const type of [
+    "Int8Array",
     "Uint8Array",
     "Uint8ClampedArray",
-    "Unt8Array",
+    "Int16Array",
     "Uint16Array",
-    "Unt16Array",
+    "Int32Array",
     "Uint32Array",
-    "Unt32Array",
     "Float32Array",
     "Float64Array",
   ] as const) {
