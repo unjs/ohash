@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.5
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.4...v2.0.5)
+
+### 🩹 Fixes
+
+- Serialization format of typed arrays ([#121](https://github.com/unjs/ohash/pull/121))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](http://github.com/zsilbi))
+
 ## v2.0.4
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.3...v2.0.4)
