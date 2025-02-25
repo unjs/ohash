@@ -133,9 +133,11 @@ const Serializer = /*@__PURE__*/ (function () {
 
     $Array(arr: any[]): string | void {
       this.write("[");
-      for (const entry of arr) {
-        this.dispatch(entry);
-        this.write(",");
+      for (let i = 0; i < arr.length; i++) {
+        this.dispatch(arr[i]);
+        if (i < arr.length - 1) {
+          this.write(",");
+        }
       }
       this.write("]");
     }
