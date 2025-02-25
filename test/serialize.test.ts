@@ -100,13 +100,63 @@ describe("serialize", () => {
       expect(serialize([2, 3, "x", 1])).toMatchInlineSnapshot(`"[2,3,'x',1,]"`);
     });
 
-    it("Uint8Array, Buffer and ArrayBufferLike", () => {
-      expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
-        `"ArrayBuffer[1,2,3]"`,
+    it("Int8Array", () => {
+      expect(serialize(new Int8Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Int8Array[1,2,3]"`,
       );
+    });
 
+    it("Uint8Array", () => {
       expect(serialize(new Uint8Array([1, 2, 3]))).toMatchInlineSnapshot(
         `"Uint8Array[1,2,3]"`,
+      );
+    });
+
+    it("Uint8ClampedArray", () => {
+      expect(serialize(new Uint8ClampedArray([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Uint8ClampedArray[1,2,3]"`,
+      );
+    });
+
+    it("Int16Array", () => {
+      expect(serialize(new Int16Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Int16Array[1,2,3]"`,
+      );
+    });
+
+    it("Uint16Array", () => {
+      expect(serialize(new Uint16Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Uint16Array[1,2,3]"`,
+      );
+    });
+
+    it("Int32Array", () => {
+      expect(serialize(new Int32Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Int32Array[1,2,3]"`,
+      );
+    });
+
+    it("Uint32Array", () => {
+      expect(serialize(new Uint32Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Uint32Array[1,2,3]"`,
+      );
+    });
+
+    it("Float32Array", () => {
+      expect(serialize(new Float32Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Float32Array[1,2,3]"`,
+      );
+    });
+
+    it("Float64Array", () => {
+      expect(serialize(new Float64Array([1, 2, 3]))).toMatchInlineSnapshot(
+        `"Float64Array[1,2,3]"`,
+      );
+    });
+
+    it("Buffer and ArrayBufferLike", () => {
+      expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
+        `"ArrayBuffer[1,2,3]"`,
       );
 
       expect(serialize(Buffer.from("hello"))).toMatchInlineSnapshot(
