@@ -23,15 +23,14 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #buffer = "";
     #serialized = "";
-    #contents = new Map();
+    #contents = new Map<object, string>();
 
     getSerialized() {
       this.commit();
-
       return this.#serialized;
     }
 
-    write(str: string) {
+    write(str: string | boolean | number | null | undefined) {
       this.#buffer += str;
     }
 
@@ -40,11 +39,9 @@ const Serializer = /*@__PURE__*/ (function () {
       this.#buffer = "";
     }
 
-    dispatch(value: any): string | void {
-      const type = value === null ? "null" : typeof value;
+    dispatch(value: any) {
       // @ts-ignore
-      const handler = this["$" + type];
-      return handler.call(this, value);
+      this["$" + (value === null ? "null" : typeof value)].call(this, value);
     }
 
     compare(a: any, b: any): number {
@@ -54,18 +51,12 @@ const Serializer = /*@__PURE__*/ (function () {
       return serialize(a).localeCompare(serialize(b));
     }
 
-    writeObject(object: any): void {
+    writeObject(object: any) {
       const objString = Object.prototype.toString.call(object);
-
-      let objType: string;
-
-      // '[object a]'.length === 10, the minimum
-      if (objString.length < 10) {
-        objType = `unknown:[${objString}]`;
-      } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, -1);
-      }
+      const objType =
+        objString.length < 10
+          ? `unknown:[${objString}]` // '[object a]'.length === 10, the minimum
+          : objString.slice(8, -1); // '[object '.length === 8
 
       if (
         objType !== "Object" &&
@@ -85,20 +76,18 @@ const Serializer = /*@__PURE__*/ (function () {
         throw new TypeError(`Cannot serialize ${objType}`);
       }
 
-      const constructor = object.constructor.name;
-
-      objType = constructor === "Object" ? "" : constructor;
+      const constructorName = object.constructor.name;
+      const finalType = constructorName === "Object" ? "" : constructorName;
 
       if (typeof object.toJSON === "function") {
-        this.write(objType);
-
+        this.write(finalType);
         return this.$object(object.toJSON());
       }
 
-      this.writeObjectEntries(objType, Object.entries(object));
+      this.writeObjectEntries(finalType, Object.entries(object));
     }
 
-    writeObjectEntries(type: string, entries: Iterable<[string, any]>): void {
+    writeObjectEntries(type: string, entries: Iterable<[string, any]>) {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
@@ -114,7 +103,7 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write("}");
     }
 
-    $string(string: any) {
+    $string(string: string) {
       this.write(`'${string}'`);
     }
 
@@ -126,9 +115,9 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${bigint}n`);
     }
 
-    $object(object: any): void {
+    $object(object: object) {
       if (this.#contents.has(object)) {
-        return this.write(this.#contents.get(object));
+        return this.write(this.#contents.get(object)!);
       }
 
       this.#contents.set(object, `#${this.#contents.size}`);
@@ -137,7 +126,7 @@ const Serializer = /*@__PURE__*/ (function () {
       this.#contents.set(object, this.#buffer);
     }
 
-    $function(fn: any) {
+    $function(fn: () => any) {
       const fnStr = Function.prototype.toString.call(fn);
       if (
         fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
@@ -147,7 +136,7 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
     }
 
-    $Array(arr: any[]): string | void {
+    $Array(arr: Array<any>) {
       this.write("[");
       for (let i = 0; i < arr.length; i++) {
         this.dispatch(arr[i]);
@@ -158,8 +147,8 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write("]");
     }
 
-    $Date(date: any) {
-      return this.write(`Date(${date.toJSON()})`);
+    $Date(date: Date) {
+      this.write(`Date(${date.toJSON()})`);
     }
 
     $ArrayBuffer(arr: ArrayBuffer) {
@@ -170,25 +159,27 @@ const Serializer = /*@__PURE__*/ (function () {
 
     $Set(set: Set<any>) {
       this.write(`Set`);
-      this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)));
+      this.$Array(Array.from(set).sort(this.compare));
     }
 
     $Map(map: Map<any, any>) {
-      return this.writeObjectEntries("Map", map.entries());
+      this.writeObjectEntries("Map", map.entries());
     }
   }
 
   for (const type of ["boolean", "number", "null", "undefined"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(val);
+    Serializer.prototype["$" + type] = function (
+      val: boolean | number | null | undefined,
+    ) {
+      this.write(val);
     };
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(`${type}(${val.toString()})`);
+    Serializer.prototype["$" + type] = function (val: Error | RegExp | URL) {
+      this.write(`${type}(${val.toString()})`);
     };
   }
 
@@ -208,5 +199,6 @@ const Serializer = /*@__PURE__*/ (function () {
       this.write(`${type}[${Array.prototype.slice.call(arr).join(",")}]`);
     };
   }
+
   return Serializer;
 })();
