@@ -8,24 +8,26 @@
  * Keep in mind that there is always a chance of intentional collisions caused by user input.
  *
  * @param input any value to serialize
+ * @param context optional reusable context that stores serialized content of objects
  * @return {string} serialized string value
  */
-export function serialize(input: any): string {
+export function serialize(input: any, context?: Map<object, string>): string {
   if (typeof input === "string") {
     return `'${input}'`;
   }
-  const serializer = new Serializer();
+  const serializer = new Serializer(context);
   serializer.dispatch(input);
-  return serializer.getSerialized();
+  return serializer.serialized;
 }
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #buffer = "";
     #serialized = "";
-    #contents = new Map<object, string>();
 
-    getSerialized() {
+    constructor(protected context: Map<object, string> = new Map()) {}
+
+    get serialized() {
       this.commit();
       return this.#serialized;
     }
@@ -48,7 +50,9 @@ const Serializer = /*@__PURE__*/ (function () {
       if (typeof a === "string" && typeof b === "string") {
         return a.localeCompare(b);
       }
-      return serialize(a).localeCompare(serialize(b));
+      return serialize(a, this.context).localeCompare(
+        serialize(b, this.context),
+      );
     }
 
     writeObject(object: any) {
@@ -116,14 +120,14 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $object(object: object) {
-      if (this.#contents.has(object)) {
-        return this.write(this.#contents.get(object)!);
+      if (this.context.has(object)) {
+        return this.write(this.context.get(object));
       }
 
-      this.#contents.set(object, `#${this.#contents.size}`);
+      this.context.set(object, `#${this.context.size}`);
       this.commit();
       this.writeObject(object);
-      this.#contents.set(object, this.#buffer);
+      this.context.set(object, this.#buffer);
     }
 
     $function(fn: () => any) {
@@ -159,7 +163,7 @@ const Serializer = /*@__PURE__*/ (function () {
 
     $Set(set: Set<any>) {
       this.write(`Set`);
-      this.$Array(Array.from(set).sort(this.compare));
+      this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)));
     }
 
     $Map(map: Map<any, any>) {
