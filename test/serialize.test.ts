@@ -309,9 +309,12 @@ describe("serialize", () => {
       };
 
       obj.a = obj.b;
+      obj.b.add(1);
       obj.b.add(obj.a);
 
-      expect(serialize(obj)).toMatchInlineSnapshot(`"{a:Set[#1],b:Set[#1]}"`);
+      expect(serialize(obj)).toMatchInlineSnapshot(
+        `"{a:Set[#1,1],b:Set[#1,1]}"`,
+      );
     });
 
     it("handles multiple circular references within the same object", () => {
