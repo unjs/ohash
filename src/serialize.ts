@@ -14,11 +14,11 @@ export function serialize(input: any): string {
   return _serialize(input);
 }
 
-function _serialize(input: any, context?: Map<any, string>): string {
+function _serialize(input: any, parent?: any): string {
   if (typeof input === "string") {
     return `'${input}'`;
   }
-  const serializer = new Serializer(context);
+  const serializer = new Serializer(parent);
   serializer.dispatch(input);
   return serializer.serialized;
 }
@@ -27,10 +27,49 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     serialized = "";
 
-    #context: Map<any, string>;
+    #context: Map<any, string | [number, number]> = new Map();
+    #parent: Serializer | undefined;
 
-    constructor(context = new Map()) {
-      this.#context = context;
+    constructor(parent?: Serializer) {
+      this.#parent = parent;
+    }
+
+    setObjectContent(object: any, content: string): void {
+      if (this.#parent) {
+        return this.#parent.setObjectContent(object, content);
+      }
+
+      this.#context.set(object, content);
+    }
+
+    setObjectPosition(object: any, position: number): void {
+      if (this.#parent) {
+        return this.#parent.setObjectContent(
+          object,
+          this.serialized.slice(position),
+        );
+      }
+
+      this.#context.set(object, [position, this.serialized.length]);
+    }
+
+    getContextSize(): number {
+      return this.#parent ? this.#parent.getContextSize() : this.#context.size;
+    }
+
+    getObjectContent(object: any): string | undefined {
+      if (this.#parent) {
+        return this.#parent.getObjectContent(object);
+      }
+
+      let item = this.#context.get(object);
+
+      if (item !== undefined && typeof item !== "string") {
+        item = this.serialized.slice(item[0], item[1]);
+        this.#context.set(object, item);
+      }
+
+      return item;
     }
 
     write(str: string) {
@@ -48,9 +87,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (typeof a === "string" && typeof b === "string") {
         return a.localeCompare(b);
       }
-      return _serialize(a, this.#context).localeCompare(
-        _serialize(b, this.#context),
-      );
+      return _serialize(a, this).localeCompare(_serialize(b, this));
     }
 
     writeObject(object: any) {
@@ -124,16 +161,17 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $object(object: any): string | void {
-      const objectContent = this.#context.get(object);
+      const objectContent = this.getObjectContent(object);
 
       if (objectContent !== undefined) {
         return this.write(objectContent);
       }
 
-      const fromLength = this.serialized.length;
-      this.#context.set(object, `#${this.#context.size}`);
+      const position = this.serialized.length;
+
+      this.setObjectContent(object, `#${this.getContextSize()}`);
       this.writeObject(object);
-      this.#context.set(object, this.serialized.slice(fromLength));
+      this.setObjectPosition(object, position);
     }
 
     $function(fn: any) {
