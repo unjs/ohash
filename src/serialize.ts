@@ -31,8 +31,10 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     compare(a: any, b: any): number {
-      if (typeof a === "string" && typeof b === "string") {
-        return a.localeCompare(b);
+      const cA = toComparableString(a);
+      const cB = toComparableString(b);
+      if (cA !== undefined && cB !== undefined) {
+        return cA.localeCompare(cB);
       }
       return _serialize(a, this.#context).localeCompare(
         _serialize(b, this.#context),
@@ -206,3 +208,14 @@ const Serializer = /*@__PURE__*/ (function () {
   }
   return Serializer;
 })();
+
+function toComparableString(val: unknown): string | undefined {
+  if (val === null) {
+    return "null";
+  }
+  const type = typeof val;
+  if (type === "symbol" || type === "function" || type === "object") {
+    return undefined;
+  }
+  return String(val);
+}
