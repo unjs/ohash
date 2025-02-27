@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.6
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.5...v2.0.6)
+
+### 🔥 Performance
+
+- **serialize:** Fast path to compare primitive values ([#123](https://github.com/unjs/ohash/pull/123))
+
+### 🩹 Fixes
+
+- **serialize:** Better circular references handling ([#119](https://github.com/unjs/ohash/pull/119))
+
+### 🏡 Chore
+
+- Update deps ([d8f1a8c](https://github.com/unjs/ohash/commit/d8f1a8c))
+- Add comments about compare ([21c8347](https://github.com/unjs/ohash/commit/21c8347))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+
 ## v2.0.5
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.4...v2.0.5)
