@@ -8,13 +8,10 @@
  * Keep in mind that there is always a chance of intentional collisions caused by user input.
  *
  * @param input any value to serialize
+ * @param context optional reusable context that stores serialized content of objects
  * @return {string} serialized string value
  */
-export function serialize(input: any): string {
-  return _serialize(input);
-}
-
-function _serialize(input: any, context?: Map<any, string>): string {
+export function serializeV0(input: any, context?: Map<object, string>): string {
   if (typeof input === "string") {
     return `'${input}'`;
   }
@@ -25,48 +22,45 @@ function _serialize(input: any, context?: Map<any, string>): string {
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
-    serialized = "";
+    #buffer = "";
+    #serialized = "";
 
-    #context: Map<any, string>;
+    constructor(protected context: Map<object, string> = new Map()) {}
 
-    constructor(context = new Map()) {
-      this.#context = context;
+    get serialized() {
+      this.commit();
+      return this.#serialized;
     }
 
-    write(str: string) {
-      this.serialized += str;
-      return str;
+    write(str: string | boolean | number | null | undefined) {
+      this.#buffer += str;
     }
 
-    dispatch(value: any): string {
-      const type = value === null ? "null" : typeof value;
+    commit() {
+      this.#serialized += this.#buffer;
+      this.#buffer = "";
+    }
+
+    dispatch(value: any) {
       // @ts-ignore
-      const handler = this["$" + type];
-      return handler.call(this, value);
+      this["$" + (value === null ? "null" : typeof value)].call(this, value);
     }
 
     compare(a: any, b: any): number {
       if (typeof a === "string" && typeof b === "string") {
         return a.localeCompare(b);
       }
-      return _serialize(a, this.#context).localeCompare(
-        _serialize(b, this.#context),
+      return serializeV0(a, this.context).localeCompare(
+        serializeV0(b, this.context),
       );
     }
 
-    writeObject(object: any): string {
+    writeObject(object: any) {
       const objString = Object.prototype.toString.call(object);
-
-      let objType = "";
-      const objectLength = objString.length;
-
-      // '[object a]'.length === 10, the minimum
-      if (objectLength < 10) {
-        objType = "unknown:[" + objString + "]";
-      } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, objectLength - 1);
-      }
+      const objType =
+        objString.length < 10
+          ? `unknown:[${objString}]` // '[object a]'.length === 10, the minimum
+          : objString.slice(8, -1); // '[object '.length === 8
 
       if (
         objType !== "Object" &&
@@ -78,120 +72,118 @@ const Serializer = /*@__PURE__*/ (function () {
         if (handler) {
           return handler.call(this, object);
         }
+
         if (typeof object?.entries === "function") {
-          return this.objectEntries(objType, object.entries());
+          return this.writeObjectEntries(objType, object.entries());
         }
-        throw new Error(`Cannot serialize ${objType}`);
+
+        throw new TypeError(`Cannot serialize ${objType}`);
       }
 
-      const constructor = object.constructor.name;
-      const objectName = constructor === "Object" ? "" : constructor;
+      const constructorName = object.constructor.name;
+      const finalType = constructorName === "Object" ? "" : constructorName;
 
       if (typeof object.toJSON === "function") {
-        return this.write(objectName) + this.$object(object.toJSON());
+        this.write(finalType);
+        return this.$object(object.toJSON());
       }
 
-      return this.objectEntries(objectName, Object.entries(object));
+      this.writeObjectEntries(finalType, Object.entries(object));
     }
 
-    objectEntries(type: string, entries: Iterable<[string, any]>) {
+    writeObjectEntries(type: string, entries: Iterable<[string, any]>) {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
-      let content = this.write(`${type}{`);
+      this.write(`${type}{`);
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += this.write(`${key}:`);
-        content += this.dispatch(value);
+        this.write(`${key}:`);
+        this.dispatch(value);
         if (i < sortedEntries.length - 1) {
-          content += this.write(",");
+          this.write(",");
         }
       }
-      return content + this.write("}");
+      this.write("}");
     }
 
-    $string(string: any) {
-      return this.write("'" + string + "'");
+    $string(string: string) {
+      this.write(`'${string}'`);
     }
 
     $symbol(symbol: symbol) {
-      return this.write(symbol.toString());
+      this.write(symbol.toString());
     }
 
     $bigint(bigint: bigint) {
-      return this.write(`${bigint}n`);
+      this.write(`${bigint}n`);
     }
 
-    $object(object: any): string | void {
-      let content = this.#context.get(object);
-
-      if (content !== undefined) {
-        return this.write(content);
+    $object(object: object) {
+      if (this.context.has(object)) {
+        return this.write(this.context.get(object));
       }
 
-      this.#context.set(object, `#${this.#context.size}`);
-      content = this.writeObject(object);
-      this.#context.set(object, content);
-
-      return content;
+      this.context.set(object, `#${this.context.size}`);
+      this.commit();
+      this.writeObject(object);
+      this.context.set(object, this.#buffer);
     }
 
-    $function(fn: any) {
+    $function(fn: () => any) {
       const fnStr = Function.prototype.toString.call(fn);
       if (
         fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
       ) {
         return this.write(`${fn.name || ""}()[native]`);
       }
-      return this.write(
-        `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`,
-      );
+      this.write(`${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`);
     }
 
-    $Array(arr: any[]): string {
-      let content = this.write("[");
+    $Array(arr: Array<any>) {
+      this.write("[");
       for (let i = 0; i < arr.length; i++) {
-        content += this.dispatch(arr[i]);
+        this.dispatch(arr[i]);
         if (i < arr.length - 1) {
-          content += this.write(",");
+          this.write(",");
         }
       }
-      return content + this.write("]");
+      this.write("]");
     }
 
-    $Date(date: any) {
-      return this.write(`Date(${date.toJSON()})`);
+    $Date(date: Date) {
+      this.write(`Date(${date.toJSON()})`);
     }
 
     $ArrayBuffer(arr: ArrayBuffer) {
-      return this.write(
+      this.write(
         `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`,
       );
     }
 
     $Set(set: Set<any>) {
-      return (
-        this.write(`Set`) +
-        this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))
-      );
+      this.write(`Set`);
+      this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)));
     }
 
     $Map(map: Map<any, any>) {
-      return this.objectEntries("Map", map.entries());
+      this.writeObjectEntries("Map", map.entries());
     }
   }
 
   for (const type of ["boolean", "number", "null", "undefined"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(val);
+    Serializer.prototype["$" + type] = function (
+      val: boolean | number | null | undefined,
+    ) {
+      this.write(val);
     };
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(`${type}(${val.toString()})`);
+    Serializer.prototype["$" + type] = function (val: Error | RegExp | URL) {
+      this.write(`${type}(${val.toString()})`);
     };
   }
 
@@ -208,16 +200,14 @@ const Serializer = /*@__PURE__*/ (function () {
   ] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return this.write(
-        `${type}[${Array.prototype.slice.call(arr).join(",")}]`,
-      );
+      this.write(`${type}[${Array.prototype.slice.call(arr).join(",")}]`);
     };
   }
 
   for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return this.write(
+      this.write(
         `${type}[${Array.prototype.slice
           .call(arr)
           .map((n) => `${n}n`)
