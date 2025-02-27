@@ -31,13 +31,9 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     compare(a: any, b: any): number {
-      const cA = toComparableString(a);
-      const cB = toComparableString(b);
-      if (cA !== undefined && cB !== undefined) {
-        return cA.localeCompare(cB);
-      }
-      return _serialize(a, this.#context).localeCompare(
-        _serialize(b, this.#context),
+      return String.prototype.localeCompare.call(
+        toComparableString(a) ?? _serialize(a, this.#context),
+        toComparableString(b) ?? _serialize(b, this.#context),
       );
     }
 
