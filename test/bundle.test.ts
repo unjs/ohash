@@ -22,7 +22,7 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(2600); // <2.6kb
+    expect(bytes).toBeLessThanOrEqual(2800); // <2.8kb
     expect(gzipSize).toBeLessThanOrEqual(1200); // <1.2kb
   });
 
@@ -33,7 +33,7 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(2900); // <2.9kb
+    expect(bytes).toBeLessThanOrEqual(3100); // <3.1kb
     expect(gzipSize).toBeLessThanOrEqual(1300); // <1.3kb
   });
 });
