@@ -122,7 +122,7 @@ const Serializer = /*@__PURE__*/ (function () {
       return this.write(`${bigint}n`);
     }
 
-    $object(object: any): string | void {
+    $object(object: any) {
       let content = this.#context.get(object);
 
       if (content !== undefined) {
@@ -148,7 +148,7 @@ const Serializer = /*@__PURE__*/ (function () {
       );
     }
 
-    $Array(arr: any[]): string {
+    $Array(arr: any[]) {
       let content = this.write("[");
       for (let i = 0; i < arr.length; i++) {
         content += this.dispatch(arr[i]);
