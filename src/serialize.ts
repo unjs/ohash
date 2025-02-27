@@ -30,13 +30,6 @@ const Serializer = /*@__PURE__*/ (function () {
       this.#context = context;
     }
 
-    serialize(value: any): string {
-      const type = value === null ? "null" : typeof value;
-      // @ts-ignore
-      const handler = this["$" + type];
-      return handler.call(this, value);
-    }
-
     compare(a: any, b: any): number {
       if (typeof a === "string" && typeof b === "string") {
         return a.localeCompare(b);
@@ -46,7 +39,14 @@ const Serializer = /*@__PURE__*/ (function () {
       );
     }
 
-    writeObject(object: any): string {
+    serialize(value: any): string {
+      const type = value === null ? "null" : typeof value;
+      // @ts-ignore
+      const handler = this["$" + type];
+      return handler.call(this, value);
+    }
+
+    serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
 
       let objType = "";
@@ -71,7 +71,7 @@ const Serializer = /*@__PURE__*/ (function () {
           return handler.call(this, object);
         }
         if (typeof object?.entries === "function") {
-          return this.objectEntries(objType, object.entries());
+          return this.serializeObjectEntries(objType, object.entries());
         }
         throw new Error(`Cannot serialize ${objType}`);
       }
@@ -83,10 +83,10 @@ const Serializer = /*@__PURE__*/ (function () {
         return objectName + this.$object(object.toJSON());
       }
 
-      return this.objectEntries(objectName, Object.entries(object));
+      return this.serializeObjectEntries(objectName, Object.entries(object));
     }
 
-    objectEntries(type: string, entries: Iterable<[string, any]>) {
+    serializeObjectEntries(type: string, entries: Iterable<[string, any]>) {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
@@ -119,7 +119,7 @@ const Serializer = /*@__PURE__*/ (function () {
 
       if (content === undefined) {
         this.#context.set(object, `#${this.#context.size}`);
-        content = this.writeObject(object);
+        content = this.serializeObject(object);
         this.#context.set(object, content);
       }
 
@@ -160,7 +160,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Map(map: Map<any, any>) {
-      return this.objectEntries("Map", map.entries());
+      return this.serializeObjectEntries("Map", map.entries());
     }
   }
 
