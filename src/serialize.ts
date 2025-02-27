@@ -19,26 +19,18 @@ function _serialize(input: any, context?: Map<any, string>): string {
     return `'${input}'`;
   }
   const serializer = new Serializer(context);
-  serializer.dispatch(input);
-  return serializer.serialized;
+  return serializer.serialize(input);
 }
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
-    serialized = "";
-
     #context: Map<any, string>;
 
     constructor(context = new Map()) {
       this.#context = context;
     }
 
-    write(str: string) {
-      this.serialized += str;
-      return str;
-    }
-
-    dispatch(value: any): string {
+    serialize(value: any): string {
       const type = value === null ? "null" : typeof value;
       // @ts-ignore
       const handler = this["$" + type];
@@ -88,7 +80,7 @@ const Serializer = /*@__PURE__*/ (function () {
       const objectName = constructor === "Object" ? "" : constructor;
 
       if (typeof object.toJSON === "function") {
-        return this.write(objectName) + this.$object(object.toJSON());
+        return objectName + this.$object(object.toJSON());
       }
 
       return this.objectEntries(objectName, Object.entries(object));
@@ -98,40 +90,38 @@ const Serializer = /*@__PURE__*/ (function () {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
-      let content = this.write(`${type}{`);
+      let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += this.write(`${key}:`);
-        content += this.dispatch(value);
+        content += `${key}:`;
+        content += this.serialize(value);
         if (i < sortedEntries.length - 1) {
-          content += this.write(",");
+          content += ",";
         }
       }
-      return content + this.write("}");
+      return content + "}";
     }
 
     $string(string: any) {
-      return this.write("'" + string + "'");
+      return `'${string}'`;
     }
 
     $symbol(symbol: symbol) {
-      return this.write(symbol.toString());
+      return symbol.toString();
     }
 
     $bigint(bigint: bigint) {
-      return this.write(`${bigint}n`);
+      return `${bigint}n`;
     }
 
     $object(object: any) {
       let content = this.#context.get(object);
 
-      if (content !== undefined) {
-        return this.write(content);
+      if (content === undefined) {
+        this.#context.set(object, `#${this.#context.size}`);
+        content = this.writeObject(object);
+        this.#context.set(object, content);
       }
-
-      this.#context.set(object, `#${this.#context.size}`);
-      content = this.writeObject(object);
-      this.#context.set(object, content);
 
       return content;
     }
@@ -141,39 +131,32 @@ const Serializer = /*@__PURE__*/ (function () {
       if (
         fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
       ) {
-        return this.write(`${fn.name || ""}()[native]`);
+        return `${fn.name || ""}()[native]`;
       }
-      return this.write(
-        `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`,
-      );
+      return `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`;
     }
 
     $Array(arr: any[]) {
-      let content = this.write("[");
+      let content = "[";
       for (let i = 0; i < arr.length; i++) {
-        content += this.dispatch(arr[i]);
+        content += this.serialize(arr[i]);
         if (i < arr.length - 1) {
-          content += this.write(",");
+          content += ",";
         }
       }
-      return content + this.write("]");
+      return content + "]";
     }
 
     $Date(date: any) {
-      return this.write(`Date(${date.toJSON()})`);
+      return `Date(${date.toJSON()})`;
     }
 
     $ArrayBuffer(arr: ArrayBuffer) {
-      return this.write(
-        `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`,
-      );
+      return `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`;
     }
 
     $Set(set: Set<any>) {
-      return (
-        this.write(`Set`) +
-        this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))
-      );
+      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {
@@ -184,14 +167,14 @@ const Serializer = /*@__PURE__*/ (function () {
   for (const type of ["boolean", "number", "null", "undefined"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(val);
+      return `${val}`;
     };
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
-      return this.write(`${type}(${val.toString()})`);
+      return `${type}(${val.toString()})`;
     };
   }
 
@@ -208,21 +191,17 @@ const Serializer = /*@__PURE__*/ (function () {
   ] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return this.write(
-        `${type}[${Array.prototype.slice.call(arr).join(",")}]`,
-      );
+      return `${type}[${Array.prototype.slice.call(arr).join(",")}]`;
     };
   }
 
   for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return this.write(
-        `${type}[${Array.prototype.slice
-          .call(arr)
-          .map((n) => `${n}n`)
-          .join(",")}]`,
-      );
+      return `${type}[${Array.prototype.slice
+        .call(arr)
+        .map((n) => `${n}n`)
+        .join(",")}]`;
     };
   }
   return Serializer;
