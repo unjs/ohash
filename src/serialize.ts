@@ -31,6 +31,9 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     compare(a: any, b: any): number {
+      // Uses fast path to compare primitive values (string, number, bigint, boolean, null, undefined)
+      // Only symbol, function and object values need to be full serialized
+      // TODO: we could make it faster by fast path if both sides are numbers (need benchmarks first)
       return String.prototype.localeCompare.call(
         toComparableString(a) ?? _serialize(a, this.#context),
         toComparableString(b) ?? _serialize(b, this.#context),
