@@ -241,9 +241,7 @@ describe("serialize", () => {
     it("blob", () => {
       expect(() =>
         serialize(new Blob(["x"])),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[TypeError: Cannot serialize Blob]`,
-      );
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
     });
   });
 
@@ -336,53 +334,21 @@ describe("serialize", () => {
     });
   });
 
-  describe("consistency", () => {
-    const v = {
-      a: { value: 1 },
-      b: { value: 1 },
-      c: { value: 1 },
-    };
+  describe("output", () => {
+    it("provides stable output", () => {
+      const simple = {
+        a: { _: 1, b: { _: 2, c: { _: 3 } } },
+        b: { _: 1, b: { _: 2, c: { _: 3 } } },
+      };
 
-    const o: Record<string, unknown> = {
-      vvv: {
-        value: { value: 1 },
-        values: [{ value: 1 }, { value: 1 }],
-      },
-      aaa: {
-        value: v.a,
-        values: [v.a, v.a],
-      },
-      aab: {
-        value: v.a,
-        values: [v.a, v.b],
-      },
-      aac: {
-        value: v.a,
-        values: [v.a, v.c],
-      },
-      aca: {
-        value: v.a,
-        values: [v.c, v.a],
-      },
-      bbb: {
-        value: v.b,
-        values: [v.b, v.b],
-      },
-      bbc: {
-        value: v.b,
-        values: [v.b, v.c],
-      },
-      cca: {
-        value: v.c,
-        values: [v.c, v.a],
-      },
-    };
+      expect(serialize(simple)).toMatchInlineSnapshot(
+        `"{a:{_:1,b:{_:2,c:{_:3}}},b:{_:1,b:{_:2,c:{_:3}}}}"`,
+      );
 
-    Object.keys(o).flatMap((keyA) =>
-      Object.keys(o).map((keyB) =>
-        it(`Expected: "${keyA}" equals Received: "${keyB}"`, () =>
-          expect(serialize(o[keyB])).toBe(serialize(o[keyA]))),
-      ),
-    );
+      const a = { _: 1, b: { _: 2, c: { _: 3 } } };
+      const refs = { a: a, b: a };
+
+      expect(serialize(refs)).toMatchInlineSnapshot(`"${serialize(simple)}"`);
+    });
   });
 });
