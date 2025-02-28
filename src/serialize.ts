@@ -166,7 +166,7 @@ const Serializer = /*@__PURE__*/ (function () {
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
-      return `${type}(${val.toString()})`;
+      return `${type}(${val})`;
     };
   }
 
