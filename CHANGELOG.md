@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.7
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.6...v2.0.7)
+
+### 🔥 Performance
+
+- **serialize:** Faster symbol and number comparison ([#125](https://github.com/unjs/ohash/pull/125))
+
+### ✅ Tests
+
+- **benchmarks:** Add `serialize` presets ([#124](https://github.com/unjs/ohash/pull/124))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+
 ## v2.0.6
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.5...v2.0.6)
