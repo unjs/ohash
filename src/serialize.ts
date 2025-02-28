@@ -98,10 +98,6 @@ const Serializer = /*@__PURE__*/ (function () {
       return `'${string}'`;
     }
 
-    $symbol(symbol: symbol) {
-      return symbol.toString();
-    }
-
     $bigint(bigint: bigint) {
       return `${bigint}n`;
     }
@@ -156,11 +152,15 @@ const Serializer = /*@__PURE__*/ (function () {
     }
   }
 
-  for (const type of ["boolean", "number", "null", "undefined"] as const) {
+  for (const type of [
+    "symbol",
+    "boolean",
+    "number",
+    "null",
+    "undefined",
+  ] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return `${val}`;
-    };
+    Serializer.prototype["$" + type] = String;
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
