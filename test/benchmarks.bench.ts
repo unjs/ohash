@@ -202,6 +202,12 @@ function createBenchObjects({
       object.map.set("clonedObject", circularObject);
       object.set.add(object);
       object.set.add(circularObject);
+
+      for (let i = 0; i < 1000; i++) {
+        object.set.add(i);
+        object.set.add(Symbol(i));
+        object.set.add(`${i}`);
+      }
     }
   }
 
