@@ -204,7 +204,7 @@ function toComparableString(val: unknown): string | undefined {
     return "null";
   }
   const type = typeof val;
-  if (type === "symbol" || type === "function" || type === "object") {
+  if (type === "function" || type === "object") {
     return undefined;
   }
   return String(val);
