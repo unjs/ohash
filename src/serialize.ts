@@ -11,32 +11,26 @@
  * @return {string} serialized string value
  */
 export function serialize(input: any): string {
-  return _serialize(input);
-}
-
-function _serialize(input: any, context?: Map<any, string>): string {
   if (typeof input === "string") {
     return `'${input}'`;
   }
-  const serializer = new Serializer(context);
-  return serializer.serialize(input);
+  return new Serializer().serialize(input);
 }
 
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
-    #context: Map<any, string>;
-
-    constructor(context = new Map()) {
-      this.#context = context;
-    }
+    #context = new Map();
 
     compare(a: any, b: any): number {
+      if (typeof a === "number" && typeof b === "number") {
+        return a - b;
+      }
+
       // Uses fast path to compare primitive values (string, number, bigint, boolean, null, undefined)
       // Only symbol, function and object values need to be full serialized
-      // TODO: we could make it faster by fast path if both sides are numbers (need benchmarks first)
       return String.prototype.localeCompare.call(
-        toComparableString(a) ?? _serialize(a, this.#context),
-        toComparableString(b) ?? _serialize(b, this.#context),
+        toComparableString(a) ?? this.serialize(a),
+        toComparableString(b) ?? this.serialize(b),
       );
     }
 
@@ -107,10 +101,6 @@ const Serializer = /*@__PURE__*/ (function () {
       return `'${string}'`;
     }
 
-    $symbol(symbol: symbol) {
-      return symbol.toString();
-    }
-
     $bigint(bigint: bigint) {
       return `${bigint}n`;
     }
@@ -165,17 +155,21 @@ const Serializer = /*@__PURE__*/ (function () {
     }
   }
 
-  for (const type of ["boolean", "number", "null", "undefined"] as const) {
+  for (const type of [
+    "symbol",
+    "boolean",
+    "number",
+    "null",
+    "undefined",
+  ] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (val: any) {
-      return `${val}`;
-    };
+    Serializer.prototype["$" + type] = String;
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
-      return `${type}(${val.toString()})`;
+      return `${type}(${val})`;
     };
   }
 
@@ -213,7 +207,7 @@ function toComparableString(val: unknown): string | undefined {
     return "null";
   }
   const type = typeof val;
-  if (type === "symbol" || type === "function" || type === "object") {
+  if (type === "function" || type === "object") {
     return undefined;
   }
   return String(val);
