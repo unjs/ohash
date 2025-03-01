@@ -27,19 +27,19 @@ const Serializer = /*@__PURE__*/ (function () {
       }
 
       return String.prototype.localeCompare.call(
-        this.serialize(a, false),
-        this.serialize(b, false),
+        this.serialize(a, true),
+        this.serialize(b, true),
       );
     }
 
-    serialize(value: any, addQuotes = true): string {
+    serialize(value: any, noQuotes?: boolean): string {
       if (value === null) {
         return "null";
       }
 
       switch (typeof value) {
         case "string": {
-          return addQuotes ? `'${value}'` : value;
+          return noQuotes ? value : `'${value}'`;
         }
         case "bigint": {
           return `${value}n`;
