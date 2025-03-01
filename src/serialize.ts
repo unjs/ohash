@@ -43,17 +43,11 @@ const Serializer = /*@__PURE__*/ (function () {
 
     serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
-
-      let objType = "";
-      const objectLength = objString.length;
-
-      // '[object a]'.length === 10, the minimum
-      if (objectLength < 10) {
-        objType = "unknown:[" + objString + "]";
-      } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, objectLength - 1);
-      }
+      const objLength = objString.length;
+      const objType =
+        objLength < 10 // '[object a]'.length === 10, the minimum
+          ? `unknown:${objString}`
+          : objString.slice(8, -1); // '[object '.length === 8
 
       if (
         objType !== "Object" &&
@@ -71,14 +65,14 @@ const Serializer = /*@__PURE__*/ (function () {
         throw new Error(`Cannot serialize ${objType}`);
       }
 
-      const constructor = object.constructor.name;
-      const objectName = constructor === "Object" ? "" : constructor;
+      const constructorName = object.constructor.name;
+      const objName = constructorName === "Object" ? "" : constructorName;
 
       if (typeof object.toJSON === "function") {
-        return objectName + this.$object(object.toJSON());
+        return objName + this.$object(object.toJSON());
       }
 
-      return this.serializeObjectEntries(objectName, Object.entries(object));
+      return this.serializeObjectEntries(objName, Object.entries(object));
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[string, any]>) {
