@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.5
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.4...v1.1.5)
+
+### 📦 Build
+
+- Add `digest` and `serialize` exports for forward compat (v1) ([#129](https://github.com/unjs/ohash/pull/129))
+
+### 🏡 Chore
+
+- Update deps ([779f9e9](https://github.com/unjs/ohash/commit/779f9e9))
+- Update ci ([b86ff51](https://github.com/unjs/ohash/commit/b86ff51))
+- Update deps ([1e276af](https://github.com/unjs/ohash/commit/1e276af))
+- Update release script for v1 ([9d59479](https://github.com/unjs/ohash/commit/9d59479))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v1.1.4
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.3...v1.1.4)
