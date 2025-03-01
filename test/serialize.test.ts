@@ -215,6 +215,10 @@ describe("serialize", () => {
         `"FormData{bar:'baz',foo:'bar'}"`,
       );
     });
+
+    it("should handle special edge cases", () => {
+      expect(serialize(Object.create(null))).toBe("{}");
+    });
   });
 
   describe("function", () => {

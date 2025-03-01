@@ -77,9 +77,12 @@ const Serializer = /*@__PURE__*/ (function () {
         }
         throw new Error(`Cannot serialize ${objType}`);
       }
-
-      const constructorName = object.constructor.name;
-      const objName = constructorName === "Object" ? "" : constructorName;
+      
+      const constructorName = object.constructor?.name;
+      const objName =
+        constructorName === "Object" || constructorName === undefined
+          ? ""
+          : constructorName;
 
       if (typeof object.toJSON === "function") {
         return objName + this.$object(object.toJSON());
