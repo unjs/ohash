@@ -29,19 +29,19 @@ const Serializer = /*@__PURE__*/ (function () {
       // Uses fast path to compare primitive values (string, number, bigint, boolean, null, undefined)
       // Only symbol, function and object values need to be full serialized
       return String.prototype.localeCompare.call(
-        toComparableString(a) ?? this.serialize(a),
-        toComparableString(b) ?? this.serialize(b),
+        this.serialize(a, false),
+        this.serialize(b, false),
       );
     }
 
-    serialize(value: any): string {
+    serialize(value: any, addQuotes = true): string {
       if (value === null) {
         return "null";
       }
 
       switch (typeof value) {
         case "string": {
-          return `'${value}'`;
+          return addQuotes ? `'${value}'` : value;
         }
         case "bigint": {
           return `${value}n`;
@@ -192,14 +192,3 @@ const Serializer = /*@__PURE__*/ (function () {
   }
   return Serializer;
 })();
-
-function toComparableString(val: unknown): string | undefined {
-  if (val === null) {
-    return "null";
-  }
-  const type = typeof val;
-  if (type === "function" || type === "object") {
-    return undefined;
-  }
-  return String(val);
-}
