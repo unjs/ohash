@@ -35,10 +35,26 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serialize(value: any): string {
-      const type = value === null ? "null" : typeof value;
-      // @ts-ignore
-      const handler = this["$" + type];
-      return handler.call(this, value);
+      if (value === null) {
+        return "null";
+      }
+
+      switch (typeof value) {
+        case "string": {
+          return `'${value}'`;
+        }
+        case "bigint": {
+          return `${value}n`;
+        }
+        case "object": {
+          return this.$object(value);
+        }
+        case "function": {
+          return this.$function(value);
+        }
+      }
+
+      return String(value);
     }
 
     serializeObject(object: any): string {
@@ -91,14 +107,6 @@ const Serializer = /*@__PURE__*/ (function () {
       return content + "}";
     }
 
-    $string(string: any) {
-      return `'${string}'`;
-    }
-
-    $bigint(bigint: bigint) {
-      return `${bigint}n`;
-    }
-
     $object(object: any) {
       let content = this.#context.get(object);
 
@@ -147,17 +155,6 @@ const Serializer = /*@__PURE__*/ (function () {
     $Map(map: Map<any, any>) {
       return this.serializeObjectEntries("Map", map.entries());
     }
-  }
-
-  for (const type of [
-    "symbol",
-    "boolean",
-    "number",
-    "null",
-    "undefined",
-  ] as const) {
-    // @ts-ignore
-    Serializer.prototype["$" + type] = String;
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
