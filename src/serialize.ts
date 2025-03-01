@@ -26,34 +26,41 @@ const Serializer = /*@__PURE__*/ (function () {
         return a - b;
       }
 
-      // Uses fast path to compare primitive values (string, number, bigint, boolean, null, undefined)
-      // Only symbol, function and object values need to be full serialized
       return String.prototype.localeCompare.call(
-        toComparableString(a) ?? this.serialize(a),
-        toComparableString(b) ?? this.serialize(b),
+        this.serialize(a, true),
+        this.serialize(b, true),
       );
     }
 
-    serialize(value: any): string {
-      const type = value === null ? "null" : typeof value;
-      // @ts-ignore
-      const handler = this["$" + type];
-      return handler.call(this, value);
+    serialize(value: any, noQuotes?: boolean): string {
+      if (value === null) {
+        return "null";
+      }
+
+      switch (typeof value) {
+        case "string": {
+          return noQuotes ? value : `'${value}'`;
+        }
+        case "bigint": {
+          return `${value}n`;
+        }
+        case "object": {
+          return this.$object(value);
+        }
+        case "function": {
+          return this.$function(value);
+        }
+      }
+
+      return String(value);
     }
 
     serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
-
-      let objType = "";
-      const objectLength = objString.length;
-
-      // '[object a]'.length === 10, the minimum
-      if (objectLength < 10) {
-        objType = "unknown:[" + objString + "]";
-      } else {
-        // '[object '.length === 8
-        objType = objString.slice(8, objectLength - 1);
-      }
+      const objType =
+        objString.length < 10 // '[object a]'.length === 10, the minimum
+          ? `unknown:${objString}`
+          : objString.slice(8, -1); // '[object '.length === 8
 
       if (
         objType !== "Object" &&
@@ -71,14 +78,14 @@ const Serializer = /*@__PURE__*/ (function () {
         throw new Error(`Cannot serialize ${objType}`);
       }
 
-      const constructor = object.constructor.name;
-      const objectName = constructor === "Object" ? "" : constructor;
+      const constructorName = object.constructor.name;
+      const objName = constructorName === "Object" ? "" : constructorName;
 
       if (typeof object.toJSON === "function") {
-        return objectName + this.$object(object.toJSON());
+        return objName + this.$object(object.toJSON());
       }
 
-      return this.serializeObjectEntries(objectName, Object.entries(object));
+      return this.serializeObjectEntries(objName, Object.entries(object));
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[string, any]>) {
@@ -95,14 +102,6 @@ const Serializer = /*@__PURE__*/ (function () {
         }
       }
       return content + "}";
-    }
-
-    $string(string: any) {
-      return `'${string}'`;
-    }
-
-    $bigint(bigint: bigint) {
-      return `${bigint}n`;
     }
 
     $object(object: any) {
@@ -155,17 +154,6 @@ const Serializer = /*@__PURE__*/ (function () {
     }
   }
 
-  for (const type of [
-    "symbol",
-    "boolean",
-    "number",
-    "null",
-    "undefined",
-  ] as const) {
-    // @ts-ignore
-    Serializer.prototype["$" + type] = String;
-  }
-
   for (const type of ["Error", "RegExp", "URL"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (val: any) {
@@ -201,14 +189,3 @@ const Serializer = /*@__PURE__*/ (function () {
   }
   return Serializer;
 })();
-
-function toComparableString(val: unknown): string | undefined {
-  if (val === null) {
-    return "null";
-  }
-  const type = typeof val;
-  if (type === "function" || type === "object") {
-    return undefined;
-  }
-  return String(val);
-}
