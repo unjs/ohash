@@ -17,6 +17,9 @@ describe("serialize", () => {
       expect(serialize(new Date(0))).toMatchInlineSnapshot(
         `"Date(1970-01-01T00:00:00.000Z)"`,
       );
+      expect(serialize(new Date(Number.NaN))).toMatchInlineSnapshot(
+        `"Date(null)"`,
+      );
     });
 
     it("boolean", () => {
