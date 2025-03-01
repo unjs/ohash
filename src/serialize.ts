@@ -25,7 +25,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (typeof a === "number" && typeof b === "number") {
         return a - b;
       }
-      
+
       return String.prototype.localeCompare.call(
         this.serialize(a, false),
         this.serialize(b, false),
