@@ -25,7 +25,7 @@
     "lint": "eslint . && prettier -c src test",
     "lint:fix": "eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
-    "release": "pnpm test && changelogen --release --push --publish --publishTag 1.x",
+    "release": "pnpm test && changelogen --release --push --publish --publishTag 1x",
     "benchmark": "node benchmark/object-hash.mjs",
     "test": "pnpm lint && vitest run && pnpm typecheck",
     "typecheck": "tsc --noEmit"
