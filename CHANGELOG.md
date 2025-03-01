@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.8
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.7...v2.0.8)
+
+### 🔥 Performance
+
+- **serialize:** Faster serialization and less bundle size ([#126](https://github.com/unjs/ohash/pull/126))
+
+### 📦 Build
+
+- Export `isEqual` from main subpath for backward compat ([#128](https://github.com/unjs/ohash/pull/128))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v2.0.7
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.6...v2.0.7)
