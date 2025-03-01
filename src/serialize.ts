@@ -57,9 +57,8 @@ const Serializer = /*@__PURE__*/ (function () {
 
     serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
-      const objLength = objString.length;
       const objType =
-        objLength < 10 // '[object a]'.length === 10, the minimum
+        objString.length < 10 // '[object a]'.length === 10, the minimum
           ? `unknown:${objString}`
           : objString.slice(8, -1); // '[object '.length === 8
 
