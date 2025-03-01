@@ -27,24 +27,26 @@ npx nypm i ohash
 
 ```js
 // ESM import
-import { hash, serialize, digest } from "ohash";
-import { isEqual, diff } from "ohash/utils";
+import { hash, serialize, digest, isEqual } from "ohash";
+import { diff } from "ohash/utils";
 
 // Dynamic import
-const { hash, serialize, digest } = await import("ohash");
-const { isEqual, diff } = await import("ohash/utils");
+const { hash, serialize, digest, isEqual } = await import("ohash");
+const { diff } = await import("ohash/utils");
 ```
 
 <details>
   <summary>Import from CDN</summary>
 
 ```js
-import { hash, serialize, digest } from "https://esm.sh/ohash";
-import { isEqual, diff } from "https://esm.sh/ohash/utils";
+import { hash, serialize, digest, isEqual } from "https://esm.sh/ohash";
+import { diff } from "https://esm.sh/ohash/utils";
 
 // Dynamic import
-const { hash, serialize, digest } = await import("https://esm.sh/ohash");
-const { isEqual, diff } = await import("https://esm.sh/ohash/utils");
+const { hash, serialize, digest, isEqual } = await import(
+  "https://esm.sh/ohash"
+);
+const { diff } = await import("https://esm.sh/ohash/utils");
 ```
 
 </details>
@@ -66,8 +68,7 @@ console.log(hash({ foo: "bar" }));
 
 Serializes any input value into a string for hashing.
 
-> [!IMPORTANT]
-> `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
+> [!IMPORTANT] > `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
 
 ```js
 import { serialize } from "ohash";
@@ -92,7 +93,7 @@ console.log(digest("Hello World!"));
 Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput) values.
 
 ```js
-import { isEqual } from "ohash/utils";
+import { isEqual } from "ohash";
 
 // true
 console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }));
