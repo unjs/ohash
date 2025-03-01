@@ -25,9 +25,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (typeof a === "number" && typeof b === "number") {
         return a - b;
       }
-
-      // Uses fast path to compare primitive values (string, number, bigint, boolean, null, undefined)
-      // Only symbol, function and object values need to be full serialized
+      
       return String.prototype.localeCompare.call(
         this.serialize(a, false),
         this.serialize(b, false),
