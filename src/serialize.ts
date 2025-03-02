@@ -72,7 +72,7 @@ const Serializer = /*@__PURE__*/ (function () {
         objType === "Object" &&
         (objName === "URL" || objName === "Blob" || objName === "FormData")
       ) {
-        // workaround for workerd runtime
+        // workaround for browsers and workerd runtime
         objType = objName;
       }
 

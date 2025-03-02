@@ -356,7 +356,7 @@ describe("serialize", () => {
   });
 });
 
-describe("workerd workarounds", () => {
+describe("browser and workerd runtime workarounds", () => {
   let originalToString: any;
 
   beforeEach(() => {
