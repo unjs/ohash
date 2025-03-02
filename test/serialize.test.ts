@@ -180,8 +180,8 @@ describe("serialize", () => {
   describe("object", () => {
     it("object", () => {
       expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
-
       expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
+      expect(serialize(Object.create(null))).toBe("{}");
     });
 
     it("symbol key", () => {
@@ -214,10 +214,6 @@ describe("serialize", () => {
       expect(serialize(form)).toMatchInlineSnapshot(
         `"FormData{bar:'baz',foo:'bar'}"`,
       );
-    });
-
-    it("should handle special edge cases", () => {
-      expect(serialize(Object.create(null))).toBe("{}");
     });
   });
 
