@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { serialize } from "../src";
 
 describe("serialize", () => {
@@ -169,11 +169,13 @@ describe("serialize", () => {
       );
     });
 
-    it("Buffer and ArrayBufferLike", () => {
+    it("ArrayBufferLike", () => {
       expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
         `"ArrayBuffer[1,2,3]"`,
       );
+    });
 
+    it.runIf(typeof Buffer !== "undefined")("Buffer", () => {
       expect(serialize(Buffer.from("hello"))).toMatchInlineSnapshot(
         `"Uint8Array[104,101,108,108,111]"`,
       );
@@ -353,5 +355,42 @@ describe("serialize", () => {
 
       expect(serialize(refs)).toMatchInlineSnapshot(`"${serialize(simple)}"`);
     });
+  });
+});
+
+// https://github.com/cloudflare/workerd/issues/3641
+describe("Object.prototype.toString issues", () => {
+  let originalToString: any;
+
+  beforeEach(() => {
+    originalToString = Object.prototype.toString;
+    Object.prototype.toString = function () {
+      return "[object Object]";
+    };
+  });
+
+  afterEach(() => {
+    Object.prototype.toString = originalToString;
+  });
+
+  it("URL", () => {
+    expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
+      `"URL(https://example.com/)"`,
+    );
+  });
+
+  it("Blob", () => {
+    expect(() => serialize(new Blob(["x"]))).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Cannot serialize Blob]`,
+    );
+  });
+
+  it("FormData", () => {
+    const form = new FormData();
+    form.set("foo", "bar");
+    form.set("bar", "baz");
+    expect(serialize(form)).toMatchInlineSnapshot(
+      `"FormData{bar:'baz',foo:'bar'}"`,
+    );
   });
 });
