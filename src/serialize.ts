@@ -138,7 +138,11 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Date(date: any) {
-      return `Date(${date.toJSON()})`;
+      try {
+        return `Date(${date.toISOString()})`;
+      } catch {
+        return `Date(null)`;
+      }
     }
 
     $ArrayBuffer(arr: ArrayBuffer) {
