@@ -169,11 +169,13 @@ describe("serialize", () => {
       );
     });
 
-    it("Buffer and ArrayBufferLike", () => {
+    it("ArrayBufferLike", () => {
       expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
         `"ArrayBuffer[1,2,3]"`,
       );
+    });
 
+    it.runIf(typeof Buffer !== "undefined")("Buffer", () => {
       expect(serialize(Buffer.from("hello"))).toMatchInlineSnapshot(
         `"Uint8Array[104,101,108,108,111]"`,
       );
