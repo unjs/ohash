@@ -358,7 +358,8 @@ describe("serialize", () => {
   });
 });
 
-describe("browser and workerd runtime workarounds", () => {
+// https://github.com/unjs/ohash/pull/132
+describe("Object.prototype.toString issues", () => {
   let originalToString: any;
 
   beforeEach(() => {

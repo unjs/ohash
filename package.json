@@ -38,12 +38,11 @@
     "lint:fix": "automd && eslint --fix . && prettier -w src test",
     "prepack": "unbuild",
     "release": "pnpm test && changelogen --release --push && pnpm publish",
-    "test": "pnpm lint && vitest run --coverage && vitest run --browser.headless && pnpm test:types",
+    "test": "pnpm lint && vitest run --coverage && pnpm test:types",
     "test:types": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.13.5",
-    "@vitest/browser": "^3.0.7",
     "@vitest/coverage-v8": "^3.0.7",
     "automd": "^0.4.0",
     "changelogen": "^0.6.0",
