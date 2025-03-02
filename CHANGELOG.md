@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.9
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.8...v2.0.9)
+
+### 🔥 Performance
+
+- **serialize:** Faster `Date` serialization ([#130](https://github.com/unjs/ohash/pull/130))
+
+### 🩹 Fixes
+
+- **serialize:** Handling objects with null constructors ([#131](https://github.com/unjs/ohash/pull/131))
+- **serialize:** Recorgnize global constructor names ([#132](https://github.com/unjs/ohash/pull/132))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+
 ## v2.0.8
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.7...v2.0.8)
