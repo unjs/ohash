@@ -57,10 +57,24 @@ const Serializer = /*@__PURE__*/ (function () {
 
     serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
-      const objType =
+      const constructorName = object.constructor?.name;
+      const objName =
+        constructorName === "Object" || constructorName === undefined
+          ? ""
+          : constructorName;
+
+      let objType =
         objString.length < 10 // '[object a]'.length === 10, the minimum
           ? `unknown:${objString}`
           : objString.slice(8, -1); // '[object '.length === 8
+
+      if (
+        objType === "Object" &&
+        (objName === "URL" || objName === "Blob" || objName === "FormData")
+      ) {
+        // workaround for workerd runtime
+        objType = objName;
+      }
 
       if (
         objType !== "Object" &&
@@ -77,12 +91,6 @@ const Serializer = /*@__PURE__*/ (function () {
         }
         throw new Error(`Cannot serialize ${objType}`);
       }
-
-      const constructorName = object.constructor?.name;
-      const objName =
-        constructorName === "Object" || constructorName === undefined
-          ? ""
-          : constructorName;
 
       if (typeof object.toJSON === "function") {
         return objName + this.$object(object.toJSON());
