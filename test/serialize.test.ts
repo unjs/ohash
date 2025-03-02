@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { serialize } from "../src";
 
 describe("serialize", () => {
@@ -353,5 +353,41 @@ describe("serialize", () => {
 
       expect(serialize(refs)).toMatchInlineSnapshot(`"${serialize(simple)}"`);
     });
+  });
+});
+
+describe("workerd workarounds", () => {
+  let originalToString: any;
+
+  beforeEach(() => {
+    originalToString = Object.prototype.toString;
+    Object.prototype.toString = function () {
+      return "[object Object]";
+    };
+  });
+
+  afterEach(() => {
+    Object.prototype.toString = originalToString;
+  });
+
+  it("URL", () => {
+    expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
+      `"URL(https://example.com/)"`,
+    );
+  });
+
+  it("Blob", () => {
+    expect(() => serialize(new Blob(["x"]))).toThrowErrorMatchingInlineSnapshot(
+      `[Error: Cannot serialize Blob]`,
+    );
+  });
+
+  it("FormData", () => {
+    const form = new FormData();
+    form.set("foo", "bar");
+    form.set("bar", "baz");
+    expect(serialize(form)).toMatchInlineSnapshot(
+      `"FormData{bar:'baz',foo:'bar'}"`,
+    );
   });
 });
