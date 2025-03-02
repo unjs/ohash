@@ -68,11 +68,7 @@ const Serializer = /*@__PURE__*/ (function () {
           ? `unknown:${objString}`
           : objString.slice(8, -1); // '[object '.length === 8
 
-      if (
-        objType === "Object" &&
-        (objName === "URL" || objName === "Blob" || objName === "FormData")
-      ) {
-        // workaround for browsers and workerd runtime
+      if (objType === "Object" && objName in globalThis) {
         objType = objName;
       }
 

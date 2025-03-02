@@ -358,7 +358,7 @@ describe("serialize", () => {
   });
 });
 
-// https://github.com/unjs/ohash/pull/132
+// https://github.com/cloudflare/workerd/issues/3641
 describe("Object.prototype.toString issues", () => {
   let originalToString: any;
 
