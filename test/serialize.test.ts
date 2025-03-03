@@ -262,6 +262,27 @@ describe("serialize", () => {
     });
   });
 
+  describe("unknown object type", () => {
+    let originalToString: any;
+
+    beforeEach(() => {
+      originalToString = Object.prototype.toString;
+      Object.prototype.toString = function () {
+        return "TEST";
+      };
+    });
+
+    afterEach(() => {
+      Object.prototype.toString = originalToString;
+    });
+
+    it("throws error", () => {
+      expect(() => serialize({})).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize unknown:TEST]`,
+      );
+    });
+  });
+
   describe("circular references", () => {
     it("handles simple circular reference", () => {
       const obj: any = {};
