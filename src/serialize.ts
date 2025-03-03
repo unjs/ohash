@@ -185,16 +185,15 @@ const Serializer = /*@__PURE__*/ (function () {
   ] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return `${type}[${Array.prototype.slice.call(arr).join(",")}]`;
+      return `${type}[${Array.prototype.join.call(arr, ",")}]`;
     };
   }
 
   for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
     // @ts-ignore
     Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return `${type}[${Array.prototype.slice
-        .call(arr)
-        .map((n) => `${n}n`)
+      return `${type}[${Array.prototype.map
+        .call(arr, (n) => `${n}n`)
         .join(",")}]`;
     };
   }
