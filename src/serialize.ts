@@ -35,11 +35,14 @@ const Serializer = /*@__PURE__*/ (function () {
     #context = new Map();
 
     compare(a: any, b: any): number {
-      if (typeof a === "string" && typeof b === "string") {
+      const typeA = typeof a;
+      const typeB = typeof b;
+
+      if (typeA === "string" && typeB === "string") {
         return a.localeCompare(b);
       }
 
-      if (typeof a === "number" && typeof b === "number") {
+      if (typeA === "number" && typeB === "number") {
         return a - b;
       }
 
