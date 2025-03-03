@@ -57,42 +57,41 @@ const Serializer = /*@__PURE__*/ (function () {
 
     serializeObject(object: any): string {
       const objString = Object.prototype.toString.call(object);
-      const constructorName = object.constructor?.name;
+
+      if (objString !== "[object Object]") {
+        return this.serializeGlobalType(
+          objString.length < 10 /* '[object a]'.length === 10, the minimum */
+            ? `unknown:${objString}`
+            : objString.slice(8, -1) /* '[object '.length === 8 */,
+          object,
+        );
+      }
+
+      const constructor = object.constructor;
       const objName =
-        constructorName === "Object" || constructorName === undefined
+        constructor === Object || constructor === undefined
           ? ""
-          : constructorName;
+          : constructor.name;
 
-      let objType =
-        objString.length < 10 // '[object a]'.length === 10, the minimum
-          ? `unknown:${objString}`
-          : objString.slice(8, -1); // '[object '.length === 8
-
-      if (objType === "Object" && objName in globalThis) {
-        objType = objName;
+      if (objName in globalThis) {
+        return this.serializeGlobalType(objName, object);
       }
-
-      if (
-        objType !== "Object" &&
-        objType !== "Function" &&
-        objType !== "AsyncFunction"
-      ) {
-        // @ts-expect-error
-        const handler = this["$" + objType];
-        if (handler) {
-          return handler.call(this, object);
-        }
-        if (typeof object?.entries === "function") {
-          return this.serializeObjectEntries(objType, object.entries());
-        }
-        throw new Error(`Cannot serialize ${objType}`);
-      }
-
       if (typeof object.toJSON === "function") {
         return objName + this.$object(object.toJSON());
       }
-
       return this.serializeObjectEntries(objName, Object.entries(object));
+    }
+
+    serializeGlobalType(type: string, object: any) {
+      // @ts-expect-error
+      const handler = this["$" + type];
+      if (handler) {
+        return handler.call(this, object);
+      }
+      if (typeof object?.entries === "function") {
+        return this.serializeObjectEntries(type, object.entries());
+      }
+      throw new Error(`Cannot serialize ${type}`);
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[string, any]>) {
