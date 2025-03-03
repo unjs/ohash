@@ -155,7 +155,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $ArrayBuffer(arr: ArrayBuffer) {
-      return `ArrayBuffer[${Array.prototype.slice.call(new Uint8Array(arr)).join(",")}]`;
+      return `ArrayBuffer[${new Uint8Array(arr).join(",")}]`;
     }
 
     $Set(set: Set<any>) {
