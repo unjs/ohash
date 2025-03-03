@@ -186,17 +186,28 @@ const Serializer = /*@__PURE__*/ (function () {
     "Float64Array",
   ] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return `${type}[${Array.prototype.join.call(arr, ",")}]`;
+    Serializer.prototype["$" + type] = function (
+      arr:
+        | Int8Array
+        | Uint8Array
+        | Uint8ClampedArray
+        | Int16Array
+        | Uint16Array
+        | Int32Array
+        | Uint32Array
+        | Float32Array
+        | Float64Array,
+    ) {
+      return `${type}[${arr.join(",")}]`;
     };
   }
 
   for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (arr: ArrayBufferLike) {
-      return `${type}[${Array.prototype.map
-        .call(arr, (n) => `${n}n`)
-        .join(",")}]`;
+    Serializer.prototype["$" + type] = function (
+      arr: BigInt64Array | BigUint64Array,
+    ) {
+      return `${type}[${arr.join("n,")}${arr.length > 0 ? "n" : ""}]`;
     };
   }
   return Serializer;

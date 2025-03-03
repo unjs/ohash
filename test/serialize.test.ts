@@ -169,6 +169,18 @@ describe("serialize", () => {
       );
     });
 
+    it("Empty BigInt64Array", () => {
+      expect(serialize(new BigInt64Array([]))).toMatchInlineSnapshot(
+        `"BigInt64Array[]"`,
+      );
+    });
+
+    it("Empty BigUint64Array", () => {
+      expect(serialize(new BigUint64Array([]))).toMatchInlineSnapshot(
+        `"BigUint64Array[]"`,
+      );
+    });
+
     it("ArrayBufferLike", () => {
       expect(serialize(new Uint8Array([1, 2, 3]).buffer)).toMatchInlineSnapshot(
         `"ArrayBuffer[1,2,3]"`,
