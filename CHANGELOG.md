@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.10
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.9...v2.0.10)
+
+### 🔥 Performance
+
+- **serialize:** Faster serialization of typed arrays and objects with string keys ([#134](https://github.com/unjs/ohash/pull/134))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+
 ## v2.0.9
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.8...v2.0.9)
