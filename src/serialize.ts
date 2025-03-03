@@ -1,5 +1,18 @@
 // Originally based on https://github.com/puleos/object-hash v3.0.0 (MIT)
 
+type TypedArray =
+  | Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float32Array
+  | Float64Array
+  | BigInt64Array
+  | BigUint64Array;
+
 /**
  * Serializes any input value into a string for hashing.
  *
@@ -186,27 +199,14 @@ const Serializer = /*@__PURE__*/ (function () {
     "Float64Array",
   ] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (
-      arr:
-        | Int8Array
-        | Uint8Array
-        | Uint8ClampedArray
-        | Int16Array
-        | Uint16Array
-        | Int32Array
-        | Uint32Array
-        | Float32Array
-        | Float64Array,
-    ) {
+    Serializer.prototype["$" + type] = function (arr: TypedArray) {
       return `${type}[${arr.join(",")}]`;
     };
   }
 
   for (const type of ["BigInt64Array", "BigUint64Array"] as const) {
     // @ts-ignore
-    Serializer.prototype["$" + type] = function (
-      arr: BigInt64Array | BigUint64Array,
-    ) {
+    Serializer.prototype["$" + type] = function (arr: TypedArray) {
       return `${type}[${arr.join("n,")}${arr.length > 0 ? "n" : ""}]`;
     };
   }
