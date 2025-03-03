@@ -77,7 +77,7 @@ const Serializer = /*@__PURE__*/ (function () {
           ? ""
           : constructor.name;
 
-      if (objName in globalThis) {
+      if (objName !== "" && objName in globalThis) {
         return this.serializeGlobalType(objName, object);
       }
       if (typeof object.toJSON === "function") {
