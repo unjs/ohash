@@ -102,8 +102,7 @@ const Serializer = /*@__PURE__*/ (function () {
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${key}:`;
-        content += this.serialize(value);
+        content += `${key}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
