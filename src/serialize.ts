@@ -63,7 +63,7 @@ const Serializer = /*@__PURE__*/ (function () {
       const objString = Object.prototype.toString.call(object);
 
       if (objString !== "[object Object]") {
-        return this.serializeGlobalType(
+        return this.serializeBuiltInType(
           objString.length < 10 /* '[object a]'.length === 10, the minimum */
             ? `unknown:${objString}`
             : objString.slice(8, -1) /* '[object '.length === 8 */,
@@ -78,7 +78,7 @@ const Serializer = /*@__PURE__*/ (function () {
           : constructor.name;
 
       if (objName !== "" && objName in globalThis) {
-        return this.serializeGlobalType(objName, object);
+        return this.serializeBuiltInType(objName, object);
       }
       if (typeof object.toJSON === "function") {
         return objName + this.$object(object.toJSON());
@@ -86,7 +86,7 @@ const Serializer = /*@__PURE__*/ (function () {
       return this.serializeObjectEntries(objName, Object.entries(object));
     }
 
-    serializeGlobalType(type: string, object: any) {
+    serializeBuiltInType(type: string, object: any) {
       // @ts-expect-error
       const handler = this["$" + type];
       if (handler) {
