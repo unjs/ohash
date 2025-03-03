@@ -100,7 +100,7 @@ const Serializer = /*@__PURE__*/ (function () {
         const json = object.toJSON();
         return (
           objName +
-          (typeof json === "object" && json !== null
+          (json !== null && typeof json === "object"
             ? this.$object(json)
             : `(${this.serialize(json)})`)
         );
