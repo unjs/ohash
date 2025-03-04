@@ -389,41 +389,41 @@ describe("serialize", () => {
       expect(serialize(refs)).toMatchInlineSnapshot(`"${serialize(simple)}"`);
     });
   });
-});
 
-// https://github.com/cloudflare/workerd/issues/3641
-describe("Object.prototype.toString issues", () => {
-  let originalToString: any;
+  // https://github.com/cloudflare/workerd/issues/3641
+  describe("Object.prototype.toString issues", () => {
+    let originalToString: any;
 
-  beforeEach(() => {
-    originalToString = Object.prototype.toString;
-    Object.prototype.toString = function () {
-      return "[object Object]";
-    };
-  });
+    beforeEach(() => {
+      originalToString = Object.prototype.toString;
+      Object.prototype.toString = function () {
+        return "[object Object]";
+      };
+    });
 
-  afterEach(() => {
-    Object.prototype.toString = originalToString;
-  });
+    afterEach(() => {
+      Object.prototype.toString = originalToString;
+    });
 
-  it("URL", () => {
-    expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
-      `"URL(https://example.com/)"`,
-    );
-  });
+    it("URL", () => {
+      expect(serialize(new URL("https://example.com"))).toMatchInlineSnapshot(
+        `"URL(https://example.com/)"`,
+      );
+    });
 
-  it("Blob", () => {
-    expect(() => serialize(new Blob(["x"]))).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Cannot serialize Blob]`,
-    );
-  });
+    it("Blob", () => {
+      expect(() =>
+        serialize(new Blob(["x"])),
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
+    });
 
-  it("FormData", () => {
-    const form = new FormData();
-    form.set("foo", "bar");
-    form.set("bar", "baz");
-    expect(serialize(form)).toMatchInlineSnapshot(
-      `"FormData{bar:'baz',foo:'bar'}"`,
-    );
+    it("FormData", () => {
+      const form = new FormData();
+      form.set("foo", "bar");
+      form.set("bar", "baz");
+      expect(serialize(form)).toMatchInlineSnapshot(
+        `"FormData{bar:'baz',foo:'bar'}"`,
+      );
+    });
   });
 });
