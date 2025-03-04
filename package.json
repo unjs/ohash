@@ -32,6 +32,7 @@
   ],
   "scripts": {
     "bench": "vitest bench",
+    "bench:bun": "bun ./test/benchmarks.bun",
     "build": "unbuild",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c src test",
