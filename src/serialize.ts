@@ -34,24 +34,6 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #context = new Map();
 
-    compare(a: any, b: any): number {
-      const typeA = typeof a;
-      const typeB = typeof b;
-
-      if (typeA === "string" && typeB === "string") {
-        return a.localeCompare(b);
-      }
-
-      if (typeA === "number" && typeB === "number") {
-        return a - b;
-      }
-
-      return String.prototype.localeCompare.call(
-        this.serialize(a, true),
-        this.serialize(b, true),
-      );
-    }
-
     serialize(value: any, noQuotes?: boolean): string {
       if (value === null) {
         return "null";
@@ -173,7 +155,25 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(
+        Array.from(set).sort((a, b) => {
+          const typeA = typeof a;
+          const typeB = typeof b;
+
+          if (typeA === "string" && typeB === "string") {
+            return a.localeCompare(b);
+          }
+
+          if (typeA === "number" && typeB === "number") {
+            return a - b;
+          }
+
+          return String.prototype.localeCompare.call(
+            this.serialize(a, true),
+            this.serialize(b, true),
+          );
+        }),
+      )}`;
     }
 
     $Map(map: Map<any, any>) {
