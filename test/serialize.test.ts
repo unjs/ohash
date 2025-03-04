@@ -390,6 +390,28 @@ describe("serialize", () => {
     });
   });
 
+  describe("input", () => {
+    it("does not alter the input", () => {
+      const simple = {
+        a: [3, 2, 1],
+        b: {
+          z: 3,
+          y: 2,
+          x: 1,
+        },
+        set: new Set([3, 2, 1]),
+      };
+
+      const clone = { ...simple };
+
+      expect(serialize(simple)).toMatchInlineSnapshot(
+        `"{a:[3,2,1],b:{x:1,y:2,z:3},set:Set[1,2,3]}"`,
+      );
+
+      expect(clone).toStrictEqual(simple);
+    });
+  });
+
   // https://github.com/cloudflare/workerd/issues/3641
   describe("Object.prototype.toString issues", () => {
     let originalToString: any;
