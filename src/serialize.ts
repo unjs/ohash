@@ -98,7 +98,13 @@ const Serializer = /*@__PURE__*/ (function () {
         return this.serializeBuiltInType(objName, object);
       }
       if (typeof object.toJSON === "function") {
-        return objName + this.$object(object.toJSON());
+        const json = object.toJSON();
+        return (
+          objName +
+          (json !== null && typeof json === "object"
+            ? this.$object(json)
+            : `(${this.serialize(json)})`)
+        );
       }
       return this.serializeObjectEntries(objName, Object.entries(object));
     }

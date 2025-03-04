@@ -222,14 +222,43 @@ describe("serialize", () => {
     });
 
     it("with toJSON()", () => {
-      class Test {
+      class TestArray {
         toJSON() {
           return [1, 2, 3];
         }
       }
-      expect(serialize(new Test())).toMatchInlineSnapshot(`"Test[1,2,3]"`);
-      expect(serialize({ x: new Test() })).toMatchInlineSnapshot(
-        `"{x:Test[1,2,3]}"`,
+      expect(serialize(new TestArray())).toMatchInlineSnapshot(
+        `"TestArray[1,2,3]"`,
+      );
+      expect(serialize({ x: new TestArray() })).toMatchInlineSnapshot(
+        `"{x:TestArray[1,2,3]}"`,
+      );
+
+      class TestObject {
+        toJSON() {
+          return { a: 1, b: 2 };
+        }
+      }
+      expect(serialize(new TestObject())).toMatchInlineSnapshot(
+        `"TestObject{a:1,b:2}"`,
+      );
+
+      class TestNull {
+        toJSON() {
+          return null;
+        }
+      }
+      expect(serialize(new TestNull())).toMatchInlineSnapshot(
+        `"TestNull(null)"`,
+      );
+
+      class TestString {
+        toJSON() {
+          return "value";
+        }
+      }
+      expect(serialize(new TestString())).toMatchInlineSnapshot(
+        `"TestString('value')"`,
       );
     });
 
