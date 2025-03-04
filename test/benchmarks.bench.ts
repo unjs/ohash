@@ -9,7 +9,7 @@ import { getVersions } from "./fixtures/utils/versions";
 
 // Options for v1
 const hashOptions = { unorderedArrays: true, unorderedSets: true };
-const versions = await getVersions(["v1.1.5", "v2.0.0", "v2.0.11"]);
+const versions = await getVersions(["v1.1.6", "v2.0.11"]);
 
 describe("benchmarks", () => {
   describe("digest", async () => {

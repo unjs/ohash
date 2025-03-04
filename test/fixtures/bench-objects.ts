@@ -17,12 +17,12 @@ export function createBenchObjects({
     boolean: true,
     nullValue: null,
     undefinedValue: undefined,
-    date: new Date(0),
   };
 
   if (size === "large") {
     object = {
       ...object,
+      date: new Date(0),
       regex: /.*/,
       url: new URL("https://example.com"),
       symbol: Symbol("test"),
@@ -77,6 +77,14 @@ export function createBenchObjects({
     };
   }
 
+  if (size === "large") {
+    for (let i = 0; i < 100; i++) {
+      object.set.add(i);
+      object.set.add(Symbol(i));
+      object.set.add(`${i}`);
+    }
+  }
+
   if (circular) {
     if (size === "small") {
       object.circular = object;
@@ -96,13 +104,11 @@ export function createBenchObjects({
       // object.map.set("clonedObject", circularObject);
       // object.set.add(object);
       // object.set.add(circularObject);
-
-      for (let i = 0; i < 1000; i++) {
-        object.set.add(i);
-        object.set.add(Symbol(i));
-        object.set.add(`${i}`);
-      }
     }
+  }
+
+  if (count === 1) {
+    return object;
   }
 
   const objects = [];
