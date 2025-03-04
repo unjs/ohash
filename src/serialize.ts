@@ -93,7 +93,8 @@ const Serializer = /*@__PURE__*/ (function () {
           ? ""
           : constructor.name;
 
-      if (objName !== "" && objName in globalThis) {
+      // @ts-expect-error
+      if (objName !== "" && globalThis[objName] === constructor) {
         return this.serializeBuiltInType(objName, object);
       }
       if (typeof object.toJSON === "function") {
