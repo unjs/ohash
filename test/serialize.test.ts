@@ -91,9 +91,11 @@ describe("serialize", () => {
 
     it("map", () => {
       const map = new Map();
+      map.set(1, 3);
+      map.set(5, 7);
       map.set("z", 2);
       map.set("a", "1");
-      expect(serialize(map)).toMatchInlineSnapshot(`"Map{a:'1',z:2}"`);
+      expect(serialize(map)).toMatchInlineSnapshot(`"Map{a:'1',z:2,1:3,5:7}"`);
     });
   });
 
