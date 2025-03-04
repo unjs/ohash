@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.11
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.10...v2.0.11)
+
+### 🩹 Fixes
+
+- **serialize:** Class name collision with globalThis ([#138](https://github.com/unjs/ohash/pull/138))
+- **serialize:** Allow `input.toJSON()` to return any type ([#135](https://github.com/unjs/ohash/pull/135))
+- **serialize:** Map serialization with object keys ([#139](https://github.com/unjs/ohash/pull/139))
+
+### ❤️ Contributors
+
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+
 ## v2.0.10
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.9...v2.0.10)
