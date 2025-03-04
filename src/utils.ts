@@ -1,4 +1,7 @@
 import { objectHash, HashOptions } from "./object-hash";
+
+export { diff } from "./diff";
+
 /**
  * Compare two objects using reference equality and stable deep hashing.
  * @param {any} object1 First object

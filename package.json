@@ -11,6 +11,11 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs"
+    },
+    "./utils": {
+      "import": "./dist/utils.mjs",
+      "types": "./dist/utils.d.ts",
+      "require": "./dist/utils.cjs"
     }
   },
   "main": "./dist/index.cjs",
