@@ -210,6 +210,15 @@ describe("serialize", () => {
         x = 1;
       }
       expect(serialize(new Test())).toMatchInlineSnapshot(`"Test{x:1}"`);
+
+      // "CustomEvent" key exists in `globalThis`
+      // See: https://github.com/unjs/ohash/issues/137
+      class CustomEvent {
+        y = 1;
+      }
+      expect(serialize(new CustomEvent())).toMatchInlineSnapshot(
+        `"CustomEvent{y:1}"`,
+      );
     });
 
     it("with toJSON()", () => {
