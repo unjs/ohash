@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v1.1.6
+
+[compare changes](https://github.com/unjs/ohash/compare/v1.1.5...v1.1.6)
+
+### 📦 Build
+
+- Add v2 forward compatible `./utils` subpath export ([d138e3a](https://github.com/unjs/ohash/commit/d138e3a))
+
+### 🏡 Chore
+
+- Update release script ([ce28a6f](https://github.com/unjs/ohash/commit/ce28a6f))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+
 ## v1.1.5
 
 [compare changes](https://github.com/unjs/ohash/compare/v1.1.4...v1.1.5)
