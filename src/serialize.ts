@@ -121,14 +121,14 @@ const Serializer = /*@__PURE__*/ (function () {
       throw new Error(`Cannot serialize ${type}`);
     }
 
-    serializeObjectEntries(type: string, entries: Iterable<[string, any]>) {
+    serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
       const sortedEntries = Array.from(entries).sort((a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${key}:${this.serialize(value)}`;
+        content += `${this.serialize(key, true)}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
