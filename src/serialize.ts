@@ -116,32 +116,23 @@ const Serializer = /*@__PURE__*/ (function () {
         return handler.call(this, object);
       }
       if (typeof object?.entries === "function") {
-        return this.serializeIterableEntries(type, object.entries());
+        return this.serializeObjectEntries(type, object.entries());
       }
       throw new Error(`Cannot serialize ${type}`);
     }
 
-    serializeIterableEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
-        this.compare(a[0], b[0]),
-      );
+    serializeObjectEntries(
+      type: string,
+      entries: Iterable<[any, any]> | Array<[string, any]>,
+    ) {
+      const isArray = Array.isArray(entries);
+      const sortedEntries = isArray
+        ? entries.sort((a, b) => a[0].localeCompare(b[0]))
+        : Array.from(entries).sort((a, b) => this.compare(a[0], b[0]));
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${this.serialize(key, true)}:${this.serialize(value)}`;
-        if (i < sortedEntries.length - 1) {
-          content += ",";
-        }
-      }
-      return content + "}";
-    }
-
-    serializeObjectEntries(type: string, entries: Array<[string, any]>) {
-      const sortedEntries = entries.sort((a, b) => a[0].localeCompare(b[0]));
-      let content = `${type}{`;
-      for (let i = 0; i < sortedEntries.length; i++) {
-        const [key, value] = sortedEntries[i];
-        content += `${key}:${this.serialize(value)}`;
+        content += `${isArray ? key : this.serialize(key, true)}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
@@ -199,7 +190,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Map(map: Map<any, any>) {
-      return this.serializeIterableEntries("Map", map.entries());
+      return this.serializeObjectEntries("Map", map.entries());
     }
   }
 
