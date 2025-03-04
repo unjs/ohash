@@ -115,7 +115,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Array<[string, any]>) {
-      const sortedEntries = entries.sort((a, b) => a[0].localeCompare(b[0]));
+      const sortedEntries = entries.sort((a, b) => this.compare(a[0], b[0]));
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
