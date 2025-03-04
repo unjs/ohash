@@ -91,9 +91,15 @@ describe("serialize", () => {
 
     it("map", () => {
       const map = new Map();
+      map.set(1, 4);
+      map.set(2, 3);
       map.set("z", 2);
       map.set("a", "1");
-      expect(serialize(map)).toMatchInlineSnapshot(`"Map{a:'1',z:2}"`);
+      map.set({ x: 42 }, "3");
+
+      expect(serialize(map)).toMatchInlineSnapshot(
+        `"Map{{x:42}:'3',1:4,2:3,a:'1',z:2}"`,
+      );
     });
   });
 
@@ -341,6 +347,12 @@ describe("serialize", () => {
       const map = new Map();
       map.set("key", map);
       expect(serialize(map)).toMatchInlineSnapshot(`"Map{key:#0}"`);
+    });
+
+    it("handles circular references within keys of Map objects", () => {
+      const map = new Map();
+      map.set(map, "value");
+      expect(serialize(map)).toMatchInlineSnapshot(`"Map{#0:'value'}"`);
     });
 
     it("handles circular references within Set objects", () => {
