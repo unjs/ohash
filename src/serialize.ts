@@ -114,7 +114,7 @@ const Serializer = /*@__PURE__*/ (function () {
       throw new Error(`Cannot serialize ${type}`);
     }
 
-    serializeObjectEntries(type: string, entries: Array<[string, any]>) {
+    serializeObjectEntries(type: string, entries: Array<[any, any]>) {
       const sortedEntries = entries.sort((a, b) => this.compare(a[0], b[0]));
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
