@@ -186,7 +186,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(Array.from(set).sort(this.compare.bind(this)))}`;
     }
 
     $Map(map: Map<any, any>) {
