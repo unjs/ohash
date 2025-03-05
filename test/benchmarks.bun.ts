@@ -1,5 +1,9 @@
 import { bench, group, run, summary } from "mitata";
-import { createBenchObjects, getPresetTitle, presets } from "./fixtures/bench-objects";
+import {
+  createBenchObjects,
+  getPresetTitle,
+  presets,
+} from "./fixtures/bench-objects";
 import { getVersions } from "./fixtures/utils/versions";
 
 // Options for v1
