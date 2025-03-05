@@ -68,7 +68,8 @@ console.log(hash({ foo: "bar" }));
 
 Serializes any input value into a string for hashing.
 
-> [!IMPORTANT] > `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
+> [!IMPORTANT]
+> `serialize` method uses best efforts to generate stable serialized values; however, it is not designed for security purposes. Keep in mind that there is always a chance of intentional collisions caused by user input.
 
 ```js
 import { serialize } from "ohash";
