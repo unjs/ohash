@@ -29,15 +29,13 @@ export async function getVersions(array: VersionString[]): Promise<
   const imports = await Promise.all(array.map((v) => getVersion(v)));
   const versions = array.map((version, i) => ({
     name: `ohash @ ${version.length === 40 ? version.slice(0, 7) : version}`,
-    serialize: (input: any, options?: Record<string, any>) =>
-      version.startsWith("v1")
-        ? imports[i].objectHash(input, options)
-        : imports[i].serialize(input),
+    serialize:
+      "objectHash" in imports[i] ? imports[i].objectHash : imports[i].serialize,
   }));
 
   versions.push({
     name: "ohash @ dev",
-    serialize: (input) => serialize(input),
+    serialize,
   });
 
   return versions;
