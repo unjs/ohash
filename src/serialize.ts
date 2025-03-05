@@ -97,7 +97,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (objName !== "" && globalThis[objName] === constructor) {
         return this.serializeBuiltInType(objName, object);
       }
-      if (typeof object.toJSON === "function") {
+      if ("toJSON" in object && typeof object.toJSON === "function") {
         const json = object.toJSON();
         return (
           objName +
@@ -115,7 +115,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (handler) {
         return handler.call(this, object);
       }
-      if (typeof object?.entries === "function") {
+      if ("entries" in object && typeof object.entries === "function") {
         return this.serializeObjectEntries(type, object.entries());
       }
       throw new Error(`Cannot serialize ${type}`);
