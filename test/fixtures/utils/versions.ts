@@ -9,9 +9,18 @@ import { pipeline } from "node:stream";
 import { promisify } from "node:util";
 import { serialize } from "../../../src";
 
-export type VersionCode = `v${number}.${number}.${string}`;
+/**
+ * Supports:
+ *  - tags (v1 and v2)
+ *  - branch names (v2 only)
+ *  - full length commmit hashes (v2 only)
+ */
+export type VersionString =
+  | "main"
+  | `v${number}.${number}.${string}`
+  | (string & {});
 
-export async function getVersions(array: VersionCode[]): Promise<
+export async function getVersions(array: VersionString[]): Promise<
   Array<{
     name: string;
     serialize: (input: any, options?: Record<string, any>) => string;
@@ -19,11 +28,11 @@ export async function getVersions(array: VersionCode[]): Promise<
 > {
   const imports = await Promise.all(array.map((v) => getVersion(v)));
   const versions = array.map((version, i) => ({
-    name: `ohash ${version}`,
+    name: `ohash @ ${version.length === 40 ? version.slice(0, 7) : version}`,
     serialize: (input: any, options?: Record<string, any>) =>
-      version.startsWith("v2")
-        ? imports[i].serialize(input)
-        : imports[i].objectHash(input, options),
+      version.startsWith("v1")
+        ? imports[i].objectHash(input, options)
+        : imports[i].serialize(input),
   }));
 
   versions.push({
@@ -34,18 +43,19 @@ export async function getVersions(array: VersionCode[]): Promise<
   return versions;
 }
 
-async function getVersion(version: VersionCode) {
+async function getVersion(version: VersionString) {
   const cacheDir = cacheDirectory();
 
   if (!existsSync(cacheDir)) {
     await mkdir(cacheDir, { recursive: true });
   }
 
-  const name = version.startsWith("v2") ? "serialize" : "object-hash";
+  const name = version.startsWith("v1") ? "object-hash" : "serialize";
   const filePath = resolve(cacheDirectory(), `${name}-${version}.ts`);
+  const isTag = /^v[0-9]+\.[0-9]+\./.test(version);
 
   await download(
-    `https://raw.githubusercontent.com/unjs/ohash/refs/tags/${version}/src/${name}.ts`,
+    `https://raw.githubusercontent.com/unjs/ohash${isTag ? "/refs/tags" : ""}/${version}/src/${name}.ts`,
     filePath,
   );
 

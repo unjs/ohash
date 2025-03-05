@@ -1,8 +1,8 @@
 import type { BenchObjectPreset } from "./bench-objects";
-import type { VersionCode } from "./utils/versions";
+import type { VersionString } from "./utils/versions";
 
 type BenchConfig = {
-  versions: VersionCode[];
+  versions: VersionString[];
   presets: BenchObjectPreset[];
   /**
    * Options for ohash v1
@@ -31,7 +31,9 @@ export const benchConfig: BenchConfig = {
     // "v2.0.8",
     // "v2.0.9",
     // "v2.0.10",
-    "v2.0.11",
+    // "v2.0.11",
+    // "7a52c4ac82c33396c2e2ea90e2896ccf3a03256b",
+    "main",
   ],
   // Note: large circular presets don't work with v1
   presets: [
