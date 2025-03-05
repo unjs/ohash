@@ -1,11 +1,11 @@
-import type { Options } from "tinybench";
+import type { BenchOptions } from "vitest";
 
 export type BenchObjectPreset = {
   count: number;
   size: "small" | "large";
   circular?: boolean;
   referenced?: boolean;
-  vitestOptions?: Options;
+  vitestOptions?: BenchOptions;
 };
 
 export function createBenchObjects({
