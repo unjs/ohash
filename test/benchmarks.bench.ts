@@ -3,7 +3,8 @@ import { digest as digestJS } from "../src/crypto/js";
 import { digest as digestNode } from "../src/crypto/node";
 import {
   createBenchObjects,
-  type BenchObjectPreset,
+  getPresetTitle,
+  presets,
 } from "./fixtures/bench-objects";
 import { getVersions } from "./fixtures/utils/versions";
 
@@ -35,60 +36,10 @@ describe("benchmarks", () => {
   });
 
   describe.only("serialize - presets", () => {
-    const presets: BenchObjectPreset[] = [
-      { count: 1, size: "small" },
-      { count: 1, size: "small", circular: true },
-      { count: 1, size: "large" },
-      { count: 1, size: "large", circular: true },
-      {
-        count: 1024,
-        size: "small",
-        referenced: true,
-      },
-      {
-        count: 1024,
-        size: "small",
-        circular: true,
-        referenced: true,
-      },
-      {
-        count: 512,
-        size: "large",
-        referenced: true,
-      },
-      {
-        count: 512,
-        size: "large",
-        circular: true,
-        referenced: true,
-      },
-      {
-        count: 256,
-        size: "small",
-      },
-      {
-        count: 256,
-        size: "small",
-        circular: true,
-      },
-      {
-        count: 128,
-        size: "large",
-      },
-      {
-        count: 128,
-        size: "large",
-        circular: true,
-      },
-    ];
-
     for (const preset of presets) {
-      const title = JSON.stringify(preset)
-        .replace(/[{"}]/g, "")
-        .replace(/,/g, ", ");
       const objects = createBenchObjects(preset);
 
-      describe(title, () => {
+      describe(getPresetTitle(preset), () => {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(objects, hashOptions);

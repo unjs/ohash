@@ -1,3 +1,50 @@
+export const presets: BenchObjectPreset[] = [
+  { count: 1, size: "small" },
+  { count: 1, size: "small", circular: true },
+  { count: 1, size: "large" },
+  { count: 1, size: "large", circular: true },
+  {
+    count: 1024,
+    size: "small",
+    referenced: true,
+  },
+  {
+    count: 1024,
+    size: "small",
+    circular: true,
+    referenced: true,
+  },
+  {
+    count: 512,
+    size: "large",
+    referenced: true,
+  },
+  {
+    count: 512,
+    size: "large",
+    circular: true,
+    referenced: true,
+  },
+  {
+    count: 256,
+    size: "small",
+  },
+  {
+    count: 256,
+    size: "small",
+    circular: true,
+  },
+  {
+    count: 128,
+    size: "large",
+  },
+  {
+    count: 128,
+    size: "large",
+    circular: true,
+  },
+];
+
 export type BenchObjectPreset = {
   count: number;
   size: "small" | "large";
@@ -117,4 +164,8 @@ export function createBenchObjects({
   }
 
   return objects;
+}
+
+export function getPresetTitle(preset: BenchObjectPreset): string {
+  return JSON.stringify(preset).replace(/[{"}]/g, "").replace(/,/g, ", ");
 }

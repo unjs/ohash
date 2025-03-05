@@ -1,8 +1,5 @@
 import { bench, group, run, summary } from "mitata";
-import {
-  createBenchObjects,
-  type BenchObjectPreset,
-} from "./fixtures/bench-objects";
+import { createBenchObjects, getPresetTitle, presets } from "./fixtures/bench-objects";
 import { getVersions } from "./fixtures/utils/versions";
 
 // Options for v1
@@ -10,60 +7,10 @@ const hashOptions = { unorderedArrays: true, unorderedSets: true };
 const versions = await getVersions(["v1.1.6", "v2.0.11"]);
 
 group("serialize - presets", () => {
-  const presets: BenchObjectPreset[] = [
-    { count: 1, size: "small" },
-    { count: 1, size: "small", circular: true },
-    { count: 1, size: "large" },
-    { count: 1, size: "large", circular: true },
-    {
-      count: 1024,
-      size: "small",
-      referenced: true,
-    },
-    {
-      count: 1024,
-      size: "small",
-      circular: true,
-      referenced: true,
-    },
-    {
-      count: 512,
-      size: "large",
-      referenced: true,
-    },
-    {
-      count: 512,
-      size: "large",
-      circular: true,
-      referenced: true,
-    },
-    {
-      count: 256,
-      size: "small",
-    },
-    {
-      count: 256,
-      size: "small",
-      circular: true,
-    },
-    {
-      count: 128,
-      size: "large",
-    },
-    {
-      count: 128,
-      size: "large",
-      circular: true,
-    },
-  ];
-
   for (const preset of presets) {
-    const title = JSON.stringify(preset)
-      .replace(/[{"}]/g, "")
-      .replace(/,/g, ", ");
     const objects = createBenchObjects(preset);
 
-    group(title, () => {
+    group(getPresetTitle(preset), () => {
       summary(() => {
         for (const version of versions) {
           bench(version.name, () => {
