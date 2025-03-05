@@ -94,17 +94,16 @@ export function createBenchObjects({
     }
 
     if (size === "large") {
-      /** These don't work with ohash v1 **/
-      // const circularObject = { ...object };
-      // circularObject.circular = object;
-      // circularObject.map.set("object", object);
-      // circularObject.set.add(object);
-      // circularObject.set.add(circularObject);
-      // object.map.set("object", object);
-      // object.map.set("clonedObject", circularObject);
-      // object.set.add(object);
-      // object.set.add(circularObject);
-      // object.circular = circularObject;
+      const circularObject = { ...object };
+      circularObject.circular = object;
+      circularObject.map.set("object", object);
+      circularObject.set.add(object);
+      circularObject.set.add(circularObject);
+      object.map.set("object", object);
+      object.map.set("clonedObject", circularObject);
+      object.set.add(object);
+      object.set.add(circularObject);
+      object.circular = circularObject;
     }
   }
 

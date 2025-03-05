@@ -33,6 +33,7 @@ export const benchConfig: BenchConfig = {
     // "v2.0.10",
     "v2.0.11",
   ],
+  // Note: large circular presets don't work with v1
   presets: [
     {
       count: 1,
@@ -40,7 +41,7 @@ export const benchConfig: BenchConfig = {
     },
     { count: 1, size: "small", circular: true },
     { count: 1, size: "large" },
-    { count: 1, size: "large", circular: true },
+    // { count: 1, size: "large", circular: true },
     {
       count: 1024,
       size: "small",
@@ -57,12 +58,12 @@ export const benchConfig: BenchConfig = {
       size: "large",
       referenced: true,
     },
-    {
-      count: 512,
-      size: "large",
-      circular: true,
-      referenced: true,
-    },
+    // {
+    //   count: 512,
+    //   size: "large",
+    //   circular: true,
+    //   referenced: true,
+    // },
     {
       count: 256,
       size: "small",
@@ -76,11 +77,11 @@ export const benchConfig: BenchConfig = {
       count: 128,
       size: "large",
     },
-    {
-      count: 128,
-      size: "large",
-      circular: true,
-    },
+    // {
+    //   count: 128,
+    //   size: "large",
+    //   circular: true,
+    // },
   ],
   hashOptions: { unorderedArrays: true, unorderedSets: true },
 };
