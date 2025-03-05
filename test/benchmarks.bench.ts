@@ -1,16 +1,12 @@
 import { bench, describe } from "vitest";
 import { digest as digestJS } from "../src/crypto/js";
 import { digest as digestNode } from "../src/crypto/node";
-import {
-  createBenchObjects,
-  getPresetTitle,
-  presets,
-} from "./fixtures/bench-objects";
+import { benchConfig } from "./fixtures/bench-config";
+import { createBenchObjects, getPresetTitle } from "./fixtures/bench-objects";
 import { getVersions } from "./fixtures/utils/versions";
 
 // Options for v1
-const hashOptions = { unorderedArrays: true, unorderedSets: true };
-const versions = await getVersions(["v1.1.6", "v2.0.11"]);
+const versions = await getVersions(benchConfig.versions);
 
 describe("benchmarks", () => {
   describe("digest", async () => {
@@ -36,14 +32,17 @@ describe("benchmarks", () => {
   });
 
   describe.only("serialize - presets", () => {
-    for (const preset of presets) {
-      const objects = createBenchObjects(preset);
-
+    for (const preset of benchConfig.presets) {
       describe(getPresetTitle(preset), () => {
         for (const version of versions) {
-          bench(version.name, () => {
-            version.serialize(objects, hashOptions);
-          });
+          const objects = createBenchObjects(preset);
+          bench(
+            version.name,
+            () => {
+              version.serialize(objects, benchConfig.hashOptions);
+            },
+            preset.vitestOptions,
+          );
         }
       });
     }
@@ -61,7 +60,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });
@@ -79,7 +78,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });
@@ -101,7 +100,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(array, hashOptions);
+          version.serialize(array, benchConfig.hashOptions);
         });
       }
     });
@@ -123,7 +122,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(array, hashOptions);
+          version.serialize(array, benchConfig.hashOptions);
         });
       }
     });
@@ -148,7 +147,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });
@@ -164,7 +163,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });
@@ -189,7 +188,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });
@@ -231,7 +230,7 @@ describe("benchmarks", () => {
 
       for (const version of versions) {
         bench(version.name, () => {
-          version.serialize(object, hashOptions);
+          version.serialize(object, benchConfig.hashOptions);
         });
       }
     });

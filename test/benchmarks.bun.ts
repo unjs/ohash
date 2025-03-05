@@ -1,24 +1,19 @@
 import { bench, group, run, summary } from "mitata";
-import {
-  createBenchObjects,
-  getPresetTitle,
-  presets,
-} from "./fixtures/bench-objects";
+import { benchConfig } from "./fixtures/bench-config";
+import { createBenchObjects, getPresetTitle } from "./fixtures/bench-objects";
 import { getVersions } from "./fixtures/utils/versions";
 
 // Options for v1
-const hashOptions = { unorderedArrays: true, unorderedSets: true };
-const versions = await getVersions(["v1.1.6", "v2.0.11"]);
+const versions = await getVersions(benchConfig.versions);
 
 group("serialize - presets", () => {
-  for (const preset of presets) {
-    const objects = createBenchObjects(preset);
-
+  for (const preset of benchConfig.presets) {
     group(getPresetTitle(preset), () => {
       summary(() => {
         for (const version of versions) {
+          const objects = createBenchObjects(preset);
           bench(version.name, () => {
-            version.serialize(objects, hashOptions);
+            version.serialize(objects, benchConfig.hashOptions);
           });
         }
       });
@@ -39,7 +34,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -59,7 +54,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -83,7 +78,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(array, hashOptions);
+//           version.serialize(array, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -107,7 +102,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(array, hashOptions);
+//           version.serialize(array, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -134,7 +129,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -152,7 +147,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -179,7 +174,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });
@@ -223,7 +218,7 @@ group("serialize - presets", () => {
 //     summary(() => {
 //       for (const version of versions) {
 //         bench(version.name, () => {
-//           version.serialize(object, hashOptions);
+//           version.serialize(object, benchConfig.hashOptions);
 //         });
 //       }
 //     });

@@ -9,9 +9,9 @@ import { pipeline } from "node:stream";
 import { promisify } from "node:util";
 import { serialize } from "../../../src";
 
-type Version = `v${number}.${string}.${string}`;
+export type VersionCode = `v${number}.${number}.${string}`;
 
-export async function getVersions(array: Version[]): Promise<
+export async function getVersions(array: VersionCode[]): Promise<
   Array<{
     name: string;
     serialize: (input: any, options?: Record<string, any>) => string;
@@ -27,14 +27,14 @@ export async function getVersions(array: Version[]): Promise<
   }));
 
   versions.push({
-    name: "ohash (current)",
+    name: "ohash @ dev",
     serialize: (input) => serialize(input),
   });
 
   return versions;
 }
 
-async function getVersion(version: Version) {
+async function getVersion(version: VersionCode) {
   const cacheDir = cacheDirectory();
 
   if (!existsSync(cacheDir)) {

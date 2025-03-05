@@ -1,55 +1,11 @@
-export const presets: BenchObjectPreset[] = [
-  { count: 1, size: "small" },
-  { count: 1, size: "small", circular: true },
-  { count: 1, size: "large" },
-  { count: 1, size: "large", circular: true },
-  {
-    count: 1024,
-    size: "small",
-    referenced: true,
-  },
-  {
-    count: 1024,
-    size: "small",
-    circular: true,
-    referenced: true,
-  },
-  {
-    count: 512,
-    size: "large",
-    referenced: true,
-  },
-  {
-    count: 512,
-    size: "large",
-    circular: true,
-    referenced: true,
-  },
-  {
-    count: 256,
-    size: "small",
-  },
-  {
-    count: 256,
-    size: "small",
-    circular: true,
-  },
-  {
-    count: 128,
-    size: "large",
-  },
-  {
-    count: 128,
-    size: "large",
-    circular: true,
-  },
-];
+import type { Options } from "tinybench";
 
 export type BenchObjectPreset = {
   count: number;
   size: "small" | "large";
   circular?: boolean;
   referenced?: boolean;
+  vitestOptions?: Options;
 };
 
 export function createBenchObjects({
@@ -138,14 +94,13 @@ export function createBenchObjects({
     }
 
     if (size === "large") {
-      const circularObject = { ...object };
-
-      circularObject.circular = object;
       /** These don't work with ohash v1 **/
+      // object.circular = object;
+      // const circularObject = { ...object };
+      // circularObject.circular = object;
       // circularObject.map.set("object", object);
       // circularObject.set.add(object);
       // circularObject.set.add(circularObject);
-
       // object.circular = circularObject;
       // object.map.set("object", object);
       // object.map.set("clonedObject", circularObject);
