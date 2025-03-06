@@ -110,7 +110,8 @@ const Serializer = /*@__PURE__*/ (function () {
       const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
-        content += `${keys[i]}:${this.serialize(object[keys[i]])}`;
+        const key = keys[i];
+        content += `${key}:${this.serialize(object[key])}`;
         if (i < keys.length - 1) {
           content += ",";
         }
