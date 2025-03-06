@@ -21,6 +21,19 @@ group("serialize - presets", () => {
   }
 });
 
+// group("serialize - combined presets", () => {
+//   summary(() => {
+//     for (const version of versions) {
+//       bench(version.name, () => {
+//         for (const preset of benchConfig.presets) {
+//           const objects = createBenchObjects(preset);
+//           version.serialize(objects, benchConfig.hashOptions);
+//         }
+//       });
+//     }
+//   });
+// });
+
 // group("serialize - custom", () => {
 //   group("simple object", () => {
 //     const object = {

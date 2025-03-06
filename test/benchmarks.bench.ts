@@ -36,13 +36,20 @@ describe("benchmarks", () => {
       describe(getPresetTitle(preset), () => {
         for (const version of versions) {
           const objects = createBenchObjects(preset);
-          bench(
-            version.name,
-            () => {
-              version.serialize(objects, benchConfig.hashOptions);
-            },
-            preset.vitestOptions,
-          );
+          bench(version.name, () => {
+            version.serialize(objects, benchConfig.hashOptions);
+          });
+        }
+      });
+    }
+  });
+
+  describe("serialize - combined presets", () => {
+    for (const version of versions) {
+      bench(version.name, () => {
+        for (const preset of benchConfig.presets) {
+          const objects = createBenchObjects(preset);
+          version.serialize(objects, benchConfig.hashOptions);
         }
       });
     }
