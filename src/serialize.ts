@@ -106,7 +106,16 @@ const Serializer = /*@__PURE__*/ (function () {
             : `(${this.serialize(json)})`)
         );
       }
-      return this.serializeObjectEntries(objName, Object.entries(object));
+
+      const keys = Object.keys(object).sort();
+      let content = `${objName}{`;
+      for (let i = 0; i < keys.length; i++) {
+        content += `${keys[i]}:${this.serialize(object[keys[i]])}`;
+        if (i < keys.length - 1) {
+          content += ",";
+        }
+      }
+      return content + "}";
     }
 
     serializeBuiltInType(type: string, object: any) {
@@ -121,18 +130,14 @@ const Serializer = /*@__PURE__*/ (function () {
       throw new Error(`Cannot serialize ${type}`);
     }
 
-    serializeObjectEntries(
-      type: string,
-      entries: Iterable<[any, any]> | Array<[string, any]>,
-    ) {
-      const isArray = Array.isArray(entries);
-      const sortedEntries = isArray
-        ? entries.sort((a, b) => a[0].localeCompare(b[0]))
-        : Array.from(entries).sort((a, b) => this.compare(a[0], b[0]));
+    serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
+      const sortedEntries = Array.from(entries).sort((a, b) =>
+        this.compare(a[0], b[0]),
+      );
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${isArray ? key : this.serialize(key, true)}:${this.serialize(value)}`;
+        content += `${this.serialize(key, true)}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
