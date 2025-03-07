@@ -9,8 +9,8 @@ export function isEqual(object1: any, object2: any): boolean {
   if (object1 === object2) {
     return true;
   }
-  if (serialize(object1) === serialize(object2)) {
-    return true;
+  if (typeof object1 !== typeof object2) {
+    return false;
   }
-  return false;
+  return serialize(object1) === serialize(object2);
 }
