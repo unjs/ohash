@@ -165,7 +165,7 @@ const Serializer = /*@__PURE__*/ (function () {
       ) {
         return `${fn.name || ""}()[native]`;
       }
-      return `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`;
+      return `${fn.name}(${fn.length})${fnStr}`;
     }
 
     $Array(arr: any[]) {
