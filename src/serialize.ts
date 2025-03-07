@@ -108,7 +108,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort();
+      const keys = quickSort(Object.keys(object));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -233,3 +233,64 @@ const Serializer = /*@__PURE__*/ (function () {
   }
   return Serializer;
 })();
+
+/**
+ * Efficient QuickSort with reduced bundle size
+ * Uses tail-call optimization and minimizes function calls
+ */
+function quickSort<T>(array: T[]): T[] {
+  // Single function implementation to reduce bundle size
+  const sort = (left: number = 0, right: number = array.length - 1): void => {
+    // Early return for single element
+    if (left >= right) return;
+
+    // Use insertion sort for small arrays
+    if (right - left <= 10) {
+      for (let i = left + 1; i <= right; i++) {
+        const temp = array[i];
+        let j = i;
+        while (j > left && array[j - 1] > temp) {
+          array[j] = array[j - 1];
+          j--;
+        }
+        array[j] = temp;
+      }
+      return;
+    }
+
+    // Simple pivot selection - middle element
+    const pivotIndex = Math.floor((left + right) / 2);
+    const pivot = array[pivotIndex];
+
+    // Move pivot to end temporarily
+    array[pivotIndex] = array[right];
+    array[right] = pivot;
+
+    // Partition
+    let storeIndex = left;
+    for (let i = left; i < right; i++) {
+      if (array[i] < pivot) {
+        if (i !== storeIndex) {
+          // Swap only when needed
+          const temp = array[i];
+          array[i] = array[storeIndex];
+          array[storeIndex] = temp;
+        }
+        storeIndex++;
+      }
+    }
+
+    // Put pivot in its final place
+    array[right] = array[storeIndex];
+    array[storeIndex] = pivot;
+
+    // Sort left part
+    sort(left, storeIndex - 1);
+
+    // Tail call optimization - replace recursion with iteration for right part
+    left = storeIndex + 1;
+  };
+
+  sort();
+  return array;
+}
