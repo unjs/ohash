@@ -52,10 +52,22 @@ async function getVersion(version: VersionString) {
   const filePath = resolve(cacheDirectory(), `${name}-${version}.ts`);
   const isTag = /^v[0-9]+\.[0-9]+\./.test(version);
 
-  await download(
-    `https://raw.githubusercontent.com/unjs/ohash${isTag ? "/refs/tags" : ""}/${version}/src/${name}.ts`,
-    filePath,
-  );
+  try {
+    await download(
+      `https://raw.githubusercontent.com/unjs/ohash${isTag ? "/refs/tags" : ""}/${version}/src/${name}.ts`,
+      filePath,
+    );
+  } catch (error) {
+    if (!existsSync(filePath)) {
+      console.error(`${error}`);
+
+      throw error;
+    }
+
+    console.warn(
+      `Version "${version}" has been removed from GitHub, using cached version..`,
+    );
+  }
 
   return import(filePath);
 }
