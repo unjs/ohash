@@ -13,7 +13,7 @@ describe("serialize", () => {
       );
     });
 
-    it("date", () => {
+    it("Date", () => {
       expect(serialize(new Date(0))).toMatchInlineSnapshot(
         `"Date(1970-01-01T00:00:00.000Z)"`,
       );
@@ -77,7 +77,7 @@ describe("serialize", () => {
       );
     });
 
-    it("set", () => {
+    it("Set", () => {
       expect(serialize(new Set([1, 2, 3]))).toMatchInlineSnapshot(
         `"Set[1,2,3]"`,
       );
@@ -89,7 +89,7 @@ describe("serialize", () => {
       );
     });
 
-    it("map", () => {
+    it("Map", () => {
       const map = new Map();
       map.set(1, 4);
       map.set(2, 3);
@@ -103,8 +103,8 @@ describe("serialize", () => {
     });
   });
 
-  describe("array", () => {
-    it("array", () => {
+  describe("arrays", () => {
+    it("Array", () => {
       expect(serialize([1, 2, "x", 3])).toMatchInlineSnapshot(`"[1,2,'x',3]"`);
       expect(serialize([2, 3, "x", 1])).toMatchInlineSnapshot(`"[2,3,'x',1]"`);
     });
@@ -306,7 +306,7 @@ describe("serialize", () => {
   });
 
   describe("not supported", () => {
-    it("blob", () => {
+    it("Blob", () => {
       expect(() =>
         serialize(new Blob(["x"])),
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
