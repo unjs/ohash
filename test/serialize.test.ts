@@ -529,4 +529,13 @@ describe("Object.prototype.toString issues", () => {
       `"FormData{bar:'baz',foo:'bar'}"`,
     );
   });
+
+  it("URLSearchParams", () => {
+    const form = new URLSearchParams();
+    form.set("foo", "bar");
+    form.set("bar", "baz");
+    expect(serialize(form)).toMatchInlineSnapshot(
+      `"URLSearchParams{bar:'baz',foo:'bar'}"`,
+    );
+  });
 });
