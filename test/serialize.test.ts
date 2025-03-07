@@ -374,7 +374,7 @@ describe("serialize", () => {
       );
     });
 
-    it("WeakRef", () => {
+    it.runIf(typeof WeakRef !== "undefined")("WeakRef", () => {
       expect(() =>
         serialize(new WeakRef({})),
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize WeakRef]`);
