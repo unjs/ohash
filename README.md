@@ -90,7 +90,7 @@ console.log(digest("Hello World!"));
 
 ## `isEqual(obj1, obj2)`
 
-Compare two objects using `===` and then fallbacks to compare based on their [serialized](#serializeinput) values.
+Compares two objects using `===`. If they are not strictly equal but of the same type, it falls back to compare based on their [serialized](#serializeinput) values.
 
 ```js
 import { isEqual } from "ohash";
@@ -101,7 +101,7 @@ console.log(isEqual({ a: 1, b: 2 }, { b: 2, a: 1 }));
 
 ## `diff(obj1, obj2)`
 
-Compare two objects with nested [serialization](#serializeinput-options). Returns an array of changes.
+Compares two objects with nested [serialization](#serializeinput). Returns an array of changes.
 
 The returned value is an array of diff entries with `$key`, `$hash`, `$value`, and `$props`. When logging, a string version of the changelog is displayed.
 
