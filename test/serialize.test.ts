@@ -175,13 +175,13 @@ describe("serialize", () => {
       );
     });
 
-    it("Empty BigInt64Array", () => {
+    it("empty BigInt64Array", () => {
       expect(serialize(new BigInt64Array([]))).toMatchInlineSnapshot(
         `"BigInt64Array[]"`,
       );
     });
 
-    it("Empty BigUint64Array", () => {
+    it("empty BigUint64Array", () => {
       expect(serialize(new BigUint64Array([]))).toMatchInlineSnapshot(
         `"BigUint64Array[]"`,
       );
