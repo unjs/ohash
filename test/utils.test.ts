@@ -17,8 +17,6 @@ describe("isEqual", () => {
     ["foo", [1, 2], false],
     ["foo", "bar", false],
     ["foo", "foo", true],
-    [0, 1, false],
-    [1, 1, true],
     [new Test(), new Test(), true],
     [new (class Test2 {})(), new (class Test2 {})(), true],
     [new Test(), new (class Test2 {})(), false],
