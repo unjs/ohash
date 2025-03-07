@@ -46,11 +46,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return typeA < typeB ? -1 : 1;
       }
 
-      if (typeA === "string") {
-        return a < b ? -1 : 1;
-      }
-
-      if (typeA === "number") {
+      if (typeA === "string" || typeA === "number") {
         return a < b ? -1 : 1;
       }
 
