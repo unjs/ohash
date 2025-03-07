@@ -325,6 +325,13 @@ describe("serialize", () => {
       expect(serialize(form)).toMatchInlineSnapshot(
         `"FormData{bar:'baz',foo:'bar'}"`,
       );
+
+      const params = new URLSearchParams();
+      params.set("foo", "bar");
+      params.set("bar", "baz");
+      expect(serialize(params)).toMatchInlineSnapshot(
+        `"URLSearchParams{bar:'baz',foo:'bar'}"`,
+      );
     });
   });
 
