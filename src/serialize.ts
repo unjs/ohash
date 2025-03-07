@@ -35,21 +35,22 @@ const Serializer = /*@__PURE__*/ (function () {
     #context = new Map();
 
     compare(a: any, b: any): number {
+      if (a === b) {
+        return 0;
+      }
+
       const typeA = typeof a;
       const typeB = typeof b;
 
-      if (typeA === "string" && typeB === "string") {
-        return a.localeCompare(b);
+      if (typeA !== typeB) {
+        return typeA < typeB ? -1 : 1;
       }
 
-      if (typeA === "number" && typeB === "number") {
-        return a - b;
+      if (typeA === "string" || typeA === "number") {
+        return a < b ? -1 : 1;
       }
 
-      return String.prototype.localeCompare.call(
-        this.serialize(a, true),
-        this.serialize(b, true),
-      );
+      return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -107,7 +108,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
+      const keys = Object.keys(object).sort();
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
