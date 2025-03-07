@@ -311,6 +311,52 @@ describe("serialize", () => {
         serialize(new Blob(["x"])),
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
     });
+
+    it("WeakMap", () => {
+      expect(() => serialize(new WeakMap())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize WeakMap]`,
+      );
+    });
+
+    it("WeakSet", () => {
+      expect(() => serialize(new WeakSet())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize WeakSet]`,
+      );
+    });
+
+    it("WeakRef", () => {
+      expect(() =>
+        serialize(new WeakRef({})),
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize WeakRef]`);
+    });
+
+    const generator = function* () {
+      yield 1;
+    };
+
+    it("Generator", () => {
+      expect(() => serialize(generator())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize Generator]`,
+      );
+    });
+
+    const asyncGenerator = async function* () {
+      yield 1;
+    };
+
+    it("AsyncGenerator", () => {
+      expect(() =>
+        serialize(asyncGenerator()),
+      ).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize AsyncGenerator]`,
+      );
+    });
+
+    it("Promise", () => {
+      expect(() =>
+        serialize(new Promise(() => {})),
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Promise]`);
+    });
   });
 
   describe("unknown object type", () => {
