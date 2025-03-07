@@ -98,7 +98,7 @@ describe("serialize", () => {
       map.set({ x: 42 }, "3");
 
       expect(serialize(map)).toMatchInlineSnapshot(
-        `"Map{1:4,2:3,a:'1',z:2,{x:42}:'3'}"`,
+        `"Map{1:4,2:3,{x:42}:'3',a:'1',z:2}"`,
       );
     });
   });
@@ -399,7 +399,7 @@ describe("serialize", () => {
       obj.b.add(obj.a);
 
       expect(serialize(obj)).toMatchInlineSnapshot(
-        `"{a:Set[#1,1],b:Set[#1,1]}"`,
+        `"{a:Set[1,#1],b:Set[1,#1]}"`,
       );
     });
 
