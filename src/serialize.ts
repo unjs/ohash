@@ -53,6 +53,43 @@ const Serializer = /*@__PURE__*/ (function () {
       return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
     }
 
+    sort<T>(array: T[], compare?: (a: T, b: T) => number): T[] {
+      const length = array.length;
+
+      if (length <= 1) {
+        return array;
+      }
+
+      if (length > 10) {
+        return array.sort(compare);
+      }
+
+      // Use insertion sort for small arrays (more performant)
+      if (compare) {
+        for (let i = 1; i < length; i++) {
+          const temp = array[i];
+          let j = i;
+          while (j > 0 && compare(temp, array[j - 1]) === -1) {
+            array[j] = array[j - 1];
+            j--;
+          }
+          array[j] = temp;
+        }
+        return array;
+      }
+
+      for (let i = 1; i < length; i++) {
+        const temp = array[i];
+        let j = i;
+        while (j > 0 && temp < array[j - 1]) {
+          array[j] = array[j - 1];
+          j--;
+        }
+        array[j] = temp;
+      }
+      return array;
+    }
+
     serialize(value: any, noQuotes?: boolean): string {
       if (value === null) {
         return "null";
@@ -108,7 +145,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort();
+      const keys = this.sort(Object.keys(object));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -133,7 +170,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
+      const sortedEntries = this.sort(Array.from(entries), (a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
@@ -193,7 +230,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(this.sort(Array.from(set), (a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {
