@@ -34,23 +34,23 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #context = new Map();
 
-    compare(a: any, b: any): number {
+    compare(a: any, b: any): boolean {
       if (a === b) {
-        return 0;
+        return false;
       }
 
       const typeA = typeof a;
       const typeB = typeof b;
 
       if (typeA !== typeB) {
-        return typeA < typeB ? -1 : 1;
+        return typeA < typeB;
       }
 
       if (typeA === "string" || typeA === "number") {
-        return a < b ? -1 : 1;
+        return a < b;
       }
 
-      return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
+      return this.serialize(a, true) < this.serialize(b, true);
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -108,7 +108,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort();
+      const keys = quickSort(Object.keys(object));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -133,7 +133,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
+      const sortedEntries = quickSort(Array.from(entries), (a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
@@ -193,7 +193,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(quickSort(Array.from(set), (a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {
@@ -233,3 +233,60 @@ const Serializer = /*@__PURE__*/ (function () {
   }
   return Serializer;
 })();
+
+function quickSort<T>(array: T[], compare?: (a: T, b: T) => boolean): T[] {
+  const sort = (left: number = 0, right: number = array.length - 1): void => {
+    // Early return for single element
+    if (left >= right) return;
+
+    // Simple pivot selection - middle element
+    const pivotIndex = Math.floor((left + right) / 2);
+    const pivot = array[pivotIndex];
+
+    // Move pivot to end temporarily
+    array[pivotIndex] = array[right];
+    array[right] = pivot;
+
+    // Partition
+    let storeIndex = left;
+
+    const swap = (i: number) => {
+      if (i !== storeIndex) {
+        // Swap only when needed
+        const temp = array[i];
+        array[i] = array[storeIndex];
+        array[storeIndex] = temp;
+      }
+      storeIndex++;
+    };
+
+    // Code style: this is a micro optimization for optimal performance
+    if (compare === undefined) {
+      for (let i = left; i < right; i++) {
+        if (array[i] < pivot) {
+          swap(i);
+        }
+      }
+    } else {
+      for (let i = left; i < right; i++) {
+        if (compare(array[i], pivot)) {
+          swap(i);
+        }
+      }
+    }
+
+    // Put pivot in its final place
+    array[right] = array[storeIndex];
+    array[storeIndex] = pivot;
+
+    // Sort left part
+    sort(left, storeIndex - 1);
+
+    // Tail call optimization - replace recursion with iteration for right part
+    left = storeIndex + 1;
+  };
+
+  sort();
+
+  return array;
+}
