@@ -161,11 +161,12 @@ const Serializer = /*@__PURE__*/ (function () {
     $function(fn: any) {
       const fnStr = Function.prototype.toString.call(fn);
       if (
+        fnStr.at(-15) === "[" &&
         fnStr.slice(-15 /* "[native code] }".length */) === "[native code] }"
       ) {
         return `${fn.name || ""}()[native]`;
       }
-      return `${fn.name}(${fn.length})${fnStr.replace(/\s*\n\s*/g, "")}`;
+      return `${fn.name}(${fn.length})${fnStr}`;
     }
 
     $Array(arr: any[]) {

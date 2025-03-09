@@ -287,9 +287,11 @@ describe("serialize", () => {
       function sum(a: number, b: number) {
         return a + b;
       }
-      expect(serialize(sum)).toMatchInlineSnapshot(
-        `"sum(2)function sum(a, b) {return a + b;}"`,
-      );
+      expect(serialize(sum)).toMatchInlineSnapshot(`
+        "sum(2)function sum(a, b) {
+                return a + b;
+              }"
+      `);
     });
 
     it("arrow function", () => {
