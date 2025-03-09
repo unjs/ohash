@@ -1,5 +1,5 @@
-import type { BenchObjectPreset } from "./bench-objects";
-import type { VersionString } from "./utils/versions";
+import type { BenchObjectPreset } from "./utils/objects";
+import { type VersionString } from "./utils/versions";
 
 type BenchConfig = {
   versions: VersionString[];
