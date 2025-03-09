@@ -7,7 +7,7 @@ export const modes = {
 
 type Mode = keyof typeof modes;
 
-const selectedMode: number =
+const selectedMode =
   process.argv
     .slice(2)
     .map((arg) => {
@@ -17,7 +17,7 @@ const selectedMode: number =
         return modes[m as Mode];
       }
 
-      throw new Error(`Invalid mode: ${m}`);
+      return 0b000 as number;
     })
     .reduce((acc, val) => acc | val, 0) || modes.presets;
 
