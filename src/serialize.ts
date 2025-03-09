@@ -35,6 +35,10 @@ const Serializer = /*@__PURE__*/ (function () {
     #context = new Map();
 
     compare(a: any, b: any): boolean {
+      if (a === b) {
+        return false;
+      }
+
       const typeA = typeof a;
       const typeB = typeof b;
 
