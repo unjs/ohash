@@ -247,9 +247,9 @@ if (isModeEnabled("custom")) {
 await run();
 
 console.log(`
-  Tips:
-  - Run with --presets to run all the presets individually (default)
-  - Run with --combined to run all the presets combined
-  - Run with --custom to run the custom benchmarks
-  - Run with --full to run all benchmarks
+Tips:
+ - Run with --presets to run all the presets individually (default)
+ - Run with --combined to run all the presets combined
+ - Run with --custom to run the custom benchmarks
+ - Run with --full to run all benchmarks
   `);
