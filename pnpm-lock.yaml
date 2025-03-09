@@ -29,6 +29,9 @@ importers:
       eslint-config-unjs:
         specifier: ^0.4.2
         version: 0.4.2(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
+      jiti:
+        specifier: ^2.4.2
+        version: 2.4.2
       mitata:
         specifier: ^1.0.34
         version: 1.0.34

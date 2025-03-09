@@ -51,6 +51,7 @@
     "esbuild": "^0.25.0",
     "eslint": "^9.21.0",
     "eslint-config-unjs": "^0.4.2",
+    "jiti": "^2.4.2",
     "mitata": "^1.0.34",
     "prettier": "^3.5.2",
     "typescript": "^5.7.3",
