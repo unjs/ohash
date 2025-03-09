@@ -32,8 +32,8 @@
   ],
   "scripts": {
     "bench": "vitest bench",
-    "bench:bun": "bun ./test/benchmarks.mitata",
-    "bench:mitata": "jiti ./test/benchmarks.mitata",
+    "bench:bun": "bun ./test/bench",
+    "bench:node": "node --import jiti/register ./test/bench",
     "build": "unbuild",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c src test",
