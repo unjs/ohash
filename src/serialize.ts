@@ -230,90 +230,10 @@ const Serializer = /*@__PURE__*/ (function () {
   return Serializer;
 })();
 
-/**
- * Efficient QuickSort with reduced bundle size
- * Uses tail-call optimization and minimizes function calls
- */
 function quickSort<T>(array: T[], compare?: (a: T, b: T) => boolean): T[] {
-  if (compare === undefined) {
-    const sortDefault = (
-      left: number = 0,
-      right: number = array.length - 1,
-    ): void => {
-      // Early return for single element
-      if (left >= right) return;
-
-      // Use insertion sort for small arrays
-      if (right - left <= 10) {
-        for (let i = left + 1; i <= right; i++) {
-          const temp = array[i];
-          let j = i;
-          while (j > left && temp < array[j - 1]) {
-            array[j] = array[j - 1];
-            j--;
-          }
-          array[j] = temp;
-        }
-        return;
-      }
-
-      // Simple pivot selection - middle element
-      const pivotIndex = Math.floor((left + right) / 2);
-      const pivot = array[pivotIndex];
-
-      // Move pivot to end temporarily
-      array[pivotIndex] = array[right];
-      array[right] = pivot;
-
-      // Partition
-      let storeIndex = left;
-      for (let i = left; i < right; i++) {
-        if (array[i] < pivot) {
-          if (i !== storeIndex) {
-            // Swap only when needed
-            const temp = array[i];
-            array[i] = array[storeIndex];
-            array[storeIndex] = temp;
-          }
-          storeIndex++;
-        }
-      }
-
-      // Put pivot in its final place
-      array[right] = array[storeIndex];
-      array[storeIndex] = pivot;
-
-      // Sort left part
-      sortDefault(left, storeIndex - 1);
-
-      // Tail call optimization - replace recursion with iteration for right part
-      left = storeIndex + 1;
-    };
-
-    sortDefault();
-    return array;
-  }
-
-  const sortCustom = (
-    left: number = 0,
-    right: number = array.length - 1,
-  ): void => {
+  const sort = (left: number = 0, right: number = array.length - 1): void => {
     // Early return for single element
     if (left >= right) return;
-
-    // Use insertion sort for small arrays
-    if (right - left <= 10) {
-      for (let i = left + 1; i <= right; i++) {
-        const temp = array[i];
-        let j = i;
-        while (j > left && compare(temp, array[j - 1])) {
-          array[j] = array[j - 1];
-          j--;
-        }
-        array[j] = temp;
-      }
-      return;
-    }
 
     // Simple pivot selection - middle element
     const pivotIndex = Math.floor((left + right) / 2);
@@ -325,15 +245,29 @@ function quickSort<T>(array: T[], compare?: (a: T, b: T) => boolean): T[] {
 
     // Partition
     let storeIndex = left;
-    for (let i = left; i < right; i++) {
-      if (compare(array[i], pivot)) {
-        if (i !== storeIndex) {
-          // Swap only when needed
-          const temp = array[i];
-          array[i] = array[storeIndex];
-          array[storeIndex] = temp;
+
+    const swap = (i: number) => {
+      if (i !== storeIndex) {
+        // Swap only when needed
+        const temp = array[i];
+        array[i] = array[storeIndex];
+        array[storeIndex] = temp;
+      }
+      storeIndex++;
+    };
+
+    // Code style: this is a micro optimization for optimal performance
+    if (compare === undefined) {
+      for (let i = left; i < right; i++) {
+        if (array[i] < pivot) {
+          swap(i);
         }
-        storeIndex++;
+      }
+    } else {
+      for (let i = left; i < right; i++) {
+        if (compare(array[i], pivot)) {
+          swap(i);
+        }
       }
     }
 
@@ -342,12 +276,13 @@ function quickSort<T>(array: T[], compare?: (a: T, b: T) => boolean): T[] {
     array[storeIndex] = pivot;
 
     // Sort left part
-    sortCustom(left, storeIndex - 1);
+    sort(left, storeIndex - 1);
 
     // Tail call optimization - replace recursion with iteration for right part
     left = storeIndex + 1;
   };
 
-  sortCustom();
+  sort();
+
   return array;
 }
