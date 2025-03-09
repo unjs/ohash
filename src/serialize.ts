@@ -60,7 +60,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return array;
       }
 
-      if (length > 10) {
+      if (length > 20) {
         return array.sort(compare);
       }
 
