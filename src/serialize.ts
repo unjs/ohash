@@ -34,23 +34,19 @@ const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #context = new Map();
 
-    compare(a: any, b: any): number {
-      if (a === b) {
-        return 0;
-      }
-
+    compare(a: any, b: any): boolean {
       const typeA = typeof a;
       const typeB = typeof b;
 
       if (typeA !== typeB) {
-        return typeA < typeB ? -1 : 1;
+        return typeA < typeB;
       }
 
       if (typeA === "string" || typeA === "number") {
-        return a < b ? -1 : 1;
+        return a < b;
       }
 
-      return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
+      return this.serialize(a, true) < this.serialize(b, true);
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -133,7 +129,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
+      const sortedEntries = quickSort(Array.from(entries), (a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
@@ -193,7 +189,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(quickSort(Array.from(set), (a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {
@@ -234,29 +230,10 @@ const Serializer = /*@__PURE__*/ (function () {
   return Serializer;
 })();
 
-/**
- * Efficient QuickSort with reduced bundle size
- * Uses tail-call optimization and minimizes function calls
- */
-function quickSort<T>(array: T[]): T[] {
-  // Single function implementation to reduce bundle size
+function quickSort<T>(array: T[], compare?: (a: T, b: T) => boolean): T[] {
   const sort = (left: number = 0, right: number = array.length - 1): void => {
     // Early return for single element
     if (left >= right) return;
-
-    // Use insertion sort for small arrays
-    if (right - left <= 10) {
-      for (let i = left + 1; i <= right; i++) {
-        const temp = array[i];
-        let j = i;
-        while (j > left && array[j - 1] > temp) {
-          array[j] = array[j - 1];
-          j--;
-        }
-        array[j] = temp;
-      }
-      return;
-    }
 
     // Simple pivot selection - middle element
     const pivotIndex = Math.floor((left + right) / 2);
@@ -268,15 +245,29 @@ function quickSort<T>(array: T[]): T[] {
 
     // Partition
     let storeIndex = left;
-    for (let i = left; i < right; i++) {
-      if (array[i] < pivot) {
-        if (i !== storeIndex) {
-          // Swap only when needed
-          const temp = array[i];
-          array[i] = array[storeIndex];
-          array[storeIndex] = temp;
+
+    const swap = (i: number) => {
+      if (i !== storeIndex) {
+        // Swap only when needed
+        const temp = array[i];
+        array[i] = array[storeIndex];
+        array[storeIndex] = temp;
+      }
+      storeIndex++;
+    };
+
+    // Code style: this is a micro optimization for optimal performance
+    if (compare === undefined) {
+      for (let i = left; i < right; i++) {
+        if (array[i] < pivot) {
+          swap(i);
         }
-        storeIndex++;
+      }
+    } else {
+      for (let i = left; i < right; i++) {
+        if (compare(array[i], pivot)) {
+          swap(i);
+        }
       }
     }
 
@@ -292,5 +283,6 @@ function quickSort<T>(array: T[]): T[] {
   };
 
   sort();
+
   return array;
 }
