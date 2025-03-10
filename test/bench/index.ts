@@ -19,7 +19,7 @@ if (isModeEnabled("presets")) {
             const objects = createBenchObjects(preset);
             bench(version.name, () => {
               version.serialize(objects, benchConfig.hashOptions);
-            });
+            }).baseline(version.baseline);
           }
         });
       });
@@ -41,7 +41,7 @@ if (isModeEnabled("combined")) {
           for (const preset of benchConfig.presets) {
             version.serialize(objects.get(preset), benchConfig.hashOptions);
           }
-        });
+        }).baseline(version.baseline);
       }
     });
   });
@@ -62,7 +62,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -82,7 +82,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -106,7 +106,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(array, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -130,7 +130,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(array, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -157,7 +157,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -175,7 +175,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -202,7 +202,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });
@@ -246,7 +246,7 @@ if (isModeEnabled("custom")) {
         for (const version of versions) {
           bench(version.name, () => {
             version.serialize(object, benchConfig.hashOptions);
-          });
+          }).baseline(version.baseline);
         }
       });
     });

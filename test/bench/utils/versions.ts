@@ -11,7 +11,7 @@ import { serialize } from "../../../src";
 
 /**
  * Supports:
- *  - tags (v1 and v2)
+ *  - version tags (v1 and v2)
  *  - branch names (v2 only)
  *  - full length commmit hashes (v2 only)
  */
@@ -20,22 +20,25 @@ export type VersionString =
   | `v${number}.${number}.${string}`
   | (string & {});
 
-export async function getVersions(array: VersionString[]): Promise<
-  Array<{
-    name: string;
-    serialize: (input: any, options?: Record<string, any>) => string;
-  }>
-> {
+type Version = {
+  name: string;
+  serialize: (input: any, options?: Record<string, any>) => string;
+  baseline: boolean;
+};
+
+export async function getVersions(array: VersionString[]): Promise<Version[]> {
   const imports = await Promise.all(array.map((v) => getVersion(v)));
-  const versions = array.map((version, i) => ({
+  const versions: Version[] = array.map((version, i) => ({
     name: `ohash @ ${version.length === 40 ? version.slice(0, 7) : version}`,
     serialize:
       "objectHash" in imports[i] ? imports[i].objectHash : imports[i].serialize,
+    baseline: false,
   }));
 
   versions.push({
     name: "ohash @ dev",
     serialize,
+    baseline: true,
   });
 
   return versions;
