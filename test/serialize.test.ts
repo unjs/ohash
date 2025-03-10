@@ -82,12 +82,12 @@ describe("serialize", () => {
         `"Set[1,2,3]"`,
       );
 
-      // Less than 10 elements
+      // Less than 20 elements
       expect(
         serialize(new Set([64, 38, 27, 81, 93, 29, 70, 45])),
       ).toMatchInlineSnapshot(`"Set[27,29,38,45,64,70,81,93]"`);
 
-      // More than 10 elements
+      // More than 20 elements
       expect(
         serialize(
           new Set([
@@ -105,6 +105,30 @@ describe("serialize", () => {
 
       expect(serialize(new Set([{ b: 1 }, { a: 1 }]))).toMatchInlineSnapshot(
         `"Set[{a:1},{b:1}]"`,
+      );
+
+      expect(
+        serialize(
+          new Set([
+            "a",
+            16,
+            Symbol("c"),
+            2n,
+            undefined,
+            Symbol("a"),
+            { c: 2 },
+            { b: 3 },
+            "c",
+            null,
+            1n,
+            Symbol("b"),
+            { d: 1 },
+            { a: 4 },
+            64,
+          ]),
+        ),
+      ).toMatchInlineSnapshot(
+        `"Set[1n,2n,16,64,null,{a:4},{b:3},{c:2},{d:1},'a','c',Symbol(a),Symbol(b),Symbol(c),undefined]"`,
       );
     });
 
