@@ -119,10 +119,6 @@ function createBenchObject({
   }
 
   if (circular) {
-    if (size === "small") {
-      object.circular = object;
-    }
-
     if (size === "large") {
       const circularObject = { ...object };
       circularObject.circular = object;
@@ -134,6 +130,8 @@ function createBenchObject({
       object.set.add(object);
       object.set.add(circularObject);
       object.circular = circularObject;
+    } else {
+      object.circular = object;
     }
   }
 
