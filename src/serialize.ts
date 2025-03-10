@@ -64,7 +64,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return array.sort(compare);
       }
 
-      // Use insertion sort for small arrays (more performant)
+      // Use insertion sort for small arrays (faster)
       if (compare) {
         for (let i = 1; i < length; i++) {
           const temp = array[i];
