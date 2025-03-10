@@ -1,7 +1,11 @@
 import { bench, group, run, summary } from "mitata";
 import { benchConfig } from "./config";
 import { isModeEnabled } from "./utils/modes";
-import { createBenchObjects, getPresetTitle } from "./utils/objects";
+import {
+  createBenchObjects,
+  getPresetTitle,
+  type BenchObjectPreset,
+} from "./utils/objects";
 import { getVersions } from "./utils/versions";
 
 const versions = await getVersions(benchConfig.versions);
@@ -27,10 +31,15 @@ if (isModeEnabled("combined")) {
   group("serialize - combined presets", () => {
     summary(() => {
       for (const version of versions) {
+        const objects = new Map<BenchObjectPreset, any>();
+
+        for (const preset of benchConfig.presets) {
+          objects.set(preset, createBenchObjects(preset));
+        }
+
         bench(version.name, () => {
           for (const preset of benchConfig.presets) {
-            const objects = createBenchObjects(preset);
-            version.serialize(objects, benchConfig.hashOptions);
+            version.serialize(objects.get(preset), benchConfig.hashOptions);
           }
         });
       }
