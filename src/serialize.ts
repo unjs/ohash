@@ -50,8 +50,8 @@ const Serializer = /*@__PURE__*/ (function () {
         case "object":
         case "function":
         case "symbol": {
-          const serializedA = this.serialize(a, true);
-          const serializedB = this.serialize(b, true);
+          const serializedA = this.serialize(a);
+          const serializedB = this.serialize(b);
           if (serializedA === serializedB) {
             return 0;
           }
