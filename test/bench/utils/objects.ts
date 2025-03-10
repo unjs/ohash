@@ -1,16 +1,14 @@
 export type BenchObjectPreset = {
   count: number;
-  size: "small" | "large";
+  size: "small" | "medium" | "large";
   circular?: boolean;
   referenced?: boolean;
 };
 
-export function createBenchObjects({
-  count = 100,
+function createBenchObject({
   size = "small",
   circular = false,
-  referenced = false,
-}: BenchObjectPreset) {
+}: Pick<BenchObjectPreset, "size" | "circular">) {
   let object: Record<string, any> = {
     string: "test",
     number: 42,
@@ -18,6 +16,30 @@ export function createBenchObjects({
     nullValue: null,
     undefinedValue: undefined,
   };
+
+  if (size !== "small") {
+    object = {
+      ...object,
+      nestedObject: {
+        string: "test",
+        number: 42,
+        boolean: true,
+        nullValue: null,
+        undefinedValue: undefined,
+        nestedObject: { ...object },
+        nestedObjects: [
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+        ],
+      },
+    };
+  }
 
   if (size === "large") {
     object = {
@@ -42,7 +64,19 @@ export function createBenchObjects({
       bigInt64Array: new BigInt64Array([1n, 2n, 3n]),
       bigUint64Array: new BigUint64Array([1n, 2n, 3n]),
       buffer: Buffer.from("hello"),
-      nestedObject: { a: 1, b: 2 },
+      nestedObject: {
+        ...object,
+        deeplyNestedObjects: [
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+          { ...object },
+        ],
+      },
       classInstance: new (class Test {
         x = 1;
       })(),
@@ -73,7 +107,6 @@ export function createBenchObjects({
         yield 2;
         yield 3;
       },
-      circular: {},
     };
   }
 
@@ -104,13 +137,24 @@ export function createBenchObjects({
     }
   }
 
+  return object;
+}
+
+export function createBenchObjects({
+  count = 100,
+  size = "small",
+  circular = false,
+  referenced = false,
+}: BenchObjectPreset) {
+  const object = createBenchObject({ size, circular });
+
   if (count === 1) {
     return object;
   }
 
   const objects = [];
   for (let i = 0; i < count; i++) {
-    objects.push(referenced ? object : { ...object });
+    objects.push(referenced ? object : createBenchObject({ size, circular }));
   }
 
   return objects;
