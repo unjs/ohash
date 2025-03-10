@@ -46,11 +46,57 @@ const Serializer = /*@__PURE__*/ (function () {
         return typeA < typeB ? -1 : 1;
       }
 
-      if (typeA === "string" || typeA === "number") {
-        return a < b ? -1 : 1;
+      switch (typeA) {
+        case "object":
+        case "function":
+        case "symbol": {
+          const serializedA = this.serialize(a);
+          const serializedB = this.serialize(b);
+          if (serializedA === serializedB) {
+            return 0;
+          }
+          return serializedA < serializedB ? -1 : 1;
+        }
       }
 
-      return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
+      return a < b ? -1 : 1;
+    }
+
+    sort<T>(array: T[], compare?: (a: T, b: T) => number): T[] {
+      const length = array.length;
+
+      if (length <= 1) {
+        return array;
+      }
+
+      if (length > 20) {
+        return array.sort(compare);
+      }
+
+      // Use insertion sort for small arrays (faster)
+      if (compare) {
+        for (let i = 1; i < length; i++) {
+          const temp = array[i];
+          let j = i;
+          while (j > 0 && compare(temp, array[j - 1]) === -1) {
+            array[j] = array[j - 1];
+            j--;
+          }
+          array[j] = temp;
+        }
+        return array;
+      }
+
+      for (let i = 1; i < length; i++) {
+        const temp = array[i];
+        let j = i;
+        while (j > 0 && temp < array[j - 1]) {
+          array[j] = array[j - 1];
+          j--;
+        }
+        array[j] = temp;
+      }
+      return array;
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -108,7 +154,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort();
+      const keys = this.sort(Object.keys(object));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -133,7 +179,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
+      const sortedEntries = this.sort(Array.from(entries), (a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
@@ -193,7 +239,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(this.sort(Array.from(set), (a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {
