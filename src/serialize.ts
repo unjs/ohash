@@ -99,14 +99,14 @@ const Serializer = /*@__PURE__*/ (function () {
       return array;
     }
 
-    serialize(value: any, noQuotes?: boolean): string {
+    serialize(value: any): string {
       if (value === null) {
         return "null";
       }
 
       switch (typeof value) {
         case "string": {
-          return noQuotes ? value : `'${value}'`;
+          return `'${value}'`;
         }
         case "bigint": {
           return `${value}n`;
@@ -185,7 +185,7 @@ const Serializer = /*@__PURE__*/ (function () {
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${this.serialize(key, true)}:${this.serialize(value)}`;
+        content += `${typeof key === "string" ? key : this.serialize(key)}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
