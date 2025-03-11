@@ -1,6 +1,6 @@
 // Based on: https://github.com/unjs/giget/blob/main/src/_utils.ts
 
-import { createWriteStream, existsSync, renameSync } from "node:fs";
+import { createWriteStream, existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import type { Agent } from "node:http";
 import { homedir, tmpdir } from "node:os";
@@ -159,18 +159,7 @@ export function cacheDirectory() {
     : resolve(homedir(), ".cache/ohash");
 
   if (process.platform === "win32") {
-    const windowsCacheDir = resolve(tmpdir(), "ohash");
-    // Migrate cache dir to new location
-    // https://github.com/unjs/giget/pull/182/
-    // TODO: remove in next releases
-    if (!existsSync(windowsCacheDir) && existsSync(cacheDir)) {
-      try {
-        renameSync(cacheDir, windowsCacheDir);
-      } catch {
-        // ignore
-      }
-    }
-    return windowsCacheDir;
+    return resolve(tmpdir(), "ohash");
   }
 
   return cacheDir;
