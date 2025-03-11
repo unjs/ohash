@@ -1,4 +1,4 @@
-// Based on: https://github.com/unjs/giget/blob/main/src/_utils.ts
+// Based on: https://github.com/unjs/giget/blob/48493620f51307588bbf1010f1dbf64cd5b50fd3/src/_utils.ts
 
 import { createWriteStream, existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
