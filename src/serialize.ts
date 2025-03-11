@@ -46,20 +46,16 @@ const Serializer = /*@__PURE__*/ (function () {
         return typeA < typeB ? -1 : 1;
       }
 
-      switch (typeA) {
-        case "object":
-        case "function":
-        case "symbol": {
-          const serializedA = this.serialize(a);
-          const serializedB = this.serialize(b);
-          if (serializedA === serializedB) {
-            return 0;
-          }
-          return serializedA < serializedB ? -1 : 1;
-        }
+      if (typeA === "string" || typeA === "number" || typeA === "bigint") {
+        return a < b ? -1 : 1;
       }
 
-      return a < b ? -1 : 1;
+      const serializedA = this.serialize(a);
+      const serializedB = this.serialize(b);
+      if (serializedA === serializedB) {
+        return 0;
+      }
+      return serializedA < serializedB ? -1 : 1;
     }
 
     sort<T>(array: T[], compare?: (a: T, b: T) => number): T[] {
