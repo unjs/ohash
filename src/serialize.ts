@@ -69,7 +69,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return array;
       }
 
-      if (length > 20) {
+      if (length > 10) {
         return array.sort(compare);
       }
 

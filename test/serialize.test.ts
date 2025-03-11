@@ -82,12 +82,12 @@ describe("serialize", () => {
         `"Set[1,2,3]"`,
       );
 
-      // Less than 20 elements
+      // Less than 10 elements
       expect(
         serialize(new Set([64, 38, 27, 81, 93, 29, 70, 45])),
       ).toMatchInlineSnapshot(`"Set[27,29,38,45,64,70,81,93]"`);
 
-      // More than 20 elements
+      // More than 10 elements
       expect(
         serialize(
           new Set([
