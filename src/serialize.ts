@@ -125,7 +125,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (handler) {
         return handler.call(this, object);
       }
-      if ("entries" in object && typeof object.entries === "function") {
+      if (typeof object.entries === "function") {
         return this.serializeObjectEntries(type, object.entries());
       }
       throw new Error(`Cannot serialize ${type}`);
