@@ -75,19 +75,20 @@ const Serializer = /*@__PURE__*/ (function () {
 
       // Use insertion sort for small arrays (faster)
       for (let i = 1; i < length; i++) {
-        const temp = array[i];
+        const current = array[i];
         let j = i;
         // Code style: intentional for better performance
         if (compare === undefined) {
-          while (j > 0 && temp < array[j - 1]) {
+          while (j > 0 && current < array[j - 1]) {
             array[j] = array[--j];
           }
-        } else {
-          while (j > 0 && compare(temp, array[j - 1]) === -1) {
-            array[j] = array[--j];
-          }
+          array[j] = current;
+          continue;
         }
-        array[j] = temp;
+        while (j > 0 && compare(current, array[j - 1]) === -1) {
+          array[j] = array[--j];
+        }
+        array[j] = current;
       }
       return array;
     }
