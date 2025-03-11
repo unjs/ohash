@@ -52,7 +52,10 @@ async function getVersion(version: VersionString) {
   }
 
   const name = version.startsWith("v1") ? "object-hash" : "serialize";
-  const filePath = resolve(cacheDirectory(), `${name}-${version}.ts`);
+  const filePath = resolve(
+    cacheDirectory(),
+    `${name}-${version.replace(/\//g, "-")}.ts`,
+  );
   const isTag = /^v[0-9]+\.[0-9]+\./.test(version);
 
   try {
