@@ -79,7 +79,7 @@ const Serializer = /*@__PURE__*/ (function () {
         let j = i;
         // Code style: intentional for better performance
         if (compare === undefined) {
-          while (j > 0 && array[j - 1] > temp) {
+          while (j > 0 && temp < array[j - 1]) {
             array[j] = array[--j];
           }
         } else {
