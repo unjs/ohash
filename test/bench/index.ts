@@ -1,16 +1,23 @@
 import { bench, group, run, summary } from "mitata";
+import { serialize } from "../../src/serialize";
 import { benchConfig } from "./config";
-import { isModeEnabled } from "./utils/modes";
 import {
   createBenchObjects,
   getPresetTitle,
   type BenchObjectPreset,
 } from "./utils/objects";
+import { suite } from "./utils/suites";
 import { getVersions } from "./utils/versions";
 
 const versions = await getVersions(benchConfig.versions);
 
-if (isModeEnabled("presets")) {
+versions.push({
+  name: "ohash @ dev",
+  serialize,
+  baseline: true,
+});
+
+suite("presets", () => {
   group("serialize - presets", () => {
     for (const preset of benchConfig.presets) {
       group(getPresetTitle(preset), () => {
@@ -25,9 +32,9 @@ if (isModeEnabled("presets")) {
       });
     }
   });
-}
+});
 
-if (isModeEnabled("combined")) {
+suite("combined", () => {
   group("serialize - combined presets", () => {
     summary(() => {
       for (const version of versions) {
@@ -45,9 +52,9 @@ if (isModeEnabled("combined")) {
       }
     });
   });
-}
+});
 
-if (isModeEnabled("custom")) {
+suite("custom", () => {
   group("serialize - custom", () => {
     group("simple object", () => {
       const object = {
@@ -251,7 +258,7 @@ if (isModeEnabled("custom")) {
       });
     });
   });
-}
+});
 
 await run();
 
