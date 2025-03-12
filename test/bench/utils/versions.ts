@@ -27,7 +27,9 @@ type Version = {
 };
 
 export function benchVersion(version: Version, fn: () => any) {
-  bench(version.name, fn).baseline(version.baseline);
+  bench(version.name, fn)
+    .baseline(version.baseline)
+    .highlight(version.baseline ? "cyan" : undefined);
 }
 
 export async function getVersions(array: VersionString[]): Promise<Version[]> {
