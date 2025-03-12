@@ -14,11 +14,12 @@ describe("serialize", () => {
     });
 
     it("date", () => {
-      expect(serialize(new Date(0))).toMatchInlineSnapshot(
-        `"Date(1970-01-01T00:00:00.000Z)"`,
+      expect(serialize(new Date(0))).toMatchInlineSnapshot(`"Date(0)"`);
+      expect(serialize(new Date(1_741_794_951_781))).toMatchInlineSnapshot(
+        `"Date(1741794951781)"`,
       );
       expect(serialize(new Date(Number.NaN))).toMatchInlineSnapshot(
-        `"Date(null)"`,
+        `"Date(NaN)"`,
       );
     });
 
