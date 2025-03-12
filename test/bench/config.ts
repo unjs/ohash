@@ -45,12 +45,12 @@ export const benchConfig: BenchConfig = {
     { count: 1, size: "large" },
 
     // {
-    //   count: 192,
-    //   size: "medium",
-    // },
-    // {
     //   count: 256,
     //   size: "small",
+    // },
+    // {
+    //   count: 192,
+    //   size: "medium",
     // },
     // {
     //   count: 128,
