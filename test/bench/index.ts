@@ -1,4 +1,4 @@
-import { bench, group, run, summary } from "mitata";
+import { group, run, summary } from "mitata";
 import { serialize } from "../../src/serialize";
 import { benchConfig } from "./config";
 import {
@@ -7,7 +7,7 @@ import {
   type BenchObjectPreset,
 } from "./utils/objects";
 import { suite } from "./utils/suites";
-import { getVersions } from "./utils/versions";
+import { benchVersion, getVersions } from "./utils/versions";
 
 const versions = await getVersions(benchConfig.versions);
 
@@ -24,9 +24,9 @@ suite("presets", () => {
         summary(() => {
           for (const version of versions) {
             const objects = createBenchObjects(preset);
-            bench(version.name, () => {
+            benchVersion(version, () => {
               version.serialize(objects, benchConfig.hashOptions);
-            }).baseline(version.baseline);
+            });
           }
         });
       });
@@ -44,11 +44,11 @@ suite("combined", () => {
           objects.set(preset, createBenchObjects(preset));
         }
 
-        bench(version.name, () => {
+        benchVersion(version, () => {
           for (const preset of benchConfig.presets) {
             version.serialize(objects.get(preset), benchConfig.hashOptions);
           }
-        }).baseline(version.baseline);
+        });
       }
     });
   });
@@ -67,9 +67,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -87,9 +87,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -111,9 +111,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(array, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -135,9 +135,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(array, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -162,9 +162,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -180,9 +180,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -207,9 +207,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
@@ -251,9 +251,9 @@ suite("custom", () => {
 
       summary(() => {
         for (const version of versions) {
-          bench(version.name, () => {
+          benchVersion(version, () => {
             version.serialize(object, benchConfig.hashOptions);
-          }).baseline(version.baseline);
+          });
         }
       });
     });
