@@ -7,7 +7,6 @@ import { homedir, tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { pipeline } from "node:stream";
 import { promisify } from "node:util";
-import { serialize } from "../../../src";
 
 /**
  * Supports:
@@ -28,20 +27,12 @@ type Version = {
 
 export async function getVersions(array: VersionString[]): Promise<Version[]> {
   const imports = await Promise.all(array.map((v) => getVersion(v)));
-  const versions: Version[] = array.map((version, i) => ({
+  return array.map((version, i) => ({
     name: `ohash @ ${version.length === 40 ? version.slice(0, 7) : version}`,
     serialize:
       "objectHash" in imports[i] ? imports[i].objectHash : imports[i].serialize,
     baseline: false,
   }));
-
-  versions.push({
-    name: "ohash @ dev",
-    serialize,
-    baseline: true,
-  });
-
-  return versions;
 }
 
 async function getVersion(version: VersionString) {
