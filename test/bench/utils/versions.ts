@@ -1,5 +1,6 @@
 // Based on: https://github.com/unjs/giget/blob/48493620f51307588bbf1010f1dbf64cd5b50fd3/src/_utils.ts
 
+import { bench } from "mitata";
 import { createWriteStream, existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import type { Agent } from "node:http";
@@ -24,6 +25,10 @@ type Version = {
   serialize: (input: any, options?: Record<string, any>) => string;
   baseline: boolean;
 };
+
+export function benchVersion(version: Version, fn: () => any) {
+  bench(version.name, fn).baseline(version.baseline);
+}
 
 export async function getVersions(array: VersionString[]): Promise<Version[]> {
   const imports = await Promise.all(array.map((v) => getVersion(v)));
