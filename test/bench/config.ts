@@ -41,48 +41,75 @@ export const benchConfig: BenchConfig = {
       count: 1,
       size: "small",
     },
-    { count: 1, size: "small", circular: true },
+    { count: 1, size: "medium" },
     { count: 1, size: "large" },
+
+    // {
+    //   count: 192,
+    //   size: "medium",
+    // },
+    // {
+    //   count: 256,
+    //   size: "small",
+    // },
+    // {
+    //   count: 128,
+    //   size: "large",
+    // },
+
+    // { count: 1, size: "small", circular: true },
+    // { count: 1, size: "medium", circular: true },
     // { count: 1, size: "large", circular: true },
-    {
-      count: 1024,
-      size: "small",
-      referenced: true,
-    },
-    {
-      count: 1024,
-      size: "small",
-      circular: true,
-      referenced: true,
-    },
-    {
-      count: 512,
-      size: "large",
-      referenced: true,
-    },
+
+    // {
+    //   count: 256,
+    //   size: "small",
+    //   circular: true,
+    // },
+    // {
+    //   count: 192,
+    //   size: "medium",
+    //   circular: true,
+    // },
+    // {
+    //   count: 128,
+    //   size: "large",
+    //   circular: true,
+    // },
+
+    // {
+    //   count: 1024,
+    //   size: "small",
+    //   referenced: true,
+    // },
+    // {
+    //   count: 768,
+    //   size: "medium",
+    //   referenced: true,
+    // },
+    // {
+    //   count: 512,
+    //   size: "large",
+    //   referenced: true,
+    // },
+
+    // {
+    //   count: 1024,
+    //   size: "small",
+    //   circular: true,
+    //   referenced: true,
+    // },
+    // {
+    //   count: 768,
+    //   size: "medium",
+    //   circular: true,
+    //   referenced: true,
+    // },
     // {
     //   count: 512,
     //   size: "large",
     //   circular: true,
     //   referenced: true,
-    // },
-    {
-      count: 256,
-      size: "small",
-    },
-    {
-      count: 256,
-      size: "small",
-      circular: true,
-    },
-    {
-      count: 128,
-      size: "large",
-    },
-    // {
-    //   count: 128,
-    //   size: "large",
-    //   circular: true,
     // },
   ],
   hashOptions: { unorderedArrays: true, unorderedSets: true },
