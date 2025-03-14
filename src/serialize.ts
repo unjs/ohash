@@ -35,53 +35,46 @@ const Serializer = /*@__PURE__*/ (function () {
     #context = new Map();
 
     compare(a: any, b: any): number {
-      if (a === b) {
-        return 0;
-      }
-
       const typeA = typeof a;
       const typeB = typeof b;
 
       if (typeA !== typeB) {
         return typeA < typeB ? -1 : 1;
       }
-
-      if (typeA === "string" || typeA === "number" || typeA === "bigint") {
-        return a < b ? -1 : 1;
+      if (typeA === "number" || typeA === "bigint") {
+        return a === b ? 0 : a < b ? -1 : 1;
       }
-
-      const serializedA = this.serialize(a);
-      const serializedB = this.serialize(b);
-      if (serializedA === serializedB) {
-        return 0;
+      if (typeA !== "string") {
+        a = this.serialize(a);
+        b = this.serialize(b);
       }
-      return serializedA < serializedB ? -1 : 1;
+      return this.compareStrings(a, b);
     }
 
-    sort<T>(array: T[], compare?: (a: T, b: T) => number): T[] {
-      const length = array.length;
+    compareStrings(a: string, b: string): number {
+      const lengthA = a.length;
+      const lengthB = b.length;
 
-      if (length <= 1) {
+      if (lengthA !== lengthB) {
+        return lengthA < lengthB ? -1 : 1;
+      }
+      return a === b ? 0 : a < b ? -1 : 1;
+    }
+
+    sort<T>(array: T[], compare: (a: T, b: T) => number): T[] {
+      if (array.length <= 1) {
         return array;
       }
 
-      if (length > 10) {
+      if (array.length > 10) {
         return array.sort(compare);
       }
 
       // Use insertion sort for small arrays (faster)
-      for (let i = 1; i < length; i++) {
+      for (let i = 1; i < array.length; i++) {
         const current = array[i];
         let j = i;
-        // Code style: intentional for better performance
-        if (compare !== undefined) {
-          while (j > 0 && compare(current, array[j - 1]) === -1) {
-            array[j] = array[--j];
-          }
-          array[j] = current;
-          continue;
-        }
-        while (j > 0 && current < array[j - 1]) {
+        while (j > 0 && compare(current, array[j - 1]) === -1) {
           array[j] = array[--j];
         }
         array[j] = current;
@@ -144,7 +137,9 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = this.sort(Object.keys(object));
+      const keys = this.sort(Object.keys(object), (a, b) =>
+        this.compareStrings(a, b),
+      );
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
