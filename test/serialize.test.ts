@@ -250,7 +250,9 @@ describe("serialize", () => {
     it("object", () => {
       expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
       expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
-      expect(serialize({ b: 1, aaa: 3, cc: 2 })).toMatchInlineSnapshot(`"{b:1,cc:2,aaa:3}"`);
+      expect(serialize({ b: 1, aaa: 3, cc: 2 })).toMatchInlineSnapshot(
+        `"{b:1,cc:2,aaa:3}"`,
+      );
       expect(serialize(Object.create(null))).toBe("{}");
     });
 
