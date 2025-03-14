@@ -42,7 +42,7 @@ const Serializer = /*@__PURE__*/ (function () {
         return typeA < typeB ? -1 : 1;
       }
       if (typeA === "number" || typeA === "bigint") {
-        return a === b ? 0 : a < b ? -1 : 1;
+        return a < b ? -1 : a > b ? 1 : 0;
       }
       if (typeA !== "string") {
         a = this.serialize(a);
@@ -58,7 +58,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (lengthA !== lengthB) {
         return lengthA < lengthB ? -1 : 1;
       }
-      return a === b ? 0 : a < b ? -1 : 1;
+      return a < b ? -1 : a > b ? 1 : 0;
     }
 
     sort<T>(array: T[], compare: (a: T, b: T) => number): T[] {
