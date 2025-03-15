@@ -131,7 +131,7 @@ describe("serialize", () => {
           ]),
         ),
       ).toMatchInlineSnapshot(
-        `"Set[1n,2n,16,64,null,{a:4},{b:3},{c:2},{d:1},'a','b','c','aa','bb',Symbol(a),Symbol(b),Symbol(c),undefined]"`,
+        `"Set[1n,2n,16,64,null,{a:4},{b:3},{c:2},{d:1},'a','aa','b','bb','c',Symbol(a),Symbol(b),Symbol(c),undefined]"`,
       );
     });
 
@@ -250,9 +250,6 @@ describe("serialize", () => {
     it("object", () => {
       expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
       expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
-      expect(serialize({ b: 1, aaa: 3, cc: 2 })).toMatchInlineSnapshot(
-        `"{b:1,cc:2,aaa:3}"`,
-      );
       expect(serialize(Object.create(null))).toBe("{}");
     });
 
@@ -457,7 +454,7 @@ describe("serialize", () => {
       obj.a.ref = obj.b;
       obj.b.ref = obj.a;
       expect(serialize(obj)).toMatchInlineSnapshot(
-        `"{a:{ref:{ref:#1,name:'B'},name:'A'},b:{ref:#1,name:'B'}}"`,
+        `"{a:{name:'A',ref:{name:'B',ref:#1}},b:{name:'B',ref:#1}}"`,
       );
     });
 

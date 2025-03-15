@@ -48,16 +48,6 @@ const Serializer = /*@__PURE__*/ (function () {
         a = this.serialize(a);
         b = this.serialize(b);
       }
-      return this.compareStrings(a, b);
-    }
-
-    compareStrings(a: string, b: string): number {
-      const lengthA = a.length;
-      const lengthB = b.length;
-
-      if (lengthA !== lengthB) {
-        return lengthA < lengthB ? -1 : 1;
-      }
       return a < b ? -1 : a > b ? 1 : 0;
     }
 
@@ -138,7 +128,7 @@ const Serializer = /*@__PURE__*/ (function () {
       }
 
       const keys = this.sort(Object.keys(object), (a, b) =>
-        this.compareStrings(a, b),
+        a < b ? -1 : a > b ? 1 : 0,
       );
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
