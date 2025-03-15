@@ -35,32 +35,51 @@ const Serializer = /*@__PURE__*/ (function () {
     #context = new Map();
 
     compare(a: any, b: any): number {
-      if (a === b) {
-        return 0;
-      }
-
       const typeA = typeof a;
       const typeB = typeof b;
 
       if (typeA !== typeB) {
         return typeA < typeB ? -1 : 1;
       }
-
-      if (typeA === "string" || typeA === "number") {
-        return a < b ? -1 : 1;
+      if (typeA === "number" || typeA === "bigint") {
+        return a < b ? -1 : a > b ? 1 : 0;
       }
-
-      return this.serialize(a, true) < this.serialize(b, true) ? -1 : 1;
+      if (typeA !== "string") {
+        a = this.serialize(a);
+        b = this.serialize(b);
+      }
+      return a < b ? -1 : a > b ? 1 : 0;
     }
 
-    serialize(value: any, noQuotes?: boolean): string {
+    sort<T>(array: T[], compare: (a: T, b: T) => number): T[] {
+      if (array.length <= 1) {
+        return array;
+      }
+
+      if (array.length > 10) {
+        return array.sort(compare);
+      }
+
+      // Use insertion sort for small arrays (faster)
+      for (let i = 1; i < array.length; i++) {
+        const current = array[i];
+        let j = i;
+        while (j > 0 && compare(current, array[j - 1]) === -1) {
+          array[j] = array[--j];
+        }
+        array[j] = current;
+      }
+      return array;
+    }
+
+    serialize(value: any): string {
       if (value === null) {
         return "null";
       }
 
       switch (typeof value) {
         case "string": {
-          return noQuotes ? value : `'${value}'`;
+          return `'${value}'`;
         }
         case "bigint": {
           return `${value}n`;
@@ -108,7 +127,9 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort();
+      const keys = this.sort(Object.keys(object), (a, b) =>
+        a < b ? -1 : a > b ? 1 : 0,
+      );
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -133,13 +154,13 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
+      const sortedEntries = this.sort(Array.from(entries), (a, b) =>
         this.compare(a[0], b[0]),
       );
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
-        content += `${this.serialize(key, true)}:${this.serialize(value)}`;
+        content += `${typeof key === "string" ? key : this.serialize(key)}:${this.serialize(value)}`;
         if (i < sortedEntries.length - 1) {
           content += ",";
         }
@@ -193,7 +214,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Set(set: Set<any>) {
-      return `Set${this.$Array(Array.from(set).sort((a, b) => this.compare(a, b)))}`;
+      return `Set${this.$Array(this.sort(Array.from(set), (a, b) => this.compare(a, b)))}`;
     }
 
     $Map(map: Map<any, any>) {

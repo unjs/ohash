@@ -12,6 +12,7 @@ export default unjs({
   "numeric-separators-style": 0,
   "unicorn/prefer-code-point": 0,
   "unicorn/prefer-ternary": 0,
-  "unicorn/prefer-spread": 0
+  "unicorn/prefer-spread": 0,
+  "unicorn/no-nested-ternary": 0
 },
 });
