@@ -27,6 +27,7 @@ type Version = {
 };
 
 export function benchVersion(version: Version, fn: () => any) {
+  fn(); // Warmup
   bench(version.name, fn)
     .baseline(version.baseline)
     .highlight(version.baseline ? "cyan" : undefined);
