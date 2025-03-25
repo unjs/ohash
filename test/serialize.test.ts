@@ -13,7 +13,7 @@ describe("serialize", () => {
       );
     });
 
-    it("date", () => {
+    it("Date", () => {
       expect(serialize(new Date(0))).toMatchInlineSnapshot(
         `"Date(1970-01-01T00:00:00.000Z)"`,
       );
@@ -77,7 +77,7 @@ describe("serialize", () => {
       );
     });
 
-    it("set", () => {
+    it("Set", () => {
       expect(serialize(new Set([1, 2, 3]))).toMatchInlineSnapshot(
         `"Set[1,2,3]"`,
       );
@@ -89,7 +89,7 @@ describe("serialize", () => {
       );
     });
 
-    it("map", () => {
+    it("Map", () => {
       const map = new Map();
       map.set(1, 4);
       map.set(2, 3);
@@ -103,8 +103,8 @@ describe("serialize", () => {
     });
   });
 
-  describe("array", () => {
-    it("array", () => {
+  describe("arrays", () => {
+    it("Array", () => {
       expect(serialize([1, 2, "x", 3])).toMatchInlineSnapshot(`"[1,2,'x',3]"`);
       expect(serialize([2, 3, "x", 1])).toMatchInlineSnapshot(`"[2,3,'x',1]"`);
     });
@@ -175,13 +175,13 @@ describe("serialize", () => {
       );
     });
 
-    it("Empty BigInt64Array", () => {
+    it("empty BigInt64Array", () => {
       expect(serialize(new BigInt64Array([]))).toMatchInlineSnapshot(
         `"BigInt64Array[]"`,
       );
     });
 
-    it("Empty BigUint64Array", () => {
+    it("empty BigUint64Array", () => {
       expect(serialize(new BigUint64Array([]))).toMatchInlineSnapshot(
         `"BigUint64Array[]"`,
       );
@@ -278,6 +278,13 @@ describe("serialize", () => {
       expect(serialize(form)).toMatchInlineSnapshot(
         `"FormData{bar:'baz',foo:'bar'}"`,
       );
+
+      const params = new URLSearchParams();
+      params.set("foo", "bar");
+      params.set("bar", "baz");
+      expect(serialize(params)).toMatchInlineSnapshot(
+        `"URLSearchParams{bar:'baz',foo:'bar'}"`,
+      );
     });
   });
 
@@ -302,10 +309,56 @@ describe("serialize", () => {
   });
 
   describe("not supported", () => {
-    it("blob", () => {
+    it("Blob", () => {
       expect(() =>
         serialize(new Blob(["x"])),
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Blob]`);
+    });
+
+    it("WeakMap", () => {
+      expect(() => serialize(new WeakMap())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize WeakMap]`,
+      );
+    });
+
+    it("WeakSet", () => {
+      expect(() => serialize(new WeakSet())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize WeakSet]`,
+      );
+    });
+
+    it.runIf(typeof WeakRef !== "undefined")("WeakRef", () => {
+      expect(() =>
+        serialize(new WeakRef({})),
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize WeakRef]`);
+    });
+
+    const generator = function* () {
+      yield 1;
+    };
+
+    it("Generator", () => {
+      expect(() => serialize(generator())).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize Generator]`,
+      );
+    });
+
+    const asyncGenerator = async function* () {
+      yield 1;
+    };
+
+    it("AsyncGenerator", () => {
+      expect(() =>
+        serialize(asyncGenerator()),
+      ).toThrowErrorMatchingInlineSnapshot(
+        `[Error: Cannot serialize AsyncGenerator]`,
+      );
+    });
+
+    it("Promise", () => {
+      expect(() =>
+        serialize(new Promise(() => {})),
+      ).toThrowErrorMatchingInlineSnapshot(`[Error: Cannot serialize Promise]`);
     });
   });
 
@@ -477,6 +530,15 @@ describe("Object.prototype.toString issues", () => {
     form.set("bar", "baz");
     expect(serialize(form)).toMatchInlineSnapshot(
       `"FormData{bar:'baz',foo:'bar'}"`,
+    );
+  });
+
+  it("URLSearchParams", () => {
+    const form = new URLSearchParams();
+    form.set("foo", "bar");
+    form.set("bar", "baz");
+    expect(serialize(form)).toMatchInlineSnapshot(
+      `"URLSearchParams{bar:'baz',foo:'bar'}"`,
     );
   });
 });

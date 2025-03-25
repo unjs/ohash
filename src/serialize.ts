@@ -97,7 +97,7 @@ const Serializer = /*@__PURE__*/ (function () {
       if (objName !== "" && globalThis[objName] === constructor) {
         return this.serializeBuiltInType(objName, object);
       }
-      if (typeof object.toJSON === "function") {
+      if ("toJSON" in object && typeof object.toJSON === "function") {
         const json = object.toJSON();
         return (
           objName +
@@ -106,7 +106,17 @@ const Serializer = /*@__PURE__*/ (function () {
             : `(${this.serialize(json)})`)
         );
       }
-      return this.serializeObjectEntries(objName, Object.entries(object));
+
+      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
+      let content = `${objName}{`;
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        content += `${key}:${this.serialize(object[key])}`;
+        if (i < keys.length - 1) {
+          content += ",";
+        }
+      }
+      return content + "}";
     }
 
     serializeBuiltInType(type: string, object: any) {
@@ -115,8 +125,8 @@ const Serializer = /*@__PURE__*/ (function () {
       if (handler) {
         return handler.call(this, object);
       }
-      if (typeof object?.entries === "function") {
-        return this.serializeObjectEntries(type, Array.from(object.entries()));
+      if (typeof object.entries === "function") {
+        return this.serializeObjectEntries(type, object.entries());
       }
       if ("outerHTML" in object) {
         return `${type}(${object.outerHTML})`;
@@ -124,8 +134,10 @@ const Serializer = /*@__PURE__*/ (function () {
       throw new Error(`Cannot serialize ${type}`);
     }
 
-    serializeObjectEntries(type: string, entries: Array<[any, any]>) {
-      const sortedEntries = entries.sort((a, b) => this.compare(a[0], b[0]));
+    serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
+      const sortedEntries = Array.from(entries).sort((a, b) =>
+        this.compare(a[0], b[0]),
+      );
       let content = `${type}{`;
       for (let i = 0; i < sortedEntries.length; i++) {
         const [key, value] = sortedEntries[i];
@@ -187,7 +199,7 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     $Map(map: Map<any, any>) {
-      return this.serializeObjectEntries("Map", Array.from(map.entries()));
+      return this.serializeObjectEntries("Map", map.entries());
     }
 
     $HTMLCollection(collection: HTMLCollection) {
