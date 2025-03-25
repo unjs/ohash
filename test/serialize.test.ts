@@ -204,7 +204,10 @@ describe("serialize", () => {
     it("object", () => {
       expect(serialize({ a: 1, b: 2 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
       expect(serialize({ b: 2, a: 1 })).toMatchInlineSnapshot(`"{a:1,b:2}"`);
-      expect(serialize(Object.create(null))).toBe("{}");
+      expect(serialize(Object.create(null))).toMatchInlineSnapshot(`"{}"`);
+      expect(serialize({ outerHTML: "foo" })).toMatchInlineSnapshot(
+        `"{outerHTML:'foo'}"`,
+      );
     });
 
     it("symbol key", () => {
