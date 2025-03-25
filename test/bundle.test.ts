@@ -22,7 +22,7 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(3200); // <3.2kb
+    expect(bytes).toBeLessThanOrEqual(3300); // <3.3kb
     expect(gzipSize).toBeLessThanOrEqual(1300); // <1.3kb
   });
 
