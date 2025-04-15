@@ -1,4 +1,4 @@
-import { SHA256 } from "./sha256";
+import { SHA256 } from "./_core";
 
 /**
  * Hashes a string using the SHA-256 algorithm and encodes it in Base64URL format.
