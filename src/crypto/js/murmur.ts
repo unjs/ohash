@@ -5,7 +5,7 @@
  * @param {number} seed Positive integer only
  * @return {number} 32-bit positive integer hash
  */
-export function murmurHash(key: Uint8Array | string, seed = 0) {
+export function murmurHash(key: Uint8Array | string, seed: number = 0): number {
   if (typeof key === "string") {
     key = createBuffer(key);
   }
