@@ -264,6 +264,6 @@ class WordArray {
  * @param {string} message - The message to hash.
  * @returns {string} The message hash as a hexadecimal string.
  */
-export function sha256(message: string) {
+export function sha256(message: string): string {
   return new SHA256().finalize(message).toHex();
 }
