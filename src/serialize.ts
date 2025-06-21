@@ -128,6 +128,9 @@ const Serializer = /*@__PURE__*/ (function () {
       if (typeof object.entries === "function") {
         return this.serializeObjectEntries(type, object.entries());
       }
+      if ("outerHTML" in object) {
+        return `${type}(${object.outerHTML})`;
+      }
       throw new Error(`Cannot serialize ${type}`);
     }
 
@@ -198,6 +201,34 @@ const Serializer = /*@__PURE__*/ (function () {
     $Map(map: Map<any, any>) {
       return this.serializeObjectEntries("Map", map.entries());
     }
+
+    $HTMLCollection(collection: HTMLCollection) {
+      return `HTMLCollection${this.$Array(Array.from(collection))}`;
+    }
+
+    $NodeList(nodeList: NodeList) {
+      return `NodeList${this.$Array(Array.from(nodeList.values()))}`;
+    }
+
+    $Range(range: Range) {
+      return `Range(${this.serialize(range.startContainer)}:${range.startOffset},${this.serialize(range.endContainer)}:${range.endOffset})`;
+    }
+  }
+
+  for (const type of ["Comment", "Text"] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (el: Comment | Text) {
+      return `${type}('${el.textContent}')`;
+    };
+  }
+
+  for (const type of ["DocumentFragment", "HTMLDocument"] as const) {
+    // @ts-ignore
+    Serializer.prototype["$" + type] = function (
+      doc: Document | DocumentFragment,
+    ) {
+      return `${type}${this.$Array(Array.from(doc.childNodes.values()))}`;
+    };
   }
 
   for (const type of ["Error", "RegExp", "URL"] as const) {
