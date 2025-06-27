@@ -134,6 +134,19 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
+## `murmurHash(str)`
+
+Converts input string (of any length) into a 32-bit positive integer using [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash).
+
+Usage:
+
+```js
+import { murmurHash } from "ohash/murmur";
+
+// "427197390"
+console.log(murmurHash("Hello World"));
+```
+
 ## Contribute
 
 - Clone this repository
@@ -148,3 +161,6 @@ Made with 💛 Published under [MIT License](./LICENSE).
 Object serialization originally based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/).
 
 sha256 implementation originally based on [brix/crypto-js](https://github.com/brix/crypto-js).
+
+MurmurHash implementation based on [perezd/node-murmurhash](https://github.com/perezd/node-murmurhash) and
+[garycourt/murmurhash-js](https://github.com/garycourt/murmurhash-js) by [Gary Court](mailto:gary.court@gmail.com) and [Austin Appleby](mailto:aappleby@gmail.com).
