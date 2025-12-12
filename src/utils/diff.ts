@@ -43,7 +43,7 @@ function _diff(h1: DiffHashedObject, h2: DiffHashedObject): DiffEntry[] {
 }
 
 function _toHashedObject(obj: any, key = ""): DiffHashedObject {
-  if (obj && typeof obj !== "object") {
+  if (obj != null && typeof obj !== "object") {
     return new DiffHashedObject(key, obj, serialize(obj));
   }
   const props: Record<string, DiffHashedObject> = {};

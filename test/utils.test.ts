@@ -23,6 +23,9 @@ describe("diff", () => {
   const createObject = () =>
     ({
       foo: "bar",
+      boolean: false,
+      u: undefined,
+      n: null,
       nested: {
         // x: undefined,
         y: 123,
@@ -39,9 +42,15 @@ describe("diff", () => {
     obj2.nested.x = 123;
     delete obj2.nested.y;
     obj2.nested.bar.baz = 123;
+    obj2.boolean = true;
+    obj2.u = true;
+    obj2.n = true;
 
     expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
       [
+        "Changed \`boolean\` from \`false\` to \`true\`",
+        "Changed \`u\` from \`{}\` to \`true\`",
+        "Changed \`n\` from \`{}\` to \`true\`",
         "Removed \`nested.y\`",
         "Changed \`nested.bar.baz\` from \`"123"\` to \`123\`",
         "Added   \`nested.x\`",
