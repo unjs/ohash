@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { serialize } from "../src";
 
 describe("serialize", () => {
@@ -491,6 +491,38 @@ describe("serialize", () => {
 
       expect(serialize(refs)).toMatchInlineSnapshot(`"${serialize(simple)}"`);
     });
+  });
+});
+
+describe("locale independence", () => {
+  const originalLocaleCompare = String.prototype.localeCompare;
+
+  function mockLocale(locale: string) {
+    vi.spyOn(String.prototype, "localeCompare").mockImplementation(function (
+      this: string,
+      other: string,
+    ) {
+      return originalLocaleCompare.call(this, other, locale);
+    });
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("should produce consistent key ordering across locales", () => {
+    const obj = { checkin: 1, destination: 2 };
+
+    // standard lexicographic order
+    mockLocale("en");
+    const serializedEn = serialize(obj);
+    vi.restoreAllMocks();
+
+    // `ch` is a digraph sorting after `d`
+    mockLocale("sk");
+    const serializedSk = serialize(obj);
+
+    expect(serializedEn).toBe(serializedSk);
   });
 });
 
