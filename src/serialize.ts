@@ -39,17 +39,16 @@ const Serializer = /*@__PURE__*/ (function () {
       const typeB = typeof b;
 
       if (typeA === "string" && typeB === "string") {
-        return a.localeCompare(b);
+        return a < b ? -1 : (a > b ? 1 : 0);
       }
 
       if (typeA === "number" && typeB === "number") {
         return a - b;
       }
 
-      return String.prototype.localeCompare.call(
-        this.serialize(a, true),
-        this.serialize(b, true),
-      );
+      const sa = this.serialize(a, true);
+      const sb = this.serialize(b, true);
+      return sa < sb ? -1 : (sa > sb ? 1 : 0);
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -107,7 +106,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
+      const keys = Object.keys(object).sort((a, b) => a < b ? -1 : (a > b ? 1 : 0));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
