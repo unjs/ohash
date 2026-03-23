@@ -39,7 +39,7 @@ const Serializer = /*@__PURE__*/ (function () {
       const typeB = typeof b;
 
       if (typeA === "string" && typeB === "string") {
-        return a < b ? -1 : a > b ? 1 : 0;
+        return a < b ? -1 : (a > b ? 1 : 0);
       }
 
       if (typeA === "number" && typeB === "number") {
@@ -48,7 +48,7 @@ const Serializer = /*@__PURE__*/ (function () {
 
       const sa = this.serialize(a, true);
       const sb = this.serialize(b, true);
-      return sa < sb ? -1 : sa > sb ? 1 : 0;
+      return sa < sb ? -1 : (sa > sb ? 1 : 0);
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -106,7 +106,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+      const keys = Object.keys(object).sort((a, b) => a < b ? -1 : (a > b ? 1 : 0));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
