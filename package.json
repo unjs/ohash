@@ -47,7 +47,7 @@
     "automd": "^0.4.3",
     "changelogen": "^0.6.2",
     "esbuild": "^0.27.4",
-    "eslint": "^9.39.4",
+    "eslint": "^10.1.0",
     "eslint-config-unjs": "^0.6.2",
     "mitata": "^1.0.34",
     "prettier": "^3.8.1",
