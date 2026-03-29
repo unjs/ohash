@@ -24,6 +24,16 @@
         "types": "./dist/crypto/js/index.d.mts",
         "default": "./dist/crypto/js/index.mjs"
       }
+    },
+    "./sha256": {
+      "node": {
+        "types": "./dist/crypto/node/sha256.d.mts",
+        "default": "./dist/crypto/node/sha256.mjs"
+      },
+      "default": {
+        "types": "./dist/crypto/js/sha256.d.mts",
+        "default": "./dist/crypto/js/sha256.mjs"
+      }
     }
   },
   "types": "./dist/index.d.mts",

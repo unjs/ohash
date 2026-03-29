@@ -134,6 +134,17 @@ const diff = diff(obj1, obj2);
 console.log(diff(obj1, obj2));
 ```
 
+## `sha256(str)`
+
+Hashes a string using the [SHA-256](https://en.wikipedia.org/wiki/SHA-2) algorithm and encodes it in a hexadecimal string format.
+
+```js
+import { sha256 } from "ohash/sha256";
+
+// "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
+console.log(sha256("Hello World"));
+```
+
 ## Contribute
 
 - Clone this repository
