@@ -24,6 +24,10 @@
         "types": "./dist/crypto/js/index.d.mts",
         "default": "./dist/crypto/js/index.mjs"
       }
+    },
+    "./murmur": {
+      "types": "./dist/crypto/js/murmur.d.mts",
+      "default": "./dist/crypto/js/murmur.mjs"
     }
   },
   "types": "./dist/index.d.mts",

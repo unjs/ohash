@@ -1,6 +1,6 @@
-import { defineBuildConfig } from "unbuild";
 import { transform } from "esbuild";
 import { rm } from "node:fs/promises";
+import { defineBuildConfig } from "unbuild";
 
 export default defineBuildConfig({
   hooks: {
@@ -21,6 +21,7 @@ export default defineBuildConfig({
     async "build:done"() {
       await rm("dist/index.d.ts");
       await rm("dist/crypto/js/index.d.ts");
+      await rm("dist/crypto/js/murmur.d.ts");
       await rm("dist/crypto/node/index.d.ts");
     },
   },
