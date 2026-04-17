@@ -8,14 +8,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs"
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      }
     },
     "./utils": {
-      "import": "./dist/utils.mjs",
-      "types": "./dist/utils.d.ts",
-      "require": "./dist/utils.cjs"
+      "import": {
+        "default": "./dist/utils.mjs",
+        "types": "./dist/utils.d.ts"
+      },
+      "require": {
+        "default": "./dist/utils.cjs",
+        "types": "./dist/utils.d.cts"
+      }
     }
   },
   "main": "./dist/index.cjs",
