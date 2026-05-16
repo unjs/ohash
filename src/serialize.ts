@@ -39,7 +39,7 @@ const Serializer = /*@__PURE__*/ (function () {
       const typeB = typeof b;
 
       if (typeA === "string" && typeB === "string") {
-        return a.localeCompare(b);
+        return a.localeCompare(b, "en");
       }
 
       if (typeA === "number" && typeB === "number") {
@@ -49,6 +49,7 @@ const Serializer = /*@__PURE__*/ (function () {
       return String.prototype.localeCompare.call(
         this.serialize(a, true),
         this.serialize(b, true),
+        "en",
       );
     }
 
