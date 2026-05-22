@@ -7,23 +7,11 @@
   "sideEffects": false,
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
-    },
-    "./utils": {
-      "types": "./dist/utils/index.d.mts",
-      "default": "./dist/utils/index.mjs"
-    },
+    ".": "./dist/index.mjs",
+    "./utils": "./dist/utils/index.mjs",
     "./crypto": {
-      "node": {
-        "types": "./dist/crypto/node/index.d.mts",
-        "default": "./dist/crypto/node/index.mjs"
-      },
-      "default": {
-        "types": "./dist/crypto/js/index.d.mts",
-        "default": "./dist/crypto/js/index.mjs"
-      }
+      "node": "./dist/crypto/node/index.mjs",
+      "default": "./dist/crypto/js/index.mjs"
     }
   },
   "types": "./dist/index.d.mts",
@@ -32,7 +20,7 @@
   ],
   "scripts": {
     "bench": "vitest bench",
-    "build": "unbuild",
+    "build": "obuild",
     "dev": "vitest dev",
     "lint": "eslint . && prettier -c src test",
     "lint:fix": "automd && eslint --fix . && prettier -w src test",
@@ -50,9 +38,9 @@
     "eslint": "^10.4.0",
     "eslint-config-unjs": "^0.6.2",
     "mitata": "^1.0.34",
+    "obuild": "^0.4.36",
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
-    "unbuild": "^3.6.1",
     "vitest": "^4.1.7"
   },
   "packageManager": "pnpm@11.2.2"
