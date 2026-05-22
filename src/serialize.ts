@@ -108,7 +108,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
+      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b, "en"));
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
