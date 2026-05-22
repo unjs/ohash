@@ -494,6 +494,57 @@ describe("serialize", () => {
   });
 });
 
+describe("locale-independent key sorting", () => {
+  let originalLocaleCompare: typeof String.prototype.localeCompare;
+  let calls: Array<{ locale: unknown }>;
+
+  beforeEach(() => {
+    originalLocaleCompare = String.prototype.localeCompare;
+    calls = [];
+    // eslint-disable-next-line no-extend-native
+    String.prototype.localeCompare = function (
+      that: string,
+      locales?: string | string[],
+      options?: Intl.CollatorOptions,
+    ) {
+      calls.push({ locale: locales });
+      return originalLocaleCompare.call(this, that, locales, options);
+    };
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line no-extend-native
+    String.prototype.localeCompare = originalLocaleCompare;
+  });
+
+  it("sorts plain object keys with explicit 'en' locale", () => {
+    serialize({ b: 1, a: 2, ch: 3, c: 4 });
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(c.locale).toBe("en");
+    }
+  });
+
+  it("compares Set members with explicit 'en' locale", () => {
+    serialize(new Set(["b", "a", "ch", "c"]));
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(c.locale).toBe("en");
+    }
+  });
+
+  it("compares mixed-type Map keys with explicit 'en' locale", () => {
+    const map = new Map<any, any>();
+    map.set({ a: 1 }, "x");
+    map.set("a", "y");
+    serialize(map);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(c.locale).toBe("en");
+    }
+  });
+});
+
 // https://github.com/cloudflare/workerd/issues/3641
 describe("Object.prototype.toString issues", () => {
   let originalToString: any;
