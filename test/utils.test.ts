@@ -48,4 +48,24 @@ describe("diff", () => {
       ]
     `);
   });
+
+  it("regression: false value should not render as {} in diff", () => {
+    const obj1 = { a: false };
+    const obj2 = { a: true };
+    expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
+      [
+        "Changed \`a\` from \`false\` to \`true\`",
+      ]
+    `);
+  });
+
+  it("regression: zero value should not be treated as empty", () => {
+    const obj1 = { a: 0 };
+    const obj2 = { a: 1 };
+    expect(diff(obj1, obj2)).toMatchInlineSnapshot(`
+      [
+        "Changed \`a\` from \`0\` to \`1\`",
+      ]
+    `);
+  });
 });
