@@ -53,8 +53,8 @@ function _diff(v1: any, v2: any, key: string): DiffEntry[] {
       const childKey = key ? `${key}.${k}` : k;
       if (has1 && has2) {
         const sub = _diff(v1[k], v2[k], childKey);
-        for (let i = 0; i < sub.length; i++) {
-          diffs.push(sub[i]);
+        for (const element_ of sub) {
+          diffs.push(element_);
         }
       } else if (has1) {
         diffs.push(
