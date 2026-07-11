@@ -5,7 +5,6 @@ import { serialize } from "../serialize";
  *
  * @param {any} obj1 - The first object to compare.
  * @param {any} obj2 - The second object to compare.
- * @param {HashOptions} [opts={}] - Configuration options for hashing the objects. See {@link HashOptions}.
  * @returns {DiffEntry[]} An array with the differences between the two objects.
  */
 export function diff(obj1: any, obj2: any): DiffEntry[] {

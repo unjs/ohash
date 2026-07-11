@@ -126,12 +126,12 @@ obj2.nested.x = 123;
 delete obj2.nested.y;
 obj2.nested.bar.baz = 123;
 
-const diff = diff(obj1, obj2);
+const changes = diff(obj1, obj2);
 
-// [-] Removed nested.y
-// [~] Changed nested.bar.baz from "123" to 123
-// [+] Added   nested.x
-console.log(diff(obj1, obj2));
+// Removed `nested.y`
+// Changed `nested.bar.baz` from `"123"` to `123`
+// Added   `nested.x`
+console.log(changes.join("\n"));
 ```
 
 ## Contribute
