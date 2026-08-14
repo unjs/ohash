@@ -48,4 +48,17 @@ describe("diff", () => {
       ]
     `);
   });
+
+  it("formats falsy primitive changes", () => {
+    expect(diff(true, false)).toMatchInlineSnapshot(`
+      [
+        "Changed \`\` from \`true\` to \`false\`",
+      ]
+    `);
+    expect(diff("value", null)).toMatchInlineSnapshot(`
+      [
+        "Changed \`\` from \`"value"\` to \`null\`",
+      ]
+    `);
+  });
 });
