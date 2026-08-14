@@ -30,6 +30,63 @@ export function serialize(input: any): string {
   return new Serializer().serialize(input);
 }
 
+// Sort weights of printable ASCII, matching the order previously produced by
+// `localeCompare` (identical in every ICU locale, verified in tests below).
+// Uppercase letters share the weight of their lowercase counterpart and are
+// only used as a tie-breaker, as collation does.
+const asciiOrder =
+  " _-,;:!?.'\"()[]{}@*/\\&#%`^+<=>|~$0123456789abcdefghijklmnopqrstuvwxyz";
+const asciiWeights = /*@__PURE__*/ (function () {
+  const weights = new Uint8Array(128);
+  for (let i = 0; i < asciiOrder.length; i++) {
+    weights[asciiOrder.charCodeAt(i)] = i + 1;
+  }
+  for (let code = 65 /* A */; code <= 90 /* Z */; code++) {
+    weights[code] = weights[code + 32];
+  }
+  return weights;
+})();
+
+/**
+ * Compares two strings in a stable, environment independent way.
+ *
+ * `localeCompare` is not used as its result depends on the environment locale
+ * (in Slovak, for example, `ch` is a single letter sorted after `h`) and on the
+ * ICU data the runtime was built with.
+ *
+ * Printable ASCII keeps the collation order to avoid needlessly changing hashes,
+ * anything else is compared by UTF-16 code units.
+ */
+function compareStrings(a: string, b: string): number {
+  if (a === b) {
+    return 0;
+  }
+  const length = Math.min(a.length, b.length);
+  let tieBreaker = 0;
+  for (let i = 0; i < length; i++) {
+    const codeA = a.charCodeAt(i);
+    const codeB = b.charCodeAt(i);
+    if (codeA === codeB) {
+      continue;
+    }
+    // Non-ASCII (and control characters) sort after ASCII, by code unit
+    const weightA =
+      codeA < 128 && asciiWeights[codeA] ? asciiWeights[codeA] : codeA + 128;
+    const weightB =
+      codeB < 128 && asciiWeights[codeB] ? asciiWeights[codeB] : codeB + 128;
+    if (weightA !== weightB) {
+      return weightA < weightB ? -1 : 1;
+    }
+    if (tieBreaker === 0) {
+      tieBreaker = codeA > codeB ? -1 : 1; // lowercase before uppercase
+    }
+  }
+  if (a.length !== b.length) {
+    return a.length < b.length ? -1 : 1;
+  }
+  return tieBreaker;
+}
+
 const Serializer = /*@__PURE__*/ (function () {
   class Serializer {
     #context = new Map();
@@ -39,17 +96,14 @@ const Serializer = /*@__PURE__*/ (function () {
       const typeB = typeof b;
 
       if (typeA === "string" && typeB === "string") {
-        return a.localeCompare(b);
+        return compareStrings(a, b);
       }
 
       if (typeA === "number" && typeB === "number") {
         return a - b;
       }
 
-      return String.prototype.localeCompare.call(
-        this.serialize(a, true),
-        this.serialize(b, true),
-      );
+      return compareStrings(this.serialize(a, true), this.serialize(b, true));
     }
 
     serialize(value: any, noQuotes?: boolean): string {
@@ -107,7 +161,7 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const keys = Object.keys(object).sort((a, b) => a.localeCompare(b));
+      const keys = Object.keys(object).sort(compareStrings);
       let content = `${objName}{`;
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
