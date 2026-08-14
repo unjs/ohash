@@ -38,10 +38,10 @@ function _diff(v1: any, v2: any, key: string, out: DiffEntry[]): void {
     return;
   }
 
-  // Objects, arrays, `null` and falsy primitives are treated as "containers"
-  // (enumerated via `for..in`); only truthy primitives are leaves.
-  const leaf1 = v1 ? typeof v1 !== "object" : false;
-  const leaf2 = v2 ? typeof v2 !== "object" : false;
+  // Only non-null objects and arrays are "containers" (enumerated via
+  // `for..in`); every primitive is a leaf, including falsy ones and `null`.
+  const leaf1 = v1 === null || typeof v1 !== "object";
+  const leaf2 = v2 === null || typeof v2 !== "object";
 
   if (!leaf1 && !leaf2) {
     // Each value is read inside the same `for..in` pass that yields its key.
@@ -138,7 +138,7 @@ function _emptyOrLeafNode(
 }
 
 function _toHashedObject(obj: any, key = ""): DiffHashedObject {
-  if (obj && typeof obj !== "object") {
+  if (obj === null || typeof obj !== "object") {
     return new DiffHashedObject(key, obj, _leafHash(obj));
   }
   // A null-prototype record so that a key colliding with an `Object.prototype`

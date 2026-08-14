@@ -140,4 +140,17 @@ describe("diff", () => {
     // A leaf against a NON-empty container yields nothing.
     expect(diff({ a: 1 }, { a: { b: 2 } })).toEqual([]);
   });
+
+  it("formats falsy primitive changes", () => {
+    expect(diff(true, false)).toMatchInlineSnapshot(`
+      [
+        "Changed \`\` from \`true\` to \`false\`",
+      ]
+    `);
+    expect(diff("value", null)).toMatchInlineSnapshot(`
+      [
+        "Changed \`\` from \`"value"\` to \`null\`",
+      ]
+    `);
+  });
 });
