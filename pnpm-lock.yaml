@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@types/node':
-        specifier: ^26
+        specifier: ^26.2.0
         version: 26.2.0
       '@vitest/coverage-v8':
         specifier: ^4.1.10
@@ -39,7 +39,7 @@ importers:
         specifier: ^3.9.6
         version: 3.9.6
       typescript:
-        specifier: ^6
+        specifier: ^6.0.3
         version: 6.0.3
       vitest:
         specifier: ^4.1.10

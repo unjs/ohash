@@ -30,7 +30,7 @@
     "test:types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^26",
+    "@types/node": "^26.2.0",
     "@vitest/coverage-v8": "^4.1.10",
     "automd": "^0.4.3",
     "changelogen": "^0.6.2",
@@ -40,8 +40,8 @@
     "mitata": "^1.0.34",
     "obuild": "^0.4.38",
     "prettier": "^3.9.6",
-    "typescript": "^6",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.10"
   },
-  "packageManager": "pnpm@11.2.2"
+  "packageManager": "pnpm@11.21.0"
 }
