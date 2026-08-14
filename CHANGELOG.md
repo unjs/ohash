@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v2.0.12
+
+[compare changes](https://github.com/unjs/ohash/compare/v2.0.11...v2.0.12)
+
+### 🔥 Performance
+
+- **serialize:** Faster object entries serialization ([#140](https://github.com/unjs/ohash/pull/140))
+- **serialize:** Faster serialization of objects and classes ([#141](https://github.com/unjs/ohash/pull/141))
+- **diff:** Fused single-pass traversal ([#195](https://github.com/unjs/ohash/pull/195))
+
+### 🩹 Fixes
+
+- **serialize:** Compare strings without localeCompare ([1d9402e](https://github.com/unjs/ohash/commit/1d9402e))
+- **utils:** Diff falsy primitive values ([#196](https://github.com/unjs/ohash/pull/196))
+
+### 📖 Documentation
+
+- Fixed important callout in README ([#143](https://github.com/unjs/ohash/pull/143))
+- Fix diff example and document v1 objectHash migration ([#200](https://github.com/unjs/ohash/pull/200))
+- Fix diff usage example and stale opts param ([#197](https://github.com/unjs/ohash/pull/197))
+
+### 📦 Build
+
+- Migrate to obuild ([2c6e231](https://github.com/unjs/ohash/commit/2c6e231))
+
+### 🏡 Chore
+
+- Update deps ([cca6f7a](https://github.com/unjs/ohash/commit/cca6f7a))
+- Update deps ([54966f0](https://github.com/unjs/ohash/commit/54966f0))
+- Fix release script ([9699452](https://github.com/unjs/ohash/commit/9699452))
+
+### ✅ Tests
+
+- **serialize:** Added tests for more built-in types ([#146](https://github.com/unjs/ohash/pull/146))
+
+### ❤️ Contributors
+
+- Pooya Parsa ([@pi0](https://github.com/pi0))
+- Sueun Cho ([@sueun-dev](https://github.com/sueun-dev))
+- Mochammad Fadhlan Al-Ghiffari ([@MFA-G](https://github.com/MFA-G))
+- Vittorio Esposito <esposito.vittorio@rocketmail.com>
+- Balázs Németh ([@zsilbi](https://github.com/zsilbi))
+- Matt Hamlin ([@hamlim](https://github.com/hamlim))
+
 ## v2.0.11
 
 [compare changes](https://github.com/unjs/ohash/compare/v2.0.10...v2.0.11)
