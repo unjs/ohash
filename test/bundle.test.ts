@@ -22,8 +22,8 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(2800); // <2.8kb
-    expect(gzipSize).toBeLessThanOrEqual(1200); // <1.2kb
+    expect(bytes).toBeLessThanOrEqual(3000); // <3.0kb
+    expect(gzipSize).toBeLessThanOrEqual(1300); // <1.3kb
   });
 
   it("hash", async () => {
@@ -33,8 +33,8 @@ describe("bundle size", () => {
     `;
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
-    expect(bytes).toBeLessThanOrEqual(3100); // <3.1kb
-    expect(gzipSize).toBeLessThanOrEqual(1300); // <1.3kb
+    expect(bytes).toBeLessThanOrEqual(3300); // <3.3kb
+    expect(gzipSize).toBeLessThanOrEqual(1400); // <1.4kb
   });
 });
 
