@@ -36,6 +36,17 @@ describe("bundle size", () => {
     expect(bytes).toBeLessThanOrEqual(3500); // <3.5kb
     expect(gzipSize).toBeLessThanOrEqual(1550); // <1.55kb
   });
+
+  it("diff", async () => {
+    const code = /* js */ `
+      import { diff } from "../src/utils";
+      diff({}, {})
+    `;
+    const { bytes, gzipSize } = await getBundleSize(code);
+    // console.log({ bytes, gzipSize });
+    expect(bytes).toBeLessThanOrEqual(5000); // <5kb
+    expect(gzipSize).toBeLessThanOrEqual(2100); // <2.1kb
+  });
 });
 
 async function getBundleSize(code: string) {
