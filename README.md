@@ -128,10 +128,10 @@ obj2.nested.bar.baz = 123;
 
 const changes = diff(obj1, obj2);
 
-// [-] Removed nested.y
-// [~] Changed nested.bar.baz from "123" to 123
-// [+] Added   nested.x
-console.log(changes);
+// Removed `nested.y`
+// Changed `nested.bar.baz` from `"123"` to `123`
+// Added   `nested.x`
+console.log(changes.join("\n"));
 ```
 
 ## Contribute
