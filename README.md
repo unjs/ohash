@@ -12,7 +12,7 @@
 Simple object hashing, serialization and comparison utils.
 
 > [!NOTE]
-> You are on active v2 development branch. Check [v1](https://github.com/unjs/ohash/tree/v1) for old ohash v1 docs and [release notes](https://github.com/unjs/ohash/releases/tag/v2.0.1) for migration.
+> ohash v2 is the current release. For the previous API, see the [v1 branch](https://github.com/unjs/ohash/tree/v1) and the [v2.0.1 release notes](https://github.com/unjs/ohash/releases/tag/v2.0.1) for migration.
 
 ## Usage
 
@@ -148,3 +148,12 @@ Made with 💛 Published under [MIT License](./LICENSE).
 Object serialization originally based on [puleos/object-hash](https://github.com/puleos/object-hash) by [Scott Puleo](https://github.com/puleos/).
 
 sha256 implementation originally based on [brix/crypto-js](https://github.com/brix/crypto-js).
+
+## Migration from v1
+
+| v1 | v2 |
+| --- | --- |
+| `objectHash(value)` (stable digest string like `object:1:string:3:foo:...`) | `serialize(value)` for a stable string, or `hash(value)` for a SHA-256 hash |
+| `hash(value)` | Still `hash(value)` (implementation changed; output format differs) |
+
+There is no v2 helper that reproduces the exact v1 `objectHash` string format. Use `serialize` when you need a stable structural string, and `hash` when you need a short digest.

@@ -494,6 +494,109 @@ describe("serialize", () => {
   });
 });
 
+// https://github.com/unjs/ohash/issues/177
+describe("locale independence", () => {
+  const nativeLocaleCompare = String.prototype.localeCompare;
+
+  afterEach(() => {
+    String.prototype.localeCompare = nativeLocaleCompare;
+  });
+
+  // In Slovak, the digraph `ch` is a distinct letter sorted after `h`
+  const useSlovakLocale = () => {
+    String.prototype.localeCompare = function (this: string, that: string) {
+      return nativeLocaleCompare.call(this, that, "sk");
+    };
+  };
+
+  it("sorts object keys independently of the locale", () => {
+    useSlovakLocale();
+    expect(serialize({ destination: "bar", checkIn: "foo" })).toBe(
+      "{checkIn:'foo',destination:'bar'}",
+    );
+  });
+
+  it("sorts Set entries independently of the locale", () => {
+    useSlovakLocale();
+    expect(serialize(new Set(["destination", "checkIn"]))).toBe(
+      "Set['checkIn','destination']",
+    );
+  });
+
+  it("sorts Map keys independently of the locale", () => {
+    useSlovakLocale();
+    const map = new Map<any, any>([
+      ["destination", "bar"],
+      ["checkIn", "foo"],
+      [{ destination: 1 }, 1],
+      [{ checkIn: 1 }, 2],
+    ]);
+    expect(serialize(map)).toBe(
+      "Map{{checkIn:1}:2,{destination:1}:1,checkIn:'foo',destination:'bar'}",
+    );
+  });
+
+  it("never uses locale-sensitive comparison", () => {
+    String.prototype.localeCompare = () => {
+      throw new Error("localeCompare is locale-dependent and must not be used");
+    };
+    expect(serialize({ destination: "bar", checkIn: "foo" })).toBe(
+      "{checkIn:'foo',destination:'bar'}",
+    );
+    expect(serialize(new Set(["destination", "checkIn", 1, { a: 1 }]))).toBe(
+      "Set[{a:1},1,'checkIn','destination']",
+    );
+    expect(serialize(new Map([["destination", 1] as const]))).toBe(
+      "Map{destination:1}",
+    );
+  });
+
+  // Sorting stays backward compatible for printable ASCII,
+  // so hashes of existing payloads do not change.
+  const expectCollationOrder = (keys: string[]) => {
+    const object = Object.fromEntries(keys.map((key) => [key, 0]));
+    const sorted = [...keys].sort((a, b) => a.localeCompare(b, "en"));
+    expect(serialize(object)).toBe(
+      `{${sorted.map((key) => `${key}:0`).join(",")}}`,
+    );
+  };
+
+  it("keeps the key order previously produced by localeCompare", () => {
+    expectCollationOrder([
+      "userId",
+      "createdAt",
+      "ID",
+      "_id",
+      "$ref",
+      "x-foo",
+      "user_name",
+      "v1",
+      "v10",
+      "2020",
+      "fooBar",
+      "foobar",
+      "FOOBAR",
+      "a",
+      "A",
+      "z",
+      "Z",
+      "with space",
+      "a.b",
+      "a/b",
+      String.raw`a\b`,
+      "a|b",
+      "a~b",
+      "a+b",
+    ]);
+  });
+
+  it("orders every printable ASCII character as localeCompare does", () => {
+    expectCollationOrder(
+      Array.from({ length: 95 }, (_, i) => String.fromCodePoint(32 + i)),
+    );
+  });
+});
+
 // https://github.com/cloudflare/workerd/issues/3641
 describe("Object.prototype.toString issues", () => {
   let originalToString: any;
