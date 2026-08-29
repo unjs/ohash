@@ -89,6 +89,28 @@ describe("serialize", () => {
       );
     });
 
+    it("sorts NaN values consistently", () => {
+      const set = serialize(new Set([Number.NaN, 1]));
+      expect(set).toBe("Set[1,NaN]");
+      expect(serialize(new Set([1, Number.NaN]))).toBe(set);
+
+      const map = serialize(
+        new Map([
+          [Number.NaN, "nan"],
+          [1, "one"],
+        ]),
+      );
+      expect(map).toBe("Map{1:'one',NaN:'nan'}");
+      expect(
+        serialize(
+          new Map([
+            [1, "one"],
+            [Number.NaN, "nan"],
+          ]),
+        ),
+      ).toBe(map);
+    });
+
     it("Map", () => {
       const map = new Map();
       map.set(1, 4);

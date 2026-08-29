@@ -95,12 +95,9 @@ const Serializer = /*@__PURE__*/ (function () {
       const typeA = typeof a;
       const typeB = typeof b;
 
-      if (typeA === "string" && typeB === "string") {
-        return compareStrings(a, b);
-      }
-
       if (typeA === "number" && typeB === "number") {
-        return a - b;
+        // NaN - number is NaN; coerce self-inequality to order it last.
+        return a - b || +(a !== a) - +(b !== b);
       }
 
       return compareStrings(this.serialize(a, true), this.serialize(b, true));
