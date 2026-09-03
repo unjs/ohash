@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import * as cryptoJS from "../src/crypto/js";
@@ -20,6 +21,15 @@ describe("crypto:digest", () => {
         );
         expect(digest("")).toBe("47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU");
       });
+
+      it.each(["\uD800", "a\uDFFFb", "\uD83D", "\uDE00\uD83D"])(
+        "matches node:crypto for the lone surrogate %j",
+        (input) => {
+          expect(digest(input)).toBe(
+            createHash("sha256").update(input, "utf8").digest("base64url"),
+          );
+        },
+      );
     });
   }
 });
