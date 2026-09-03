@@ -27,6 +27,8 @@ const base64KeyStr =
 // Reusable object
 const W: number[] = [];
 
+const encoder = /*@__PURE__*/ new TextEncoder();
+
 /**
  * SHA-256 hash algorithm.
  */
@@ -194,13 +196,14 @@ class WordArray {
   }
 
   static fromUtf8(input: string) {
-    const str = unescape(encodeURIComponent(input)); // utf8 => latin1
-    const strlen = str.length;
+    const bytes = encoder.encode(input);
     const words: number[] = [];
-    for (let i = 0; i < strlen; i++) {
-      words[i >>> 2] |= (str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+    let i = 0;
+    for (const byte of bytes) {
+      words[i >>> 2] |= byte << (24 - (i % 4) * 8);
+      i++;
     }
-    return new WordArray(words, strlen);
+    return new WordArray(words, bytes.length);
   }
 
   toBase64(): string {
