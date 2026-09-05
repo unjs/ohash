@@ -30,18 +30,18 @@
     "test:types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^26",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@types/node": "^26.4.1",
+    "@vitest/coverage-v8": "^4.1.11",
     "automd": "^0.4.3",
     "changelogen": "^0.6.2",
     "esbuild": "^0.28.2",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "eslint-config-unjs": "^0.6.2",
     "mitata": "^1.0.34",
-    "obuild": "^0.4.38",
+    "obuild": "^0.4.39",
     "prettier": "^3.9.6",
-    "typescript": "^6",
-    "vitest": "^4.1.10"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
   },
-  "packageManager": "pnpm@11.2.2"
+  "packageManager": "pnpm@11.25.0"
 }
