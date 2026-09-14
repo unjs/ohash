@@ -227,6 +227,29 @@ describe("serialize", () => {
       );
     });
 
+    it("own `constructor` key", () => {
+      // A record carrying its own `constructor` key (`JSON.parse` output, a
+      // query object, ...) must serialize as plain data instead of having that
+      // value read as the object's class.
+      expect(serialize({ constructor: null })).toMatchInlineSnapshot(
+        `"{constructor:null}"`,
+      );
+      expect(serialize({ constructor: 1 })).toMatchInlineSnapshot(
+        `"{constructor:1}"`,
+      );
+      expect(
+        serialize(JSON.parse(`{"constructor":"x"}`)),
+      ).toMatchInlineSnapshot(`"{constructor:'x'}"`);
+      // A value that happens to be a global must not select its handler.
+      expect(serialize({ constructor: Date })).toMatchInlineSnapshot(
+        `"{constructor:Date()[native]}"`,
+      );
+      // Distinct values still hash distinctly.
+      expect(serialize({ constructor: 1 })).not.toBe(
+        serialize({ constructor: 2 }),
+      );
+    });
+
     it("with toJSON()", () => {
       class TestArray {
         toJSON() {

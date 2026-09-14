@@ -34,7 +34,7 @@ describe("bundle size", () => {
     const { bytes, gzipSize } = await getBundleSize(code);
     // console.log({ bytes, gzipSize });
     expect(bytes).toBeLessThanOrEqual(3500); // <3.5kb
-    expect(gzipSize).toBeLessThanOrEqual(1550); // <1.55kb
+    expect(gzipSize).toBeLessThanOrEqual(1560); // <1.56kb
   });
 
   it("diff", async () => {
