@@ -141,7 +141,13 @@ const Serializer = /*@__PURE__*/ (function () {
         );
       }
 
-      const constructor = object.constructor;
+      // The constructor is read from the prototype rather than from the object
+      // itself: an own `constructor` key (`JSON.parse` output, any user
+      // supplied record) would otherwise shadow it and be read as the class.
+      // `{ constructor: null }` threw on `.name`, `{ constructor: 1 }` produced
+      // an `undefined` prefix, and a value that happens to equal a global
+      // (`{ constructor: Date }`) selected that type's handler.
+      const constructor = Object.getPrototypeOf(object)?.constructor;
       const objName =
         constructor === Object || constructor === undefined
           ? ""
