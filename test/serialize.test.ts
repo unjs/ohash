@@ -282,6 +282,16 @@ describe("serialize", () => {
       expect(serialize(params)).toMatchInlineSnapshot(
         `"URLSearchParams{bar:'baz',foo:'bar'}"`,
       );
+
+      const p1 = new URLSearchParams([
+        ["tag", "b"],
+        ["tag", "a"],
+      ]);
+      const p2 = new URLSearchParams([
+        ["tag", "a"],
+        ["tag", "b"],
+      ]);
+      expect(serialize(p1)).toBe(serialize(p2));
     });
   });
 

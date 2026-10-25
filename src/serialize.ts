@@ -186,18 +186,15 @@ const Serializer = /*@__PURE__*/ (function () {
     }
 
     serializeObjectEntries(type: string, entries: Iterable<[any, any]>) {
-      const sortedEntries = Array.from(entries).sort((a, b) =>
-        this.compare(a[0], b[0]),
+      const sortedEntries = Array.from(entries).sort(
+        (a, b) => this.compare(a[0], b[0]) || this.compare(a[1], b[1]),
       );
-      let content = `${type}{`;
-      for (let i = 0; i < sortedEntries.length; i++) {
-        const [key, value] = sortedEntries[i];
+      let content = "";
+      for (const [key, value] of sortedEntries) {
+        if (content) content += ",";
         content += `${this.serialize(key, true)}:${this.serialize(value)}`;
-        if (i < sortedEntries.length - 1) {
-          content += ",";
-        }
       }
-      return content + "}";
+      return `${type}{${content}}`;
     }
 
     $object(object: any) {
